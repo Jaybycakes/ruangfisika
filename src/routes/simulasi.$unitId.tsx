@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useState } from "react";
 import {
-  ChevronRight, Maximize2, Pause, Play, RotateCcw, BookOpen, X,
+  ChevronRight, Maximize2, Pause, Play, RotateCcw, BookOpen,
   Gauge, Activity, Settings2,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -42,7 +42,6 @@ export const Route = createFileRoute("/simulasi/$unitId")({
 function Workspace() {
   const { unit } = Route.useLoaderData();
   const [playing, setPlaying] = useState(false);
-  const [notesOpen, setNotesOpen] = useState(false);
   const [friction, setFriction] = useState(true);
   const [velocity, setVelocity] = useState(20);
   const [mass, setMass] = useState(2);
@@ -69,13 +68,14 @@ function Workspace() {
           </nav>
 
           <div className="ml-auto flex items-center gap-2">
-            <button
-              onClick={() => setNotesOpen(true)}
+            <Link
+              to="/panduan/$unitId"
+              params={{ unitId: unit.id }}
               className="inline-flex items-center gap-1.5 rounded-md border border-border bg-background px-3 py-1.5 text-xs font-medium text-foreground hover:bg-secondary"
             >
               <BookOpen className="h-3.5 w-3.5" />
               <span className="hidden sm:inline">Panduan Guru</span>
-            </button>
+            </Link>
             <button
               onClick={toggleFullscreen}
               className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-background text-foreground hover:bg-secondary"
@@ -198,47 +198,6 @@ function Workspace() {
         </aside>
       </div>
 
-      {/* Teacher notes */}
-      {notesOpen && (
-        <div className="fixed inset-0 z-50 flex">
-          <div className="flex-1 bg-foreground/30 backdrop-blur-sm" onClick={() => setNotesOpen(false)} />
-          <div className="flex w-full max-w-md flex-col border-l border-border bg-card shadow-card">
-            <div className="flex items-center justify-between border-b border-border px-5 py-4">
-              <div className="flex items-center gap-2">
-                <BookOpen className="h-4 w-4 text-accent" />
-                <h3 className="text-sm font-semibold text-card-foreground">Panduan Guru</h3>
-              </div>
-              <button onClick={() => setNotesOpen(false)} aria-label="Tutup" className="rounded-md p-1 hover:bg-secondary">
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-            <div className="flex-1 space-y-6 overflow-y-auto p-5 text-sm text-foreground">
-              <section>
-                <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Tujuan Pembelajaran</h4>
-                <ul className="mt-2 list-disc space-y-1.5 pl-5 text-foreground/90">
-                  <li>Siswa dapat menjelaskan konsep utama {unit.title.toLowerCase()}.</li>
-                  <li>Siswa dapat menganalisis pengaruh parameter terhadap hasil simulasi.</li>
-                  <li>Siswa dapat menarik kesimpulan dari data eksperimen.</li>
-                </ul>
-              </section>
-              <section>
-                <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Pertanyaan Diskusi</h4>
-                <ol className="mt-2 list-decimal space-y-1.5 pl-5 text-foreground/90">
-                  <li>Apa yang terjadi ketika parameter diubah?</li>
-                  <li>Bagaimana grafik berubah seiring waktu?</li>
-                  <li>Apakah hasil sesuai dengan prediksi teoritis?</li>
-                </ol>
-              </section>
-              <section>
-                <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Catatan Mengajar</h4>
-                <p className="mt-2 text-foreground/80">
-                  Gunakan mode layar penuh saat menyajikan di proyektor agar visualisasi terlihat jelas dari belakang kelas.
-                </p>
-              </section>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
