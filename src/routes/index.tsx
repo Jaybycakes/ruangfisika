@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { ArrowRight, Play, Sparkles } from "lucide-react";
+import { ArrowRight, BarChart3, Play, Sparkles } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { UNITS, type Unit } from "@/lib/curriculum";
 
