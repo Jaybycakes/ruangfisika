@@ -63,17 +63,19 @@ function Dashboard() {
             </a>
           </div>
 
-          <dl className="mt-10 grid max-w-2xl grid-cols-3 gap-4 sm:gap-8">
-            {[
-              { k: "13", v: "Unit Kurikulum" },
-              { k: `${sem1} / ${sem2}`, v: "Semester 1 / 2" },
-              { k: "100%", v: "Bahasa Indonesia" },
-            ].map((s) => (
-              <div key={s.v} className="rounded-lg border border-white/15 bg-white/5 px-4 py-3 backdrop-blur">
-                <dt className="text-xs text-white/70">{s.v}</dt>
-                <dd className="mt-1 text-xl font-bold sm:text-2xl">{s.k}</dd>
-              </div>
-            ))}
+          <dl className="mt-10 grid max-w-2xl grid-cols-2 gap-4 sm:gap-8">
+            <div className="rounded-lg border border-white/15 bg-white/5 px-4 py-3 backdrop-blur">
+              <dt className="text-xs text-white/70">Unit Kurikulum</dt>
+              <dd className="mt-1 text-xl font-bold sm:text-2xl">13</dd>
+            </div>
+            <div className="rounded-lg border border-white/15 bg-white/5 px-4 py-3 backdrop-blur">
+              <dt className="flex items-center gap-1.5 text-xs text-white/70">
+                <BarChart3 className="h-3.5 w-3.5" />
+                Grafik & Analisis Real-Time
+              </dt>
+              <dd className="mt-1 text-xl font-bold sm:text-2xl">Langsung di Kelas</dd>
+              <dd className="mt-0.5 text-[11px] text-white/60">Visualisasi data interaktif untuk setiap simulasi</dd>
+            </div>
           </dl>
         </div>
       </section>
