@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SimulasiUnitIdRouteImport } from './routes/simulasi.$unitId'
+import { Route as PanduanUnitIdRouteImport } from './routes/panduan.$unitId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,30 +23,39 @@ const SimulasiUnitIdRoute = SimulasiUnitIdRouteImport.update({
   path: '/simulasi/$unitId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PanduanUnitIdRoute = PanduanUnitIdRouteImport.update({
+  id: '/panduan/$unitId',
+  path: '/panduan/$unitId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/panduan/$unitId': typeof PanduanUnitIdRoute
   '/simulasi/$unitId': typeof SimulasiUnitIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/panduan/$unitId': typeof PanduanUnitIdRoute
   '/simulasi/$unitId': typeof SimulasiUnitIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/panduan/$unitId': typeof PanduanUnitIdRoute
   '/simulasi/$unitId': typeof SimulasiUnitIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/simulasi/$unitId'
+  fullPaths: '/' | '/panduan/$unitId' | '/simulasi/$unitId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/simulasi/$unitId'
-  id: '__root__' | '/' | '/simulasi/$unitId'
+  to: '/' | '/panduan/$unitId' | '/simulasi/$unitId'
+  id: '__root__' | '/' | '/panduan/$unitId' | '/simulasi/$unitId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  PanduanUnitIdRoute: typeof PanduanUnitIdRoute
   SimulasiUnitIdRoute: typeof SimulasiUnitIdRoute
 }
 
@@ -65,11 +75,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SimulasiUnitIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/panduan/$unitId': {
+      id: '/panduan/$unitId'
+      path: '/panduan/$unitId'
+      fullPath: '/panduan/$unitId'
+      preLoaderRoute: typeof PanduanUnitIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  PanduanUnitIdRoute: PanduanUnitIdRoute,
   SimulasiUnitIdRoute: SimulasiUnitIdRoute,
 }
 export const routeTree = rootRouteImport

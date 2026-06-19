@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useState } from "react";
 import {
-  ChevronRight, Maximize2, Pause, Play, RotateCcw, BookOpen, X,
+  ChevronRight, Maximize2, Pause, Play, RotateCcw, BookOpen,
   Gauge, Activity, Settings2,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
