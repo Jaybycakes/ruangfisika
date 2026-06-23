@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import type p5 from 'p5';
 
 interface ParabolaProps {
   velocity: number;
@@ -38,9 +37,9 @@ export function ParabolaSimulation({ velocity, angle, gravity, triggerReset }: P
         console.log('[ParabolaSimulation] p5.js loaded successfully');
         const p5Constructor = p5Module.default;
 
-    const sketch = (p: p5) => {
+    const sketch = (p: any) => {
       let x: number, y: number, vx: number, vy: number;
-      let path: typeof p.Vector[] = [];
+      let path: any[] = [];
       let isPlaying = false;
       const dt = 0.15;
 
