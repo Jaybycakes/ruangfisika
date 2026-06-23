@@ -24,8 +24,11 @@ export function ParabolaSimulation({ velocity, angle, gravity, triggerReset }: P
   useEffect(() => {
     if (!isClient || !containerRef.current) return;
 
+    console.log('[ParabolaSimulation] Loading p5.js...');
+
     // Dynamic import of p5 on client side only
     import('p5').then((p5Module) => {
+      console.log('[ParabolaSimulation] p5.js loaded successfully');
       const p5 = p5Module.default;
 
     const sketch = (p: p5) => {
@@ -49,6 +52,7 @@ export function ParabolaSimulation({ velocity, angle, gravity, triggerReset }: P
       };
 
       const resetSimulation = () => {
+        console.log('[ParabolaSimulation] Reset triggered', { velocity: propsRef.current.velocity, angle: propsRef.current.angle, gravity: propsRef.current.gravity });
         const { velocity: v, angle: a } = propsRef.current;
         x = 50;
         y = p.height - 50;
@@ -102,10 +106,14 @@ export function ParabolaSimulation({ velocity, angle, gravity, triggerReset }: P
     };
 
     p5Instance.current = new p5(sketch, containerRef.current);
+    console.log('[ParabolaSimulation] p5 instance created');
 
     return () => {
+      console.log('[ParabolaSimulation] Cleaning up p5 instance');
       p5Instance.current?.remove();
     };
+    }).catch((error) => {
+      console.error('[ParabolaSimulation] Failed to load p5.js:', error);
     });
   }, [isClient]);
 
