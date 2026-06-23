@@ -1,5 +1,4 @@
-import React, { useEffect, useRef } from 'react';
-import p5 from 'p5';
+import React, { useEffect, useRef, useState } from 'react';
 
 interface ParabolaProps {
   velocity: number;
@@ -12,13 +11,22 @@ export function ParabolaSimulation({ velocity, angle, gravity, triggerReset }: P
   const containerRef = useRef<HTMLDivElement>(null);
   const p5Instance = useRef<any>(null);
   const propsRef = useRef({ velocity, angle, gravity });
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
     propsRef.current = { velocity, angle, gravity };
   }, [velocity, angle, gravity]);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!isClient || !containerRef.current) return;
+
+    // Dynamic import of p5 on client side only
+    import('p5').then((p5Module) => {
+      const p5 = p5Module.default;
 
     const sketch = (p: p5) => {
       let x: number, y: number, vx: number, vy: number;
@@ -98,13 +106,22 @@ export function ParabolaSimulation({ velocity, angle, gravity, triggerReset }: P
     return () => {
       p5Instance.current?.remove();
     };
-  }, []);
+    });
+  }, [isClient]);
 
   useEffect(() => {
     if (p5Instance.current && p5Instance.current.customReset) {
       p5Instance.current.customReset();
     }
   }, [triggerReset]);
+
+  if (!isClient) {
+    return (
+      <div ref={containerRef} className="w-full h-full min-h-[400px] grid place-items-center bg-secondary/30">
+        <div className="text-muted-foreground text-sm">Loading simulation...</div>
+      </div>
+    );
+  }
 
   return <div ref={containerRef} className="w-full h-full min-h-[400px]" />;
 }
