@@ -1,1 +1,0 @@
-import{t as e}from"./jsx-runtime-DGeXAQPT.js";var t=e(),n=({error:e})=>(0,t.jsx)(`div`,{className:`grid min-h-screen place-items-center bg-background p-6 text-center text-sm text-muted-foreground`,children:e.message});export{n as errorComponent};
