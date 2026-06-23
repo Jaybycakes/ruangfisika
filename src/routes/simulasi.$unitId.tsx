@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { getUnit } from "@/lib/curriculum";
+import { ParabolaSimulation } from "@/components/simulations/ParabolaSimulation";
 
 export const Route = createFileRoute("/simulasi/$unitId")({
   head: ({ params }) => {
@@ -46,7 +47,9 @@ function Workspace() {
   const [velocity, setVelocity] = useState(20);
   const [mass, setMass] = useState(2);
   const [angle, setAngle] = useState(45);
+  const [gravity, setGravity] = useState(9.8);
   const [preset, setPreset] = useState("default");
+  const [resetTrigger, setResetTrigger] = useState(0);
 
   const toggleFullscreen = () => {
     if (typeof document === "undefined") return;
@@ -94,34 +97,31 @@ function Workspace() {
         <div className="flex flex-1 flex-col">
           {/* Canvas */}
           <div className="relative flex-1 border-b border-border bg-secondary/30 p-4 sm:p-6">
-            <div className="relative h-[420px] w-full overflow-hidden rounded-lg border border-border bg-background grid-bg lg:h-full lg:min-h-[420px]">
-              <div className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-md bg-card/80 px-2.5 py-1 text-[11px] font-medium text-muted-foreground backdrop-blur">
+            <div className="relative h-[420px] w-full overflow-hidden rounded-lg border border-border bg-background lg:h-full lg:min-h-[420px]">
+              <div className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-md bg-card/80 px-2.5 py-1 text-[11px] font-medium text-muted-foreground backdrop-blur z-10">
                 <span className={`h-1.5 w-1.5 rounded-full ${playing ? "bg-orange" : "bg-muted-foreground"}`} />
                 {playing ? "Berjalan" : "Siap"}
               </div>
-              <div className="absolute inset-0 grid place-items-center">
-                <div className="text-center">
-                  <div className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-accent/15 text-accent">
-                    <unit.icon className="h-7 w-7" />
-                  </div>
-                  <p className="mt-3 text-sm font-medium text-foreground">Kanvas Simulasi</p>
-                  <p className="mt-1 max-w-sm text-xs text-muted-foreground">
-                    Area interaktif untuk {unit.title.toLowerCase()} akan dimuat di sini.
-                  </p>
-                </div>
-              </div>
+              
+              {/* ParabolaSimulation Component */}
+              <ParabolaSimulation 
+                velocity={velocity} 
+                angle={angle} 
+                gravity={gravity}
+                triggerReset={resetTrigger}
+              />
 
               {/* Floating playback */}
-              <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full border border-border bg-card/90 px-2 py-1.5 shadow-card backdrop-blur">
+              <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full border border-border bg-card/90 px-2 py-1.5 shadow-card backdrop-blur z-10">
                 <button
-                  onClick={() => setPlaying((p) => !p)}
+                  onClick={() => setResetTrigger(prev => prev + 1)}
                   className="inline-flex items-center gap-1.5 rounded-full bg-orange px-4 py-1.5 text-xs font-semibold text-orange-foreground hover:opacity-90"
                 >
-                  {playing ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5 fill-current" />}
-                  {playing ? "Pause" : "Play"}
+                  <Play className="h-3.5 w-3.5 fill-current" />
+                  Play
                 </button>
                 <button
-                  onClick={() => setPlaying(false)}
+                  onClick={() => setResetTrigger(prev => prev + 1)}
                   className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs font-medium text-foreground hover:bg-secondary"
                 >
                   <RotateCcw className="h-3.5 w-3.5" /> Reset
@@ -185,7 +185,8 @@ function Workspace() {
             <Field label="Percepatan Gravitasi (m/s²)">
               <input
                 type="number"
-                defaultValue={9.8}
+                value={gravity}
+                onChange={(e) => setGravity(Number(e.target.value))}
                 step={0.1}
                 className="h-9 w-full rounded-md border border-sidebar-border bg-background px-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring/40"
               />
