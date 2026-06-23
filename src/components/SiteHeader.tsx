@@ -19,7 +19,7 @@ export function SiteHeader() {
         <nav className="ml-6 hidden items-center gap-1 md:flex">
           <Link to="/" className="rounded-md px-3 py-1.5 text-sm text-foreground/80 hover:bg-secondary hover:text-foreground">Beranda</Link>
           <a href="#kurikulum" className="rounded-md px-3 py-1.5 text-sm text-foreground/80 hover:bg-secondary hover:text-foreground">Kurikulum</a>
-          <a href="#panduan" className="rounded-md px-3 py-1.5 text-sm text-foreground/80 hover:bg-secondary hover:text-foreground">Panduan</a>
+          <Link to="/panduan" className="rounded-md px-3 py-1.5 text-sm text-foreground/80 hover:bg-secondary hover:text-foreground">Panduan</Link>
         </nav>
 
         <div className="ml-auto flex items-center gap-2">

@@ -10,13 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PanduanIndexRouteImport } from './routes/panduan.index'
 import { Route as SimulasiUnitIdRouteImport } from './routes/simulasi.$unitId'
 import { Route as PanduanUnitIdRouteImport } from './routes/panduan.$unitId'
-import { Route as PanduanIndexRouteImport } from './routes/panduan.index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PanduanIndexRoute = PanduanIndexRouteImport.update({
+  id: '/panduan/',
+  path: '/panduan/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SimulasiUnitIdRoute = SimulasiUnitIdRouteImport.update({
@@ -29,44 +34,39 @@ const PanduanUnitIdRoute = PanduanUnitIdRouteImport.update({
   path: '/panduan/$unitId',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PanduanIndexRoute = PanduanIndexRouteImport.update({
-  id: '/panduan/',
-  path: '/panduan/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/panduan': typeof PanduanIndexRoute
   '/panduan/$unitId': typeof PanduanUnitIdRoute
   '/simulasi/$unitId': typeof SimulasiUnitIdRoute
+  '/panduan/': typeof PanduanIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/panduan': typeof PanduanIndexRoute
   '/panduan/$unitId': typeof PanduanUnitIdRoute
   '/simulasi/$unitId': typeof SimulasiUnitIdRoute
+  '/panduan': typeof PanduanIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/panduan/': typeof PanduanIndexRoute
   '/panduan/$unitId': typeof PanduanUnitIdRoute
   '/simulasi/$unitId': typeof SimulasiUnitIdRoute
+  '/panduan/': typeof PanduanIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/panduan' | '/panduan/$unitId' | '/simulasi/$unitId'
+  fullPaths: '/' | '/panduan/$unitId' | '/simulasi/$unitId' | '/panduan/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/panduan' | '/panduan/$unitId' | '/simulasi/$unitId'
-  id: '__root__' | '/' | '/panduan/' | '/panduan/$unitId' | '/simulasi/$unitId'
+  to: '/' | '/panduan/$unitId' | '/simulasi/$unitId' | '/panduan'
+  id: '__root__' | '/' | '/panduan/$unitId' | '/simulasi/$unitId' | '/panduan/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  PanduanIndexRoute: typeof PanduanIndexRoute
   PanduanUnitIdRoute: typeof PanduanUnitIdRoute
   SimulasiUnitIdRoute: typeof SimulasiUnitIdRoute
+  PanduanIndexRoute: typeof PanduanIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -76,6 +76,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/panduan/': {
+      id: '/panduan/'
+      path: '/panduan'
+      fullPath: '/panduan/'
+      preLoaderRoute: typeof PanduanIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/simulasi/$unitId': {
@@ -92,21 +99,14 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PanduanUnitIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/panduan/': {
-      id: '/panduan/'
-      path: '/panduan'
-      fullPath: '/panduan'
-      preLoaderRoute: typeof PanduanIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  PanduanIndexRoute: PanduanIndexRoute,
   PanduanUnitIdRoute: PanduanUnitIdRoute,
   SimulasiUnitIdRoute: SimulasiUnitIdRoute,
+  PanduanIndexRoute: PanduanIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
