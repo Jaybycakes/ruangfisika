@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import type p5 from 'p5';
 
 interface ParabolaProps {
   velocity: number;
@@ -12,6 +13,7 @@ export function ParabolaSimulation({ velocity, angle, gravity, triggerReset }: P
   const p5Instance = useRef<any>(null);
   const propsRef = useRef({ velocity, angle, gravity });
   const [isClient, setIsClient] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     setIsClient(true);
@@ -26,14 +28,19 @@ export function ParabolaSimulation({ velocity, angle, gravity, triggerReset }: P
 
     console.log('[ParabolaSimulation] Loading p5.js...');
 
+    let mounted = true;
+
     // Dynamic import of p5 on client side only
-    import('p5').then((p5Module) => {
-      console.log('[ParabolaSimulation] p5.js loaded successfully');
-      const p5 = p5Module.default;
+    import('p5')
+      .then((p5Module) => {
+        if (!mounted || !containerRef.current) return;
+        
+        console.log('[ParabolaSimulation] p5.js loaded successfully');
+        const p5Constructor = p5Module.default;
 
     const sketch = (p: p5) => {
       let x: number, y: number, vx: number, vy: number;
-      let path: p5.Vector[] = [];
+      let path: typeof p.Vector[] = [];
       let isPlaying = false;
       const dt = 0.15;
 
@@ -105,16 +112,25 @@ export function ParabolaSimulation({ velocity, angle, gravity, triggerReset }: P
       };
     };
 
-    p5Instance.current = new p5(sketch, containerRef.current);
+    p5Instance.current = new p5Constructor(sketch, containerRef.current);
     console.log('[ParabolaSimulation] p5 instance created');
 
     return () => {
       console.log('[ParabolaSimulation] Cleaning up p5 instance');
+      if (mounted) {
+        p5Instance.current?.remove();
+      }
+    };
+    })
+    .catch((err) => {
+      console.error('[ParabolaSimulation] Failed to load p5.js:', err);
+      setError('Failed to load simulation library');
+    });
+
+    return () => {
+      mounted = false;
       p5Instance.current?.remove();
     };
-    }).catch((error) => {
-      console.error('[ParabolaSimulation] Failed to load p5.js:', error);
-    });
   }, [isClient]);
 
   useEffect(() => {
@@ -122,6 +138,14 @@ export function ParabolaSimulation({ velocity, angle, gravity, triggerReset }: P
       p5Instance.current.customReset();
     }
   }, [triggerReset]);
+
+  if (error) {
+    return (
+      <div ref={containerRef} className="w-full h-full min-h-[400px] grid place-items-center bg-secondary/30">
+        <div className="text-red-500 text-sm">{error}</div>
+      </div>
+    );
+  }
 
   if (!isClient) {
     return (
