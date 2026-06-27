@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   ChevronRight, Maximize2, Pause, Play, RotateCcw, BookOpen,
   Gauge, Activity, Settings2,
@@ -42,6 +42,14 @@ export const Route = createFileRoute("/simulasi/$unitId")({
 
 function Workspace() {
   const { unit } = Route.useLoaderData();
+  
+  // Redirect to HTML file for energi-terbarukan unit
+  useEffect(() => {
+    if (unit.id === 'energi-terbarukan') {
+      window.location.href = '/unit13-energi-terbarukan.html';
+    }
+  }, [unit.id]);
+
   const [playing, setPlaying] = useState(false);
   const [friction, setFriction] = useState(true);
   const [velocity, setVelocity] = useState(20);
