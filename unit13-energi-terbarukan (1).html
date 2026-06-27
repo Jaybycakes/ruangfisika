@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 13 — Energi Terbarukan | Fisika SMA Kelas 10</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0b0f1a;--surface:#111827;--surface2:#1a2235;--border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
+  --text:#e8edf5;--muted:#7a8ba0;
+  --solar:#f59e0b;--wind:#38bdf8;--hydro:#34d399;--geo:#f87171;--bio:#a78bfa;--thermal:#fb923c;--accent:#22c55e;
+  --font:'Inter',system-ui,sans-serif;--mono:'JetBrains Mono','Fira Mono',monospace;--rad:10px;--rad-lg:16px;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:15px;line-height:1.6;min-height:100vh}
+.header{border-bottom:1px solid var(--border);padding:0 2rem;position:sticky;top:0;background:rgba(11,15,26,0.95);backdrop-filter:blur(12px);z-index:100;display:flex;align-items:center;gap:1rem;height:56px}
+.header-badge{font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);padding:3px 10px;border-radius:99px}
+.header h1{font-size:14px;font-weight:500}
+.header-sub{font-size:12px;color:var(--muted);margin-left:auto}
+.tab-bar{display:flex;gap:2px;padding:1rem 2rem 0;border-bottom:1px solid var(--border);overflow-x:auto;background:var(--bg);position:sticky;top:56px;z-index:99}
+.tab{padding:8px 14px;font-size:12px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color 0.15s,border-color 0.15s;background:none;border-top:none;border-left:none;border-right:none;font-family:var(--font)}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--text);border-bottom-color:var(--accent)}
+.page{display:none;padding:2rem;max-width:980px;margin:0 auto}
+.page.active{display:block}
+.page-title{font-size:22px;font-weight:600;margin-bottom:6px}
+.page-desc{font-size:14px;color:var(--muted);margin-bottom:2rem;line-height:1.7}
+.sim-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rad-lg);padding:1.5rem;margin-bottom:1.25rem}
+.sim-card-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);margin-bottom:1.25rem}
+.controls-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1rem;margin-bottom:1.25rem}
+.ctrl{display:flex;flex-direction:column;gap:6px}
+.ctrl-label{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;color:var(--muted)}
+.ctrl-label span{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--text)}
+input[type=range]{-webkit-appearance:none;width:100%;height:4px;background:var(--surface2);border-radius:2px;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--bg)}
+input[type=range].solar::-webkit-slider-thumb{background:var(--solar)}
+input[type=range].wind::-webkit-slider-thumb{background:var(--wind)}
+input[type=range].hydro::-webkit-slider-thumb{background:var(--hydro)}
+input[type=range].geo::-webkit-slider-thumb{background:var(--geo)}
+input[type=range].bio::-webkit-slider-thumb{background:var(--bio)}
+input[type=range].thermal::-webkit-slider-thumb{background:var(--thermal)}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:1.25rem}
+.stat{background:var(--surface2);border-radius:var(--rad);padding:12px 14px;border:1px solid var(--border)}
+.stat-val{font-family:var(--mono);font-size:20px;font-weight:700;line-height:1.2}
+.stat-label{font-size:11px;color:var(--muted);margin-top:4px}
+.solar-c{color:var(--solar)}.wind-c{color:var(--wind)}.hydro-c{color:var(--hydro)}.geo-c{color:var(--geo)}.bio-c{color:var(--bio)}.thermal-c{color:var(--thermal)}.accent-c{color:var(--accent)}
+.formula{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 var(--rad) var(--rad) 0;padding:10px 14px;font-family:var(--mono);font-size:12px;color:var(--muted);line-height:2;margin-top:1rem}
+.formula strong{color:var(--text);font-weight:600}
+.energy-bar-wrap{margin:8px 0}
+.energy-bar-label{font-size:12px;color:var(--muted);margin-bottom:5px;display:flex;justify-content:space-between}
+.energy-bar-bg{height:10px;background:var(--surface2);border-radius:5px;overflow:hidden}
+.energy-bar-fill{height:100%;border-radius:5px;transition:width 0.3s ease}
+canvas.sim-canvas{max-height:220px;width:100%;border-radius:var(--rad);background:var(--surface2);display:block;margin-top:1rem}
+.pill-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.25rem}
+.pill{padding:4px 12px;border-radius:99px;font-size:12px;border:1px solid var(--border2);color:var(--muted);background:var(--surface2)}
+.compare-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:1rem}
+.compare-table th{text-align:left;padding:8px 12px;font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border)}
+.compare-table td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:middle}
+.compare-table tr:last-child td{border-bottom:none}
+.compare-table tr:hover td{background:rgba(255,255,255,0.02)}
+.region-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:10px;margin-top:1rem}
+.region-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--rad);padding:12px 14px}
+.region-name{font-size:13px;font-weight:600;margin-bottom:6px}
+.region-tags{display:flex;flex-wrap:wrap;gap:4px}
+.rtag{font-size:10px;padding:2px 7px;border-radius:99px;font-weight:600}
+/* CHAIN */
+.chain-wrap{display:flex;align-items:center;gap:0;flex-wrap:wrap;margin:1rem 0}
+.chain-node{background:var(--surface2);border:1px solid var(--border2);border-radius:var(--rad);padding:10px 14px;text-align:center;min-width:100px;flex:1;position:relative}
+.chain-node .cn-icon{font-size:22px;display:block;margin-bottom:4px}
+.chain-node .cn-label{font-size:11px;color:var(--muted);line-height:1.4}
+.chain-node .cn-val{font-size:12px;font-weight:600;font-family:var(--mono);margin-top:3px}
+.chain-arrow{font-size:20px;color:var(--muted);padding:0 4px;flex-shrink:0}
+.chain-node.active-node{border-color:var(--accent);background:rgba(34,197,94,0.06)}
+/* COST BENEFIT */
+.cb-section{margin-bottom:1.5rem}
+.cb-section h4{font-size:13px;font-weight:600;margin-bottom:10px;color:var(--text)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:600px){.two-col{grid-template-columns:1fr}.chain-wrap{flex-direction:column}.chain-arrow{transform:rotate(90deg)}.page{padding:1rem}.header{padding:0 1rem}.tab-bar{padding:0.75rem 1rem 0;top:56px}}
+/* STORAGE */
+.storage-viz{display:flex;align-items:flex-end;gap:8px;height:120px;margin:1rem 0;padding:0 8px}
+.storage-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.storage-bar-outer{width:100%;flex:1;background:var(--surface2);border-radius:4px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end}
+.storage-bar-inner{width:100%;border-radius:4px;transition:height 0.4s ease}
+.storage-bar-label{font-size:10px;color:var(--muted);text-align:center}
+::-webkit-scrollbar{height:4px;width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <span class="header-badge">Unit 13</span>
+  <h1>Energi Terbarukan</h1>
+  <span class="header-sub">Fisika SMA Kelas 10 · Kurikulum Merdeka</span>
+</header>
+
+<div class="tab-bar">
+  <button class="tab active" onclick="showTab('chain')">Rantai Konversi</button>
+  <button class="tab" onclick="showTab('solar')">Surya PV</button>
+  <button class="tab" onclick="showTab('thermal')">Surya Termal</button>
+  <button class="tab" onclick="showTab('wind')">Angin</button>
+  <button class="tab" onclick="showTab('hydro')">Air</button>
+  <button class="tab" onclick="showTab('geo')">Panas Bumi</button>
+  <button class="tab" onclick="showTab('bio')">Biomassa</button>
+  <button class="tab" onclick="showTab('storage')">Penyimpanan</button>
+  <button class="tab" onclick="showTab('costbenefit')">Analisis Biaya</button>
+  <button class="tab" onclick="showTab('compare')">Perbandingan</button>
+  <button class="tab" onclick="showTab('indonesia')">Indonesia</button>
+</div>
+
+<!-- ===== RANTAI KONVERSI ===== -->
+<div class="page active" id="page-chain">
+  <div class="page-title">Rantai Konversi Energi</div>
+  <div class="page-desc">Setiap sumber energi terbarukan melewati serangkaian tahap konversi sebelum menjadi listrik yang dapat digunakan. Pilih sumber energi untuk melihat rantai konversinya secara interaktif.</div>
+
+  <div class="sim-card">
+    <div class="sim-card-title">Pilih Sumber Energi</div>
+    <div class="pill-row">
+      <button class="pill" id="chain-btn-solar" onclick="setChain('solar')" style="cursor:pointer">Surya PV</button>
+      <button class="pill" id="chain-btn-thermal" onclick="setChain('thermal')" style="cursor:pointer">Surya Termal</button>
+      <button class="pill" id="chain-btn-wind" onclick="setChain('wind')" style="cursor:pointer">Angin</button>
+      <button class="pill" id="chain-btn-hydro" onclick="setChain('hydro')" style="cursor:pointer">Air (PLTA)</button>
+      <button class="pill" id="chain-btn-geo" onclick="setChain('geo')" style="cursor:pointer">Panas Bumi</button>
+      <button class="pill" id="chain-btn-bio" onclick="setChain('bio')" style="cursor:pointer">Biomassa</button>
+    </div>
+    <canvas id="chain-canvas" class="sim-canvas" height="190"></canvas>
+    <div id="chain-desc" style="font-size:13px;color:var(--muted);margin-top:1rem;line-height:1.8"></div>
+  </div>
+
+  <div class="sim-card">
+    <div class="sim-card-title">Persamaan Efisiensi Total</div>
+    <div class="controls-grid">
+      <div class="ctrl">
+        <div class="ctrl-label">η₁ Konversi tahap 1 (%) <span id="chain-e1-val">85</span></div>
+        <input type="range" id="chain-e1" min="10" max="100" step="1" value="85">
+      </div>
+      <div class="ctrl">
+        <div class="ctrl-label">η₂ Konversi tahap 2 (%) <span id="chain-e2-val">90</span></div>
+        <input type="range" id="chain-e2" min="10" max="100" step="1" value="90">
+      </div>
+      <div class="ctrl">
+        <div class="ctrl-label">η₃ Konversi tahap 3 (%) <span id="chain-e3-val">95</span></div>
+        <input type="range" id="chain-e3" min="10" max="100" step="1" value="95">
+      </div>
+      <div class="ctrl">
+        <div class="ctrl-label">Energi input (kJ) <span id="chain-ein-val">1000</span></div>
+        <input type="range" id="chain-ein" min="100" max="5000" step="100" value="1000">
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-val accent-c" id="chain-etotal">—</div><div class="stat-label">η total (%)</div></div>
+      <div class="stat"><div class="stat-val accent-c" id="chain-eout">—</div><div class="stat-label">Energi keluar (kJ)</div></div>
+      <div class="stat"><div class="stat-val accent-c" id="chain-eloss">—</div><div class="stat-label">Energi hilang (kJ)</div></div>
+    </div>
+    <div class="formula">
+      <strong>η_total = η₁ × η₂ × η₃</strong> (perkalian efisiensi tiap tahap)<br>
+      <strong>E_keluar = E_input × η_total</strong><br>
+      Setiap tahap konversi selalu ada energi yang hilang sebagai panas (Hukum Termodinamika II)
+    </div>
+  </div>
+</div>
+
+<!-- ===== SOLAR PV ===== -->
+<div class="page" id="page-solar">
+  <div class="page-title" style="color:var(--solar)">Panel Surya Fotovoltaik (PV)</div>
+  <div class="page-desc">Panel surya PV mengubah energi foton cahaya matahari langsung menjadi energi listrik melalui efek fotolistrik pada sel semikonduktor (silikon). Efisiensinya dipengaruhi sudut panel, intensitas cahaya, dan suhu.</div>
+  <div class="pill-row">
+    <span class="pill">Efek Fotolistrik</span><span class="pill">Sel Semikonduktor</span><span class="pill">Irradiance</span><span class="pill">Koefisien Suhu</span>
+  </div>
+  <div class="sim-card">
+    <div class="sim-card-title">Simulator Panel Surya PV</div>
+    <div class="controls-grid">
+      <div class="ctrl"><div class="ctrl-label">Luas panel (m²) <span id="solar-area-val">2.0</span></div><input type="range" class="solar" id="solar-area" min="0.5" max="20" step="0.5" value="2"></div>
+      <div class="ctrl"><div class="ctrl-label">Intensitas cahaya (W/m²) <span id="solar-irr-val">800</span></div><input type="range" class="solar" id="solar-irr" min="100" max="1200" step="50" value="800"></div>
+      <div class="ctrl"><div class="ctrl-label">Sudut panel (°) <span id="solar-angle-val">35</span></div><input type="range" class="solar" id="solar-angle" min="0" max="90" step="1" value="35"></div>
+      <div class="ctrl"><div class="ctrl-label">Suhu panel (°C) <span id="solar-temp-val">25</span></div><input type="range" class="solar" id="solar-temp" min="10" max="80" step="1" value="25"></div>
+      <div class="ctrl"><div class="ctrl-label">Efisiensi dasar (%) <span id="solar-eff-val">20</span></div><input type="range" class="solar" id="solar-eff" min="5" max="30" step="1" value="20"></div>
+    </div>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-val solar-c" id="solar-power">—</div><div class="stat-label">Daya keluar (W)</div></div>
+      <div class="stat"><div class="stat-val solar-c" id="solar-eff-actual">—</div><div class="stat-label">Efisiensi aktual (%)</div></div>
+      <div class="stat"><div class="stat-val solar-c" id="solar-daily">—</div><div class="stat-label">Energi harian (kWh)</div></div>
+      <div class="stat"><div class="stat-val solar-c" id="solar-co2">—</div><div class="stat-label">CO₂ dicegah (kg/hari)</div></div>
+    </div>
+    <div class="energy-bar-wrap">
+      <div class="energy-bar-label"><span>Efisiensi konversi</span><span id="solar-bar-pct">—</span></div>
+      <div class="energy-bar-bg"><div class="energy-bar-fill" id="solar-bar" style="background:var(--solar);width:0%"></div></div>
+    </div>
+    <canvas class="sim-canvas" id="solar-canvas" height="190"></canvas>
+    <div class="formula">
+      <strong>P_keluar = A × I × cos(θ) × η_aktual</strong><br>
+      η_aktual = η_dasar × [1 − 0.005 × (T − 25)] &nbsp;(koefisien suhu: −0,5%/°C)<br>
+      I = intensitas cahaya · θ = sudut panel · T = suhu panel (°C)
+    </div>
+  </div>
+  <div class="sim-card">
+    <div class="sim-card-title">Grafik Daya vs Sudut Panel</div>
+    <div style="position:relative;height:160px"><canvas id="solar-angle-chart"></canvas></div>
+  </div>
+</div>
+
+<!-- ===== SOLAR THERMAL ===== -->
+<div class="page" id="page-thermal">
+  <div class="page-title" style="color:var(--thermal)">Energi Surya Termal</div>
+  <div class="page-desc">Surya termal menggunakan panas matahari untuk memanaskan fluida (air atau oli). Berbeda dengan PV yang menghasilkan listrik langsung, surya termal menghasilkan panas yang bisa dipakai untuk pemanas air, memasak, atau menggerakkan turbin uap (Concentrated Solar Power).</div>
+  <div class="pill-row">
+    <span class="pill">Pemanas Air Surya</span><span class="pill">Kolektor Pelat Datar</span><span class="pill">Concentrated Solar Power</span><span class="pill">Q = mcΔT</span>
+  </div>
+  <div class="sim-card">
+    <div class="sim-card-title">Simulator Pemanas Air Surya (Kolektor Pelat Datar)</div>
+    <div class="controls-grid">
+      <div class="ctrl"><div class="ctrl-label">Luas kolektor (m²) <span id="th-area-val">3.0</span></div><input type="range" class="thermal" id="th-area" min="0.5" max="20" step="0.5" value="3"></div>
+      <div class="ctrl"><div class="ctrl-label">Intensitas surya (W/m²) <span id="th-irr-val">700</span></div><input type="range" class="thermal" id="th-irr" min="100" max="1200" step="50" value="700"></div>
+      <div class="ctrl"><div class="ctrl-label">Efisiensi kolektor (%) <span id="th-eff-val">65</span></div><input type="range" class="thermal" id="th-eff" min="20" max="90" step="1" value="65"></div>
+      <div class="ctrl"><div class="ctrl-label">Suhu air masuk (°C) <span id="th-tin-val">25</span></div><input type="range" class="thermal" id="th-tin" min="10" max="60" step="1" value="25"></div>
+      <div class="ctrl"><div class="ctrl-label">Volume air (liter) <span id="th-vol-val">100</span></div><input type="range" class="thermal" id="th-vol" min="10" max="500" step="10" value="100"></div>
+      <div class="ctrl"><div class="ctrl-label">Durasi pemanasan (jam) <span id="th-dur-val">4</span></div><input type="range" class="thermal" id="th-dur" min="1" max="10" step="0.5" value="4"></div>
+    </div>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-val thermal-c" id="th-power">—</div><div class="stat-label">Daya serap (W)</div></div>
+      <div class="stat"><div class="stat-val thermal-c" id="th-qtotal">—</div><div class="stat-label">Kalor total (kJ)</div></div>
+      <div class="stat"><div class="stat-val thermal-c" id="th-tout">—</div><div class="stat-label">Suhu akhir air (°C)</div></div>
+      <div class="stat"><div class="stat-val thermal-c" id="th-saving">—</div><div class="stat-label">Penghematan (kWh)</div></div>
+    </div>
+    <canvas class="sim-canvas" id="thermal-canvas" height="150"></canvas>
+    <div class="formula">
+      <strong>Q = P_serap × t</strong> &nbsp;·&nbsp; <strong>P_serap = A × I × η</strong><br>
+      <strong>ΔT = Q / (m × c_air)</strong> &nbsp;·&nbsp; c_air = 4.186 kJ/kg·°C · m = massa air (kg)<br>
+      <strong>T_akhir = T_awal + ΔT</strong> (jika T_akhir &gt; 100°C → air mendidih)
+    </div>
+  </div>
+  <div class="sim-card">
+    <div class="sim-card-title">Perbandingan PV vs Termal</div>
+    <table class="compare-table">
+      <thead><tr><th>Aspek</th><th style="color:var(--solar)">Surya PV</th><th style="color:var(--thermal)">Surya Termal</th></tr></thead>
+      <tbody>
+        <tr><td>Output</td><td>Listrik langsung</td><td>Panas (kalor)</td></tr>
+        <tr><td>Efisiensi tipikal</td><td>15–22%</td><td>50–70% (kolektor pelat datar)</td></tr>
+        <tr><td>Penggunaan utama</td><td>Semua kebutuhan listrik</td><td>Pemanas air, memasak, CSP</td></tr>
+        <tr><td>Biaya per kW</td><td>Semakin turun</td><td>Lebih rendah untuk panas</td></tr>
+        <tr><td>Penyimpanan</td><td>Baterai (mahal)</td><td>Tangki air panas (murah)</td></tr>
+        <tr><td>Cocok untuk Indonesia</td><td>Sangat cocok</td><td>Sangat cocok (pemanas air)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== WIND ===== -->
+<div class="page" id="page-wind">
+  <div class="page-title" style="color:var(--wind)">Turbin Angin</div>
+  <div class="page-desc">Turbin angin mengubah energi kinetik angin menjadi energi listrik. Daya sangat sensitif terhadap kecepatan angin (P ∝ v³). Hukum Betz menyatakan efisiensi maksimum teoritis adalah 59,3%.</div>
+  <div class="pill-row">
+    <span class="pill">Energi Kinetik</span><span class="pill">Hukum Betz (59,3%)</span><span class="pill">Koefisien Daya Cp</span><span class="pill">P ∝ v³</span>
+  </div>
+  <div class="sim-card">
+    <div class="sim-card-title">Kalkulator Daya Turbin Angin</div>
+    <div class="controls-grid">
+      <div class="ctrl"><div class="ctrl-label">Kecepatan angin (m/s) <span id="wind-speed-val">8</span></div><input type="range" class="wind" id="wind-speed" min="1" max="25" step="0.5" value="8"></div>
+      <div class="ctrl"><div class="ctrl-label">Panjang bilah (m) <span id="wind-blade-val">40</span></div><input type="range" class="wind" id="wind-blade" min="5" max="100" step="5" value="40"></div>
+      <div class="ctrl"><div class="ctrl-label">Koefisien daya Cp <span id="wind-cp-val">0.40</span></div><input type="range" class="wind" id="wind-cp" min="0.10" max="0.59" step="0.01" value="0.40"></div>
+      <div class="ctrl"><div class="ctrl-label">Densitas udara (kg/m³) <span id="wind-rho-val">1.225</span></div><input type="range" class="wind" id="wind-rho" min="0.9" max="1.3" step="0.005" value="1.225"></div>
+    </div>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-val wind-c" id="wind-power">—</div><div class="stat-label">Daya keluar (kW)</div></div>
+      <div class="stat"><div class="stat-val wind-c" id="wind-pmax">—</div><div class="stat-label">Daya angin total (kW)</div></div>
+      <div class="stat"><div class="stat-val wind-c" id="wind-eff">—</div><div class="stat-label">Efisiensi Cp (%)</div></div>
+      <div class="stat"><div class="stat-val wind-c" id="wind-daily">—</div><div class="stat-label">Energi/hari (MWh)</div></div>
+    </div>
+    <canvas class="sim-canvas" id="wind-canvas" height="150"></canvas>
+    <div class="formula">
+      <strong>P_angin = ½ × ρ × A × v³</strong> &nbsp;·&nbsp; A = π × r²<br>
+      <strong>P_turbin = Cp × P_angin</strong><br>
+      Batas Betz: Cp_maks = 16/27 ≈ 0,593 — tidak ada turbin yang bisa melampaui ini
+    </div>
+  </div>
+  <div class="sim-card">
+    <div class="sim-card-title">Grafik Daya vs Kecepatan Angin</div>
+    <canvas id="wind-chart" height="160"></canvas>
+  </div>
+</div>
+
+<!-- ===== HYDRO ===== -->
+<div class="page" id="page-hydro">
+  <div class="page-title" style="color:var(--hydro)">Pembangkit Listrik Tenaga Air</div>
+  <div class="page-desc">PLTA mengubah energi potensial air menjadi energi kinetik lalu listrik. Daya bergantung pada tinggi jatuh (head) dan debit aliran.</div>
+  <div class="pill-row">
+    <span class="pill">Ep = mgh</span><span class="pill">Debit Q (m³/s)</span><span class="pill">Head H (m)</span><span class="pill">Turbin Kaplan/Pelton</span>
+  </div>
+  <div class="sim-card">
+    <div class="sim-card-title">Simulator PLTA</div>
+    <div class="controls-grid">
+      <div class="ctrl"><div class="ctrl-label">Ketinggian efektif H (m) <span id="hydro-h-val">80</span></div><input type="range" class="hydro" id="hydro-h" min="5" max="500" step="5" value="80"></div>
+      <div class="ctrl"><div class="ctrl-label">Debit air Q (m³/s) <span id="hydro-q-val">15</span></div><input type="range" class="hydro" id="hydro-q" min="1" max="200" step="1" value="15"></div>
+      <div class="ctrl"><div class="ctrl-label">Efisiensi turbin η (%) <span id="hydro-eff-val">88</span></div><input type="range" class="hydro" id="hydro-eff" min="50" max="95" step="1" value="88"></div>
+    </div>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-val hydro-c" id="hydro-power">—</div><div class="stat-label">Daya keluar (MW)</div></div>
+      <div class="stat"><div class="stat-val hydro-c" id="hydro-pmax">—</div><div class="stat-label">Daya teoritis (MW)</div></div>
+      <div class="stat"><div class="stat-val hydro-c" id="hydro-daily">—</div><div class="stat-label">Energi harian (GWh)</div></div>
+      <div class="stat"><div class="stat-val hydro-c" id="hydro-homes">—</div><div class="stat-label">Rumah terlayani</div></div>
+    </div>
+    <canvas class="sim-canvas" id="hydro-canvas" height="160"></canvas>
+    <div class="formula">
+      <strong>P_teoritis = ρ × g × Q × H</strong> &nbsp;(ρ_air = 1000 kg/m³, g = 9,8 m/s²)<br>
+      <strong>P_keluar = η × P_teoritis</strong>
+    </div>
+  </div>
+</div>
+
+<!-- ===== GEO ===== -->
+<div class="page" id="page-geo">
+  <div class="page-title" style="color:var(--geo)">Energi Panas Bumi</div>
+  <div class="page-desc">Panas bumi memanfaatkan panas dari dalam bumi. Indonesia memiliki potensi geothermal terbesar di dunia karena posisinya di Cincin Api Pasifik.</div>
+  <div class="pill-row">
+    <span class="pill">Flash Steam</span><span class="pill">Siklus Binary</span><span class="pill">Efisiensi Carnot</span><span class="pill">Baseload</span>
+  </div>
+  <div class="sim-card">
+    <div class="sim-card-title">Kalkulator Pembangkit Geothermal</div>
+    <div class="controls-grid">
+      <div class="ctrl"><div class="ctrl-label">Suhu reservoir (°C) <span id="geo-temp-val">250</span></div><input type="range" class="geo" id="geo-temp" min="100" max="400" step="10" value="250"></div>
+      <div class="ctrl"><div class="ctrl-label">Laju alir fluida (kg/s) <span id="geo-flow-val">100</span></div><input type="range" class="geo" id="geo-flow" min="10" max="500" step="10" value="100"></div>
+      <div class="ctrl"><div class="ctrl-label">Suhu buang (°C) <span id="geo-tout-val">45</span></div><input type="range" class="geo" id="geo-tout" min="20" max="120" step="5" value="45"></div>
+      <div class="ctrl"><div class="ctrl-label">Efisiensi sistem (%) <span id="geo-eff-val">15</span></div><input type="range" class="geo" id="geo-eff" min="5" max="30" step="1" value="15"></div>
+    </div>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-val geo-c" id="geo-power">—</div><div class="stat-label">Daya listrik (MW)</div></div>
+      <div class="stat"><div class="stat-val geo-c" id="geo-carnot">—</div><div class="stat-label">Efisiensi Carnot maks (%)</div></div>
+      <div class="stat"><div class="stat-val geo-c" id="geo-annual">—</div><div class="stat-label">Energi tahunan (GWh)</div></div>
+      <div class="stat"><div class="stat-val geo-c" id="geo-co2">—</div><div class="stat-label">CO₂ dicegah (ton/thn)</div></div>
+    </div>
+    <div class="formula">
+      <strong>η_Carnot = 1 − T_buang/T_reservoir</strong> (suhu dalam Kelvin)<br>
+      <strong>Q_tersedia = ṁ × c_p × ΔT</strong> &nbsp;(c_p air ≈ 4,18 kJ/kg·K)<br>
+      <strong>P_listrik = η × Q_tersedia</strong>
+    </div>
+  </div>
+</div>
+
+<!-- ===== BIO ===== -->
+<div class="page" id="page-bio">
+  <div class="page-title" style="color:var(--bio)">Biomassa dan Biofuel</div>
+  <div class="page-desc">Biomassa adalah bahan organik yang dapat dibakar atau dikonversi menjadi biofuel. Indonesia memiliki potensi besar dari perkebunan kelapa sawit, tebu, dan limbah pertanian.</div>
+  <div class="pill-row">
+    <span class="pill">Nilai Kalor (HV)</span><span class="pill">Biogas</span><span class="pill">Bioethanol</span><span class="pill">Karbon Netral</span>
+  </div>
+  <div class="sim-card">
+    <div class="sim-card-title">Kalkulator Energi Biomassa</div>
+    <div class="controls-grid">
+      <div class="ctrl"><div class="ctrl-label">Massa biomassa (ton/hari) <span id="bio-mass-val">50</span></div><input type="range" class="bio" id="bio-mass" min="1" max="500" step="1" value="50"></div>
+      <div class="ctrl"><div class="ctrl-label">Nilai kalor (MJ/kg) <span id="bio-hv-val">15.0</span></div><input type="range" class="bio" id="bio-hv" min="5" max="30" step="0.5" value="15"></div>
+      <div class="ctrl"><div class="ctrl-label">Efisiensi konversi (%) <span id="bio-eff-val">30</span></div><input type="range" class="bio" id="bio-eff" min="10" max="60" step="1" value="30"></div>
+    </div>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-val bio-c" id="bio-energy">—</div><div class="stat-label">Energi input (GJ/hari)</div></div>
+      <div class="stat"><div class="stat-val bio-c" id="bio-power">—</div><div class="stat-label">Daya listrik (MW)</div></div>
+      <div class="stat"><div class="stat-val bio-c" id="bio-annual">—</div><div class="stat-label">Energi tahunan (GWh)</div></div>
+      <div class="stat"><div class="stat-val bio-c" id="bio-co2net">—</div><div class="stat-label">Status emisi</div></div>
+    </div>
+    <div class="formula">
+      <strong>E_input = m × HV</strong> &nbsp;·&nbsp; <strong>P_listrik = E_input × η / waktu</strong><br>
+      Biomassa dianggap karbon-netral jika ditanam ulang — CO₂ yang dilepas saat pembakaran diserap kembali oleh tanaman baru
+    </div>
+  </div>
+</div>
+
+<!-- ===== STORAGE / INTERMITTENCY ===== -->
+<div class="page" id="page-storage">
+  <div class="page-title">Penyimpanan Energi & Intermittency</div>
+  <div class="page-desc">Tantangan utama energi terbarukan seperti surya dan angin adalah sifatnya yang <em>intermiten</em> — tidak selalu tersedia saat dibutuhkan. Penyimpanan energi (energy storage) adalah solusi utama untuk mengatasi ketidakcocokan antara produksi dan konsumsi.</div>
+
+  <div class="sim-card">
+    <div class="sim-card-title">Simulator Intermittency — Produksi vs Konsumsi (24 Jam)</div>
+    <div class="controls-grid">
+      <div class="ctrl"><div class="ctrl-label">Kapasitas panel surya (kW) <span id="st-solar-val">50</span></div><input type="range" id="st-solar" min="0" max="200" step="5" value="50"></div>
+      <div class="ctrl"><div class="ctrl-label">Kapasitas turbin angin (kW) <span id="st-wind-val">30</span></div><input type="range" id="st-wind" min="0" max="200" step="5" value="30"></div>
+      <div class="ctrl"><div class="ctrl-label">Konsumsi rata-rata (kW) <span id="st-load-val">40</span></div><input type="range" id="st-load" min="10" max="200" step="5" value="40"></div>
+      <div class="ctrl"><div class="ctrl-label">Kapasitas baterai (kWh) <span id="st-bat-val">100</span></div><input type="range" id="st-bat" min="0" max="500" step="10" value="100"></div>
+    </div>
+    <div style="position:relative;height:180px;margin-top:1rem"><canvas id="storage-chart"></canvas></div>
+    <div class="stats-row" style="margin-top:1rem">
+      <div class="stat"><div class="stat-val accent-c" id="st-surplus">—</div><div class="stat-label">Surplus total (kWh)</div></div>
+      <div class="stat"><div class="stat-val" style="color:var(--geo)" id="st-deficit">—</div><div class="stat-label">Defisit total (kWh)</div></div>
+      <div class="stat"><div class="stat-val accent-c" id="st-reliability">—</div><div class="stat-label">Jam terpenuhi (dari 24)</div></div>
+      <div class="stat"><div class="stat-val accent-c" id="st-batfinal">—</div><div class="stat-label">Sisa baterai akhir (kWh)</div></div>
+    </div>
+    <div class="formula">
+      <strong>Surplus = P_produksi − P_konsumsi</strong> (jika &gt; 0 → isi baterai)<br>
+      <strong>Defisit = P_konsumsi − P_produksi</strong> (jika &gt; 0 → ambil dari baterai atau blackout)<br>
+      Intermittency: surya hanya berproduksi siang hari · angin bergantung pada kecepatan angin
+    </div>
+  </div>
+
+  <div class="sim-card">
+    <div class="sim-card-title">Perbandingan Teknologi Penyimpanan Energi</div>
+    <table class="compare-table">
+      <thead><tr><th>Teknologi</th><th>Kapasitas</th><th>Efisiensi</th><th>Durasi</th><th>Biaya</th><th>Contoh</th></tr></thead>
+      <tbody>
+        <tr><td style="color:#60a5fa;font-weight:600">Baterai Lithium-ion</td><td>kWh–MWh</td><td>90–95%</td><td>Jam</td><td>Mahal</td><td>Tesla Powerwall</td></tr>
+        <tr><td style="color:#34d399;font-weight:600">PLTA Pompa (Pumped Hydro)</td><td>GWh</td><td>70–85%</td><td>Jam–Hari</td><td>Sedang</td><td>PLTA Cirata</td></tr>
+        <tr><td style="color:#f59e0b;font-weight:600">Tangki Air Panas (Termal)</td><td>kWh–MWh</td><td>80–90%</td><td>Jam</td><td>Murah</td><td>Pemanas air surya</td></tr>
+        <tr><td style="color:#a78bfa;font-weight:600">Hidrogen (Fuel Cell)</td><td>MWh–TWh</td><td>40–60%</td><td>Hari–Musiman</td><td>Sangat mahal</td><td>Masih berkembang</td></tr>
+        <tr><td style="color:#fb923c;font-weight:600">Compressed Air (CAES)</td><td>GWh</td><td>60–70%</td><td>Jam–Hari</td><td>Sedang</td><td>McIntosh, Alabama</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== COST BENEFIT ===== -->
+<div class="page" id="page-costbenefit">
+  <div class="page-title">Analisis Biaya-Manfaat</div>
+  <div class="page-desc">Bandingkan biaya dan manfaat jangka panjang antara energi terbarukan dan pembangkit konvensional (bahan bakar fosil). Analisis ini mencakup biaya investasi awal, biaya operasi, penghematan bahan bakar, dan dampak lingkungan.</div>
+
+  <div class="sim-card">
+    <div class="sim-card-title">Kalkulator Analisis Biaya — Surya PV vs PLN/Diesel</div>
+    <div class="cb-section">
+      <h4>Parameter Sistem</h4>
+      <div class="controls-grid">
+        <div class="ctrl"><div class="ctrl-label">Kapasitas sistem (kW) <span id="cb-cap-val">10</span></div><input type="range" id="cb-cap" min="1" max="100" step="1" value="10"></div>
+        <div class="ctrl"><div class="ctrl-label">Produksi harian (kWh/kW) <span id="cb-gen-val">4.5</span></div><input type="range" id="cb-gen" min="2" max="7" step="0.1" value="4.5"></div>
+        <div class="ctrl"><div class="ctrl-label">Umur sistem (tahun) <span id="cb-life-val">25</span></div><input type="range" id="cb-life" min="5" max="30" step="1" value="25"></div>
+      </div>
+    </div>
+    <div class="cb-section">
+      <h4>Biaya Energi Terbarukan</h4>
+      <div class="controls-grid">
+        <div class="ctrl"><div class="ctrl-label">Biaya instalasi (Rp juta/kW) <span id="cb-capex-val">15</span></div><input type="range" id="cb-capex" min="5" max="40" step="1" value="15"></div>
+        <div class="ctrl"><div class="ctrl-label">Biaya O&M tahunan (Rp juta) <span id="cb-om-val">2</span></div><input type="range" id="cb-om" min="0" max="20" step="0.5" value="2"></div>
+      </div>
+    </div>
+    <div class="cb-section">
+      <h4>Biaya Konvensional (Pembanding)</h4>
+      <div class="controls-grid">
+        <div class="ctrl"><div class="ctrl-label">Tarif listrik (Rp/kWh) <span id="cb-tariff-val">1500</span></div><input type="range" id="cb-tariff" min="500" max="5000" step="100" value="1500"></div>
+        <div class="ctrl"><div class="ctrl-label">Kenaikan tarif per tahun (%) <span id="cb-escalate-val">5</span></div><input type="range" id="cb-escalate" min="0" max="15" step="0.5" value="5"></div>
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-val solar-c" id="cb-investasi">—</div><div class="stat-label">Total investasi (Rp juta)</div></div>
+      <div class="stat"><div class="stat-val accent-c" id="cb-penghematan">—</div><div class="stat-label">Penghematan total (Rp juta)</div></div>
+      <div class="stat"><div class="stat-val accent-c" id="cb-roi">—</div><div class="stat-label">ROI bersih (Rp juta)</div></div>
+      <div class="stat"><div class="stat-val accent-c" id="cb-payback">—</div><div class="stat-label">Payback period (tahun)</div></div>
+      <div class="stat"><div class="stat-val accent-c" id="cb-lcoe">—</div><div class="stat-label">LCOE (Rp/kWh)</div></div>
+      <div class="stat"><div class="stat-val" style="color:var(--hydro)" id="cb-co2total">—</div><div class="stat-label">CO₂ dicegah (ton)</div></div>
+    </div>
+    <div style="position:relative;height:180px;margin-top:1rem"><canvas id="cb-chart"></canvas></div>
+    <div class="formula">
+      <strong>LCOE = (Investasi + Total O&M) / Total Energi Diproduksi</strong><br>
+      <strong>Penghematan = Σ (Energi × Tarif_tahun_ke-t)</strong> dengan eskalasi tarif tiap tahun<br>
+      <strong>Payback = Investasi / Penghematan rata-rata per tahun</strong><br>
+      LCOE = Levelized Cost of Energy (biaya rata-rata per kWh selama umur sistem)
+    </div>
+  </div>
+
+  <div class="sim-card">
+    <div class="sim-card-title">Tantangan Pengembangan Energi Terbarukan</div>
+    <table class="compare-table">
+      <thead><tr><th>Tantangan</th><th>Penjelasan</th><th>Solusi yang Dikembangkan</th></tr></thead>
+      <tbody>
+        <tr><td style="color:var(--geo);font-weight:600">Biaya Awal Tinggi</td><td>Investasi instalasi besar meski O&M rendah</td><td>Subsidi, green bond, skema ESCO</td></tr>
+        <tr><td style="color:var(--solar);font-weight:600">Intermittency</td><td>Surya & angin tidak berproduksi terus-menerus</td><td>Baterai, PLTA pompa, grid pintar</td></tr>
+        <tr><td style="color:var(--wind);font-weight:600">Penyimpanan Mahal</td><td>Baterai skala besar masih sangat mahal</td><td>Litium, vanadium flow battery, hidrogen</td></tr>
+        <tr><td style="color:var(--bio);font-weight:600">Infrastruktur Grid</td><td>Jaringan listrik belum siap untuk EBT skala besar</td><td>Smart grid, interkoneksi antarpulau</td></tr>
+        <tr><td style="color:var(--thermal);font-weight:600">Keterbatasan Lahan</td><td>Panel surya & turbin angin butuh lahan luas</td><td>PLTS atap, floating solar, offshore wind</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== COMPARE ===== -->
+<div class="page" id="page-compare">
+  <div class="page-title">Perbandingan Sumber Energi Terbarukan</div>
+  <div class="page-desc">Bandingkan karakteristik efisiensi, keandalan, biaya, dan dampak lingkungan dari semua jenis energi terbarukan.</div>
+  <div class="sim-card">
+    <div class="sim-card-title">Grafik Perbandingan Efisiensi & Kapasitas Faktor</div>
+    <div style="position:relative;height:180px"><canvas id="compare-chart"></canvas></div>
+  </div>
+  <div class="sim-card">
+    <div class="sim-card-title">Tabel Karakteristik Lengkap</div>
+    <table class="compare-table">
+      <thead><tr><th>Sumber</th><th>Efisiensi</th><th>Kapasitas Faktor</th><th>Keandalan</th><th>Emisi CO₂</th><th>Potensi Indonesia</th></tr></thead>
+      <tbody>
+        <tr><td style="color:var(--solar);font-weight:600">Surya PV</td><td>15–22%</td><td>18–25%</td><td>Tergantung cuaca</td><td>~20 gCO₂/kWh</td><td>2.900 TWh/thn</td></tr>
+        <tr><td style="color:var(--thermal);font-weight:600">Surya Termal</td><td>50–70%</td><td>25–40%</td><td>Tergantung cuaca</td><td>~15 gCO₂/kWh</td><td>Sangat besar</td></tr>
+        <tr><td style="color:var(--wind);font-weight:600">Angin</td><td>35–45%</td><td>25–40%</td><td>Tergantung cuaca</td><td>~7 gCO₂/kWh</td><td>~60 GW</td></tr>
+        <tr><td style="color:var(--hydro);font-weight:600">Air (PLTA)</td><td>85–95%</td><td>40–60%</td><td>Sangat andal</td><td>~4 gCO₂/kWh</td><td>75 GW</td></tr>
+        <tr><td style="color:var(--geo);font-weight:600">Panas Bumi</td><td>10–23%</td><td>80–95%</td><td>Baseload andal</td><td>~38 gCO₂/kWh</td><td>~29 GW (#1 dunia)</td></tr>
+        <tr><td style="color:var(--bio);font-weight:600">Biomassa</td><td>20–35%</td><td>70–90%</td><td>Andal (tersimpan)</td><td>~0 neto</td><td>32 GW</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="sim-card">
+    <div class="sim-card-title">Kalkulator Bauran Energi</div>
+    <div class="controls-grid">
+      <div class="ctrl"><div class="ctrl-label">Surya PV (%) <span id="mix-solar-val">20</span></div><input type="range" class="solar" id="mix-solar" min="0" max="100" step="5" value="20"></div>
+      <div class="ctrl"><div class="ctrl-label">Angin (%) <span id="mix-wind-val">15</span></div><input type="range" class="wind" id="mix-wind" min="0" max="100" step="5" value="15"></div>
+      <div class="ctrl"><div class="ctrl-label">Air PLTA (%) <span id="mix-hydro-val">30</span></div><input type="range" class="hydro" id="mix-hydro" min="0" max="100" step="5" value="30"></div>
+      <div class="ctrl"><div class="ctrl-label">Panas Bumi (%) <span id="mix-geo-val">20</span></div><input type="range" class="geo" id="mix-geo" min="0" max="100" step="5" value="20"></div>
+      <div class="ctrl"><div class="ctrl-label">Biomassa (%) <span id="mix-bio-val">15</span></div><input type="range" class="bio" id="mix-bio" min="0" max="100" step="5" value="15"></div>
+    </div>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-val accent-c" id="mix-total">100%</div><div class="stat-label">Total bauran</div></div>
+      <div class="stat"><div class="stat-val accent-c" id="mix-cf">—</div><div class="stat-label">Kapasitas faktor rata-rata</div></div>
+      <div class="stat"><div class="stat-val accent-c" id="mix-co2">—</div><div class="stat-label">Emisi rata-rata (gCO₂/kWh)</div></div>
+      <div class="stat"><div class="stat-val accent-c" id="mix-status">—</div><div class="stat-label">Status</div></div>
+    </div>
+    <div style="position:relative;height:160px;margin-top:1rem"><canvas id="mix-chart"></canvas></div>
+  </div>
+</div>
+
+<!-- ===== INDONESIA ===== -->
+<div class="page" id="page-indonesia">
+  <div class="page-title">Potensi Energi Terbarukan Indonesia</div>
+  <div class="page-desc">Indonesia memiliki potensi energi terbarukan terbesar di Asia Tenggara — ~442 GW total potensi teknis. Namun baru ~13% bauran energi nasional berasal dari sumber terbarukan (2023).</div>
+  <div class="sim-card">
+    <div class="sim-card-title">Potensi Per Wilayah</div>
+    <div class="region-grid">
+      <div class="region-card"><div class="region-name">Sumatera</div><div class="region-tags"><span class="rtag" style="background:rgba(245,158,11,0.15);color:var(--solar)">Surya</span><span class="rtag" style="background:rgba(248,113,113,0.15);color:var(--geo)">Geothermal</span><span class="rtag" style="background:rgba(167,139,250,0.15);color:var(--bio)">Biomassa</span></div><p style="font-size:12px;color:var(--muted);margin-top:8px">Sarulla & Bukit Daun (geothermal). Biomassa kelapa sawit & karet terbesar.</p></div>
+      <div class="region-card"><div class="region-name">Jawa</div><div class="region-tags"><span class="rtag" style="background:rgba(245,158,11,0.15);color:var(--solar)">Surya</span><span class="rtag" style="background:rgba(248,113,113,0.15);color:var(--geo)">Geothermal</span><span class="rtag" style="background:rgba(167,139,250,0.15);color:var(--bio)">Biomassa</span></div><p style="font-size:12px;color:var(--muted);margin-top:8px">Kamojang & Darajat (geothermal). Biogas dari limbah gula & singkong.</p></div>
+      <div class="region-card"><div class="region-name">Kalimantan</div><div class="region-tags"><span class="rtag" style="background:rgba(52,211,153,0.15);color:var(--hydro)">PLTA</span><span class="rtag" style="background:rgba(167,139,250,0.15);color:var(--bio)">Biomassa</span><span class="rtag" style="background:rgba(245,158,11,0.15);color:var(--solar)">Surya</span></div><p style="font-size:12px;color:var(--muted);margin-top:8px">Sungai Mahakam & Kapuas → PLTA besar. Hutan tropis = potensi biomassa.</p></div>
+      <div class="region-card"><div class="region-name">Sulawesi</div><div class="region-tags"><span class="rtag" style="background:rgba(248,113,113,0.15);color:var(--geo)">Geothermal</span><span class="rtag" style="background:rgba(52,211,153,0.15);color:var(--hydro)">PLTA</span></div><p style="font-size:12px;color:var(--muted);margin-top:8px">Lahendong (geothermal). PLTA Poso & Bakaru dari Sungai Larona.</p></div>
+      <div class="region-card"><div class="region-name">NTT & NTB</div><div class="region-tags"><span class="rtag" style="background:rgba(56,189,248,0.15);color:var(--wind)">Angin</span><span class="rtag" style="background:rgba(245,158,11,0.15);color:var(--solar)">Surya</span></div><p style="font-size:12px;color:var(--muted);margin-top:8px">Kecepatan angin tertinggi di Indonesia. PLTB Sidrap 75 MW & Jeneponto.</p></div>
+      <div class="region-card"><div class="region-name">Papua</div><div class="region-tags"><span class="rtag" style="background:rgba(52,211,153,0.15);color:var(--hydro)">PLTA</span><span class="rtag" style="background:rgba(245,158,11,0.15);color:var(--solar)">Surya</span></div><p style="font-size:12px;color:var(--muted);margin-top:8px">Potensi PLTA terbesar — Sungai Mamberamo ≈ 24 GW teoritis.</p></div>
+    </div>
+  </div>
+  <div class="sim-card">
+    <div class="sim-card-title">Potensi vs Kapasitas Terpasang (GW) — Skala Logaritmik</div>
+    <div style="position:relative;height:180px"><canvas id="indonesia-chart"></canvas></div>
+  </div>
+  <div class="sim-card">
+    <div class="sim-card-title">Fakta Kunci Indonesia</div>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-val accent-c">~442 GW</div><div class="stat-label">Total potensi teknis EBT</div></div>
+      <div class="stat"><div class="stat-val accent-c">~13%</div><div class="stat-label">Bauran EBT nasional (2023)</div></div>
+      <div class="stat"><div class="stat-val accent-c">23%</div><div class="stat-label">Target bauran EBT 2025</div></div>
+      <div class="stat"><div class="stat-val accent-c">#1</div><div class="stat-label">Potensi geothermal terbesar di dunia</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== UTILITIES =====
+function g(id){return parseFloat(document.getElementById(id).value)}
+function s(id,v){const el=document.getElementById(id);if(el)el.textContent=v}
+
+function showTab(name){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  event.target.classList.add('active');
+  if(name==='compare'&&!mixChartInstance) buildMixChart();
+}
+
+// ===== CHAIN =====
+const CHAINS={
+  solar:{color:'#f59e0b',steps:[{icon:'☀️',label:'Energi Foton\n(Cahaya Matahari)',sub:'Sumber'},{icon:'⚡',label:'Efek Fotolistrik\n(Sel Silikon)',sub:'Konversi 1'},{icon:'🔋',label:'Arus DC\n(Listrik Searah)',sub:'Output sel'},{icon:'🔄',label:'Inverter\n(DC → AC)',sub:'Konversi 2'},{icon:'🏠',label:'Listrik AC\n(Siap pakai)',sub:'Output akhir'}],desc:'Panel surya menggunakan efek fotolistrik: foton cahaya menabrak elektron di semikonduktor silikon, membebaskannya dan menciptakan arus listrik DC. Inverter kemudian mengubah DC menjadi AC untuk digunakan rumah tangga.'},
+  thermal:{color:'#fb923c',steps:[{icon:'☀️',label:'Energi Radiasi\n(Cahaya Matahari)',sub:'Sumber'},{icon:'🔆',label:'Kolektor\n(Absorpsi Panas)',sub:'Konversi 1'},{icon:'💧',label:'Fluida Panas\n(Air/Oli)',sub:'Medium'},{icon:'🌡️',label:'Kalor Tersimpan\n(Tangki air panas)',sub:'Penyimpanan'},{icon:'🚿',label:'Panas Terpakai\n(Air panas/uap)',sub:'Output akhir'}],desc:'Kolektor surya termal menyerap radiasi matahari dan mengubahnya menjadi panas pada fluida. Berbeda dengan PV, energi disimpan sebagai panas pada tangki air — lebih murah dan efisiensi termal lebih tinggi (50–70%).'},
+  wind:{color:'#38bdf8',steps:[{icon:'💨',label:'Energi Kinetik\n(Angin)',sub:'Sumber'},{icon:'🌀',label:'Bilah Berputar\n(Rotor)',sub:'Konversi 1'},{icon:'⚙️',label:'Gearbox\n(Percepat rotasi)',sub:'Transmisi'},{icon:'🔌',label:'Generator\n(Rotasi → Listrik)',sub:'Konversi 2'},{icon:'🏭',label:'Listrik AC\n(Ke jaringan)',sub:'Output akhir'}],desc:'Angin mendorong bilah turbin, mengubah energi kinetik menjadi energi mekanik rotasi. Gearbox meningkatkan kecepatan putar untuk generator. Daya berbanding lurus dengan pangkat tiga kecepatan angin (P ∝ v³).'},
+  hydro:{color:'#34d399',steps:[{icon:'🏔️',label:'Energi Potensial\n(Air di ketinggian)',sub:'Sumber'},{icon:'⬇️',label:'Jatuh Bebas\n(Penstock)',sub:'Konversi 1'},{icon:'💧',label:'Energi Kinetik\n(Air berkecepatan)',sub:'Medium'},{icon:'⚙️',label:'Turbin Air\n(Francis/Kaplan)',sub:'Konversi 2'},{icon:'⚡',label:'Generator\n(→ Listrik)',sub:'Output akhir'}],desc:'Air di ketinggian memiliki energi potensial (Ep = mgh). Saat mengalir ke bawah melalui penstock, Ep berubah menjadi energi kinetik, lalu memutar turbin dan generator. Efisiensi tertinggi di antara semua EBT (85–95%).'},
+  geo:{color:'#f87171',steps:[{icon:'🌋',label:'Panas Bumi\n(Magma/Batuan panas)',sub:'Sumber'},{icon:'💧',label:'Fluida Geothermal\n(Air/Uap bertekanan)',sub:'Medium'},{icon:'🌡️',label:'Uap Bertekanan\n(Flash/Dry steam)',sub:'Konversi 1'},{icon:'⚙️',label:'Turbin Uap\n(Rotasi)',sub:'Konversi 2'},{icon:'⚡',label:'Generator\n(→ Listrik)',sub:'Output akhir'}],desc:'Panas dari perut bumi (magma) memanaskan air tanah hingga menjadi uap bertekanan tinggi. Uap ini dialirkan ke turbin uap untuk menghasilkan listrik. Bersifat baseload — beroperasi 24/7 tanpa bergantung cuaca.'},
+  bio:{color:'#a78bfa',steps:[{icon:'🌿',label:'Biomassa\n(Bahan organik)',sub:'Sumber'},{icon:'🔥',label:'Pembakaran\n(Kalor)',sub:'Konversi 1'},{icon:'💨',label:'Uap Panas\n(Steam boiler)',sub:'Medium'},{icon:'⚙️',label:'Turbin Uap\n(Rotasi)',sub:'Konversi 2'},{icon:'⚡',label:'Generator\n(→ Listrik)',sub:'Output akhir'}],desc:'Biomassa dibakar untuk menghasilkan panas yang mengubah air menjadi uap. Uap bertekanan memutar turbin dan generator. Dianggap karbon-netral karena CO₂ yang dilepas saat pembakaran akan diserap kembali oleh tanaman baru.'},
+};
+
+let chainAnimFrame=null, chainStep=0;
+function setChain(type){
+  const ch=CHAINS[type];
+  document.querySelectorAll('[id^=chain-btn-]').forEach(b=>b.style.borderColor='');
+  document.getElementById('chain-btn-'+type).style.borderColor=ch.color;
+  document.getElementById('chain-desc').textContent=ch.desc;
+  cancelAnimationFrame(chainAnimFrame);
+  chainStep=0;
+  drawChain(type,0);
+  let step=0;
+  function animate(){
+    step++;
+    if(step<=ch.steps.length){drawChain(type,step);chainAnimFrame=setTimeout(()=>requestAnimationFrame(animate),600);}
+  }
+  setTimeout(()=>requestAnimationFrame(animate),300);
+}
+
+function drawChain(type,activeUpTo){
+  const cv=document.getElementById('chain-canvas');
+  const dpr=window.devicePixelRatio||1;
+  const displayW=cv.offsetWidth||800;
+  const displayH=220;
+  cv.width=displayW*dpr; cv.height=displayH*dpr;
+  cv.style.height=displayH+'px';
+  const ctx=cv.getContext('2d');
+  ctx.scale(dpr,dpr);
+  const W=displayW, H=displayH;
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#111827'; ctx.fillRect(0,0,W,H);
+
+  const ch=CHAINS[type];
+  const n=ch.steps.length;
+  const gap=32;
+  const nodeW=Math.min(130, Math.floor((W - gap*(n-1) - 32) / n));
+  const nodeH=150;
+  const totalW=n*nodeW+(n-1)*gap;
+  const startX=Math.floor((W-totalW)/2);
+  const startY=Math.floor((H-nodeH)/2);
+
+  ch.steps.forEach((step,i)=>{
+    const x=startX+i*(nodeW+gap);
+    const y=startY;
+    const isActive=i<activeUpTo;
+    const midY=y+nodeH/2;
+
+    // connector line
+    if(i<n-1){
+      const lx1=x+nodeW, lx2=x+nodeW+gap;
+      ctx.strokeStyle=isActive?ch.color:'rgba(255,255,255,0.12)';
+      ctx.lineWidth=isActive?2.5:1;
+      ctx.setLineDash(isActive?[]:[5,4]);
+      ctx.beginPath();ctx.moveTo(lx1,midY);ctx.lineTo(lx2,midY);ctx.stroke();
+      ctx.setLineDash([]);
+      // arrowhead
+      ctx.fillStyle=isActive?ch.color:'rgba(255,255,255,0.12)';
+      ctx.beginPath();
+      ctx.moveTo(lx2,midY);
+      ctx.lineTo(lx2-9,midY-5);
+      ctx.lineTo(lx2-9,midY+5);
+      ctx.closePath();ctx.fill();
+    }
+
+    // node box
+    const rx=x,ry=y,rw=nodeW,rh=nodeH,r=10;
+    ctx.fillStyle=isActive?`${ch.color}20`:'rgba(26,34,53,0.9)';
+    ctx.strokeStyle=isActive?ch.color:'rgba(255,255,255,0.1)';
+    ctx.lineWidth=isActive?2:1;
+    ctx.beginPath();
+    ctx.moveTo(rx+r,ry);ctx.lineTo(rx+rw-r,ry);ctx.arcTo(rx+rw,ry,rx+rw,ry+r,r);
+    ctx.lineTo(rx+rw,ry+rh-r);ctx.arcTo(rx+rw,ry+rh,rx+rw-r,ry+rh,r);
+    ctx.lineTo(rx+r,ry+rh);ctx.arcTo(rx,ry+rh,rx,ry+rh-r,r);
+    ctx.lineTo(rx,ry+r);ctx.arcTo(rx,ry,rx+r,ry,r);
+    ctx.closePath();ctx.fill();ctx.stroke();
+
+    // icon — use text fallback at fixed size
+    ctx.font='22px serif';
+    ctx.textAlign='center';
+    ctx.textBaseline='middle';
+    ctx.fillText(step.icon, x+nodeW/2, y+32);
+
+    // label lines
+    ctx.textBaseline='alphabetic';
+    ctx.fillStyle=isActive?'#e8edf5':'#94a3b8';
+    ctx.font=`600 11px Inter,system-ui,sans-serif`;
+    const lines=step.label.split('\n');
+    lines.forEach((l,li)=>{
+      ctx.fillText(l, x+nodeW/2, y+56+li*16);
+    });
+
+    // sub badge
+    const badgeY=y+nodeH-18;
+    ctx.fillStyle=isActive?ch.color:'#475569';
+    ctx.font=`600 10px Inter,system-ui,sans-serif`;
+    ctx.fillText(step.sub, x+nodeW/2, badgeY);
+  });
+}
+
+// chain efficiency calc
+function chainEffCalc(){
+  const e1=g('chain-e1')/100,e2=g('chain-e2')/100,e3=g('chain-e3')/100,ein=g('chain-ein');
+  s('chain-e1-val',g('chain-e1'));s('chain-e2-val',g('chain-e2'));s('chain-e3-val',g('chain-e3'));s('chain-ein-val',g('chain-ein'));
+  const etot=e1*e2*e3*100;
+  const eout=ein*(etot/100);
+  s('chain-etotal',etot.toFixed(1)+'%');
+  s('chain-eout',eout.toFixed(1));
+  s('chain-eloss',(ein-eout).toFixed(1));
+}
+['chain-e1','chain-e2','chain-e3','chain-ein'].forEach(id=>document.getElementById(id).addEventListener('input',chainEffCalc));
+
+// ===== SOLAR PV =====
+function solarCalc(){
+  const A=g('solar-area'),irr=g('solar-irr'),ang=g('solar-angle'),T=g('solar-temp'),eff0=g('solar-eff')/100;
+  s('solar-area-val',A.toFixed(1));s('solar-irr-val',irr);s('solar-angle-val',ang);s('solar-temp-val',T);s('solar-eff-val',g('solar-eff'));
+  const effA=eff0*(1-0.005*(T-25));
+  const P=A*irr*Math.cos(ang*Math.PI/180)*effA;
+  s('solar-power',P.toFixed(1));s('solar-eff-actual',(effA*100).toFixed(2));
+  s('solar-daily',(P*8/1000).toFixed(2));s('solar-co2',(P*8/1000*0.82).toFixed(2));
+  const pct=Math.min(100,(effA/0.3)*100);
+  document.getElementById('solar-bar').style.width=pct.toFixed(1)+'%';
+  s('solar-bar-pct',(effA*100).toFixed(2)+'%');
+  solarDraw(P,A,irr,ang);
+}
+function solarDraw(P,A,irr,ang){
+  const cv=document.getElementById('solar-canvas');
+  const ctx=cv.getContext('2d');
+  const W=cv.offsetWidth||600;cv.width=W;cv.height=190;
+  ctx.fillStyle='#1a2235';ctx.fillRect(0,0,W,190);
+  const sunX=W*.12,sunY=45;
+  for(let i=0;i<8;i++){const a=i/8*Math.PI*2;ctx.strokeStyle='rgba(245,158,11,0.3)';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(sunX+Math.cos(a)*22,sunY+Math.sin(a)*22);ctx.lineTo(sunX+Math.cos(a)*36,sunY+Math.sin(a)*36);ctx.stroke();}
+  ctx.fillStyle='#f59e0b';ctx.beginPath();ctx.arc(sunX,sunY,18,0,Math.PI*2);ctx.fill();
+  const px=W*.48,py=100,pw=110,ph=55,rad=(ang-90)*Math.PI/180;
+  ctx.save();ctx.translate(px,py);ctx.rotate(rad);
+  ctx.fillStyle='#1e3a5f';ctx.fillRect(-pw/2,-ph/2,pw,ph);
+  ctx.strokeStyle='#38bdf8';ctx.lineWidth=1;
+  for(let i=1;i<4;i++){ctx.beginPath();ctx.moveTo(-pw/2+i*pw/4,-ph/2);ctx.lineTo(-pw/2+i*pw/4,ph/2);ctx.stroke();}
+  ctx.strokeStyle='#60a5fa';ctx.lineWidth=2;ctx.strokeRect(-pw/2,-ph/2,pw,ph);ctx.restore();
+  ctx.strokeStyle='rgba(245,158,11,0.4)';ctx.lineWidth=1.5;ctx.setLineDash([4,4]);
+  ctx.beginPath();ctx.moveTo(sunX+18,sunY);ctx.lineTo(px,py);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='#7a8ba0';ctx.font='11px monospace';
+  ctx.fillText('P = '+P.toFixed(1)+' W',W*.68,55);ctx.fillText('I = '+irr+' W/m²',W*.68,72);ctx.fillText('θ = '+ang+'°',W*.68,89);ctx.fillText('η = '+(g('solar-eff-actual')||'—')+'%',W*.68,106);
+  ctx.strokeStyle='rgba(255,255,255,0.08)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,165);ctx.lineTo(W,165);ctx.stroke();
+  ctx.fillStyle='rgba(255,255,255,0.04)';ctx.fillRect(0,165,W,25);
+}
+['solar-area','solar-irr','solar-angle','solar-temp','solar-eff'].forEach(id=>document.getElementById(id).addEventListener('input',solarCalc));
+
+// ===== SOLAR THERMAL =====
+function thermalCalc(){
+  const A=g('th-area'),irr=g('th-irr'),eff=g('th-eff')/100,Tin=g('th-tin'),vol=g('th-vol'),dur=g('th-dur');
+  s('th-area-val',A.toFixed(1));s('th-irr-val',irr);s('th-eff-val',g('th-eff'));s('th-tin-val',Tin);s('th-vol-val',vol);s('th-dur-val',dur.toFixed(1));
+  const P=A*irr*eff;
+  const Qtotal=P*dur*3600/1000;
+  const mass=vol*1;
+  const dT=Qtotal/(mass*4.186);
+  const Tout=Math.min(100,Tin+dT);
+  const saving=P*dur/1000;
+  s('th-power',P.toFixed(1));s('th-qtotal',Qtotal.toFixed(1));s('th-tout',Tout.toFixed(1));s('th-saving',saving.toFixed(2));
+  thermalDraw(P,Tin,Tout,dur);
+}
+function thermalDraw(P,Tin,Tout,dur){
+  const cv=document.getElementById('thermal-canvas');
+  const ctx=cv.getContext('2d');
+  const W=cv.offsetWidth||600;cv.width=W;cv.height=200;
+  ctx.fillStyle='#1a2235';ctx.fillRect(0,0,W,200);
+  const sunX=W*.1,sunY=50;
+  for(let i=0;i<8;i++){const a=i/8*Math.PI*2;ctx.strokeStyle='rgba(251,146,60,0.3)';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(sunX+Math.cos(a)*20,sunY+Math.sin(a)*20);ctx.lineTo(sunX+Math.cos(a)*33,sunY+Math.sin(a)*33);ctx.stroke();}
+  ctx.fillStyle='#fb923c';ctx.beginPath();ctx.arc(sunX,sunY,18,0,Math.PI*2);ctx.fill();
+  const cx=W*.38,cy=90,cw=90,ch=50;
+  ctx.fillStyle='#7c2d12';ctx.fillRect(cx,cy,cw,ch);
+  ctx.fillStyle='#fed7aa';ctx.fillRect(cx+4,cy+4,cw-8,14);
+  ctx.strokeStyle='#fb923c';ctx.lineWidth=2;ctx.strokeRect(cx,cy,cw,ch);
+  ctx.fillStyle='#7a8ba0';ctx.font='10px monospace';ctx.textAlign='center';ctx.fillText('Kolektor Termal',cx+cw/2,cy-6);
+  ctx.strokeStyle='rgba(251,146,60,0.5)';ctx.lineWidth=1.5;ctx.setLineDash([4,4]);
+  ctx.beginPath();ctx.moveTo(sunX+18,sunY);ctx.lineTo(cx,cy+20);ctx.stroke();ctx.setLineDash([]);
+  const tx=W*.68,ty=65,tr=38;
+  const tempRatio=Math.min(1,(Tout-Tin)/80);
+  const grad=ctx.createRadialGradient(tx,ty+tr*.3,tr*.1,tx,ty+tr*.5,tr);
+  grad.addColorStop(0,`rgba(251,146,60,${0.3+tempRatio*0.5})`);
+  grad.addColorStop(1,'rgba(26,34,53,0.8)');
+  ctx.fillStyle=grad;ctx.beginPath();ctx.ellipse(tx,ty+tr*.6,tr,tr*1.3,0,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle='#fb923c';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(tx,ty+tr*.6,tr,tr*1.3,0,0,Math.PI*2);ctx.stroke();
+  ctx.fillStyle='#fb923c';ctx.font='600 12px monospace';ctx.textAlign='center';
+  ctx.fillText(Tout.toFixed(0)+'°C',tx,ty+tr*.6);
+  ctx.fillStyle='#7a8ba0';ctx.font='10px monospace';ctx.fillText('Tangki Air',tx,ty+tr*2.4);
+  ctx.strokeStyle='rgba(251,146,60,0.4)';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(cx+cw,cy+ch/2);ctx.bezierCurveTo(cx+cw+20,cy+ch/2,tx-20,ty+tr,tx-tr,ty+tr*.6);ctx.stroke();
+  ctx.textAlign='left';
+  ctx.fillStyle='#7a8ba0';ctx.font='11px monospace';
+  ctx.fillText('P = '+P.toFixed(0)+' W',W*.05,170);
+  ctx.fillText('T_in = '+Tin+'°C → T_out = '+Tout.toFixed(1)+'°C',W*.05,185);
+}
+['th-area','th-irr','th-eff','th-tin','th-vol','th-dur'].forEach(id=>document.getElementById(id).addEventListener('input',thermalCalc));
+
+// ===== WIND =====
+let windAnimRunning=false;
+function windCalc(){
+  const v=g('wind-speed'),r=g('wind-blade'),Cp=g('wind-cp'),rho=g('wind-rho');
+  s('wind-speed-val',v.toFixed(1));s('wind-blade-val',r);s('wind-cp-val',Cp.toFixed(2));s('wind-rho-val',rho.toFixed(3));
+  const A=Math.PI*r*r,Pmax=.5*rho*A*Math.pow(v,3),P=Cp*Pmax;
+  s('wind-power',(P/1000).toFixed(1));s('wind-pmax',(Pmax/1000).toFixed(1));s('wind-eff',(Cp*100).toFixed(1));s('wind-daily',(P*24/1e9).toFixed(3));
+}
+function windAnimLoop(){
+  const v=g('wind-speed'),r=g('wind-blade'),Cp=g('wind-cp');
+  const A=Math.PI*r*r,Pmax=.5*1.225*A*Math.pow(v,3),P=Cp*Pmax;
+  const cv=document.getElementById('wind-canvas');
+  const ctx=cv.getContext('2d');
+  const W=cv.offsetWidth||600;if(cv.width!==W){cv.width=W;cv.height=200;}
+  ctx.fillStyle='#1a2235';ctx.fillRect(0,0,W,200);
+  ctx.fillStyle='rgba(52,211,153,0.06)';ctx.fillRect(0,162,W,38);
+  ctx.strokeStyle='rgba(52,211,153,0.25)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,162);ctx.lineTo(W,162);ctx.stroke();
+  const tx=W*.42,ty=162;
+  ctx.strokeStyle='rgba(255,255,255,0.55)';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(tx,ty);ctx.lineTo(tx,58);ctx.stroke();
+  const bladeLen=Math.min(52,r*.85);
+  const now=Date.now()*.0015*(v/8);
+  for(let i=0;i<3;i++){const a=now+i*2*Math.PI/3;ctx.strokeStyle='#38bdf8';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(tx,58);ctx.lineTo(tx+Math.cos(a)*bladeLen,58+Math.sin(a)*bladeLen);ctx.stroke();}
+  ctx.fillStyle='#7a8ba0';ctx.beginPath();ctx.arc(tx,58,5,0,Math.PI*2);ctx.fill();
+  for(let i=0;i<4;i++){const wy=48+i*33,wx=25+(v/25)*55;ctx.strokeStyle='rgba(56,189,248,0.35)';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(28,wy);ctx.lineTo(28+wx,wy);ctx.stroke();ctx.fillStyle='rgba(56,189,248,0.35)';ctx.beginPath();ctx.moveTo(28+wx,wy);ctx.lineTo(28+wx-7,wy-3);ctx.lineTo(28+wx-7,wy+3);ctx.closePath();ctx.fill();}
+  ctx.fillStyle='#7a8ba0';ctx.font='11px monospace';
+  ctx.fillText('v = '+v.toFixed(1)+' m/s',W*.62,68);ctx.fillText('P = '+(P/1000).toFixed(1)+' kW',W*.62,85);ctx.fillText('r = '+r+' m',W*.62,102);ctx.fillText('Cp = '+Cp.toFixed(2),W*.62,119);
+  requestAnimationFrame(windAnimLoop);
+}
+['wind-speed','wind-blade','wind-cp','wind-rho'].forEach(id=>document.getElementById(id).addEventListener('input',windCalc));
+
+// ===== HYDRO =====
+function hydroCalc(){
+  const H=g('hydro-h'),Q=g('hydro-q'),eff=g('hydro-eff')/100;
+  s('hydro-h-val',H);s('hydro-q-val',Q);s('hydro-eff-val',g('hydro-eff'));
+  const Pmax=1000*9.8*Q*H,P=eff*Pmax;
+  s('hydro-power',(P/1e6).toFixed(2));s('hydro-pmax',(Pmax/1e6).toFixed(2));s('hydro-daily',(P*24/1e12).toFixed(4));s('hydro-homes',Math.round(P/900).toLocaleString('id-ID'));
+  hydroDraw(H,Q,P/1e6);
+}
+function hydroDraw(H,Q,PMW){
+  const cv=document.getElementById('hydro-canvas');const ctx=cv.getContext('2d');
+  const W=cv.offsetWidth||600;cv.width=W;cv.height=220;
+  ctx.fillStyle='#1a2235';ctx.fillRect(0,0,W,220);
+  const hS=Math.min(130,H*.45),damX=W*.42;
+  ctx.fillStyle='rgba(52,211,153,0.12)';ctx.fillRect(18,38,damX-36,hS);
+  ctx.strokeStyle='rgba(52,211,153,0.4)';ctx.lineWidth=1;ctx.strokeRect(18,38,damX-36,hS);
+  ctx.fillStyle='#7a8ba0';ctx.font='10px monospace';ctx.textAlign='left';ctx.fillText('Reservoir',24,32);ctx.fillText('H='+H+'m',24,52);ctx.fillText('Q='+Q+'m³/s',24,65);
+  ctx.fillStyle='#4a5568';ctx.fillRect(damX-8,38,15,hS+55);
+  ctx.strokeStyle='rgba(255,255,255,0.25)';ctx.lineWidth=1.5;ctx.strokeRect(damX-8,38,15,hS+55);
+  ctx.strokeStyle='#34d399';ctx.lineWidth=2.5;ctx.setLineDash([6,4]);
+  ctx.beginPath();ctx.moveTo(damX+7,38+hS+18);ctx.bezierCurveTo(damX+38,38+hS+28,damX+58,175,W-28,185);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='#38bdf8';ctx.beginPath();ctx.arc(damX+78,162,14,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#1a2235';ctx.font='bold 8px monospace';ctx.textAlign='center';ctx.fillText('T',damX+78,166);
+  ctx.strokeStyle='#f59e0b';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(damX+78,148);ctx.lineTo(damX+78,118);ctx.lineTo(W-46,118);ctx.stroke();
+  ctx.fillStyle='#f59e0b';ctx.textAlign='left';ctx.font='11px monospace';ctx.fillText('⚡ '+PMW.toFixed(2)+' MW',W-135,113);
+  ctx.textAlign='left';
+}
+['hydro-h','hydro-q','hydro-eff'].forEach(id=>document.getElementById(id).addEventListener('input',hydroCalc));
+
+// ===== GEO =====
+function geoCalc(){
+  const Tres=g('geo-temp'),flow=g('geo-flow'),Tout=g('geo-tout'),eff=g('geo-eff')/100;
+  s('geo-temp-val',Tres);s('geo-flow-val',flow);s('geo-tout-val',Tout);s('geo-eff-val',g('geo-eff'));
+  const TresK=Tres+273,ToutK=Tout+273;
+  const carnot=(1-ToutK/TresK)*100;
+  const Qavail=flow*4.18*(Tres-Tout);
+  const P=eff*Qavail;
+  s('geo-power',(P/1000).toFixed(2));s('geo-carnot',carnot.toFixed(1));s('geo-annual',(P*8760/1000).toFixed(1));s('geo-co2',(P*8760/1000*0.7).toFixed(0));
+}
+['geo-temp','geo-flow','geo-tout','geo-eff'].forEach(id=>document.getElementById(id).addEventListener('input',geoCalc));
+
+// ===== BIO =====
+function bioCalc(){
+  const mass=g('bio-mass'),hv=g('bio-hv'),eff=g('bio-eff')/100;
+  s('bio-mass-val',mass);s('bio-hv-val',hv.toFixed(1));s('bio-eff-val',g('bio-eff'));
+  const Einput=mass*1000*hv/1000;
+  const P=eff*mass*1000*hv/86400;
+  const annual=P*8760/1e6;
+  s('bio-energy',Einput.toFixed(1));s('bio-power',(P/1000).toFixed(2));s('bio-annual',annual.toFixed(2));
+  s('bio-co2net','~0 neto jika replanting');
+}
+['bio-mass','bio-hv','bio-eff'].forEach(id=>document.getElementById(id).addEventListener('input',bioCalc));
+
+// ===== STORAGE =====
+let storageChartInstance=null;
+function storageCalc(){
+  const sCap=g('st-solar'),wCap=g('st-wind'),load=g('st-load'),batCap=g('st-bat');
+  s('st-solar-val',sCap);s('st-wind-val',wCap);s('st-load-val',load);s('st-bat-val',batCap);
+
+  const solarProfile=[0,0,0,0,0,0.1,0.3,0.6,0.85,1,1,1,0.95,0.9,0.85,0.75,0.5,0.25,0.05,0,0,0,0,0];
+  const windProfile=[0.5,0.55,0.6,0.65,0.7,0.65,0.5,0.4,0.35,0.3,0.3,0.35,0.4,0.4,0.45,0.5,0.6,0.7,0.75,0.8,0.75,0.7,0.65,0.55];
+  const loadProfile=[0.6,0.55,0.5,0.5,0.55,0.65,0.8,0.9,0.85,0.8,0.8,0.85,0.9,0.85,0.8,0.85,1,1,0.95,0.85,0.8,0.75,0.7,0.65];
+
+  const labels=[],prodData=[],loadData=[],batData=[],surplusData=[],deficitData=[];
+  let bat=batCap*0.5,surplus=0,deficit=0,metHours=0;
+
+  for(let h=0;h<24;h++){
+    const prod=(sCap*solarProfile[h])+(wCap*windProfile[h]);
+    const cons=load*loadProfile[h];
+    const net=prod-cons;
+    if(net>0){bat=Math.min(batCap,bat+net);surplus+=net;}
+    else{const need=-net;if(bat>=need){bat-=need;metHours++;}else{deficit+=(need-bat);bat=0;if(bat>=0)metHours+=bat/need;}}
+    if(net>=0)metHours=metHours;
+    labels.push(h+':00');prodData.push(prod.toFixed(1));loadData.push(cons.toFixed(1));batData.push(bat.toFixed(1));
+  }
+  s('st-surplus',surplus.toFixed(1));s('st-deficit',deficit.toFixed(1));
+  const metH=Math.round((24-Math.ceil(deficit/(load||1)))); 
+  s('st-reliability',Math.min(24,metH).toString());
+  s('st-batfinal',bat.toFixed(1));
+
+  if(storageChartInstance)storageChartInstance.destroy();
+  storageChartInstance=new Chart(document.getElementById('storage-chart'),{
+    type:'line',
+    data:{labels,datasets:[
+      {label:'Produksi (kW)',data:prodData,borderColor:'#22c55e',backgroundColor:'rgba(34,197,94,0.08)',fill:true,borderWidth:2,pointRadius:2,tension:.4},
+      {label:'Konsumsi (kW)',data:loadData,borderColor:'#f87171',backgroundColor:'rgba(248,113,113,0.08)',fill:true,borderWidth:2,pointRadius:2,tension:.4},
+      {label:'Baterai (kWh)',data:batData,borderColor:'#f59e0b',backgroundColor:'transparent',borderWidth:1.5,pointRadius:1,tension:.4,borderDash:[4,3]},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#7a8ba0',font:{size:11}}}},scales:{x:{ticks:{color:'#7a8ba0',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'}},y:{ticks:{color:'#7a8ba0',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'}}}}
+  });
+}
+['st-solar','st-wind','st-load','st-bat'].forEach(id=>document.getElementById(id).addEventListener('input',storageCalc));
+
+// ===== COST BENEFIT =====
+let cbChartInstance=null;
+function cbCalc(){
+  const cap=g('cb-cap'),gen=g('cb-gen'),life=g('cb-life'),capex=g('cb-capex'),om=g('cb-om'),tariff=g('cb-tariff'),esc=g('cb-escalate')/100;
+  s('cb-cap-val',cap);s('cb-gen-val',gen.toFixed(1));s('cb-life-val',life);s('cb-capex-val',capex);s('cb-om-val',om.toFixed(1));s('cb-tariff-val',tariff);s('cb-escalate-val',g('cb-escalate'));
+  const invest=cap*capex;
+  const totalOM=om*life;
+  const dailyKwh=cap*gen;
+  const annualKwh=dailyKwh*365;
+  let totalSaving=0;
+  const yearLabels=[],savingCumul=[],costCumul=[];
+  let cumSaving=0,cumCost=invest;
+  let payback=null;
+  for(let y=1;y<=life;y++){
+    const tariffY=tariff*Math.pow(1+esc,y-1);
+    const saving=annualKwh*tariffY/1e6;
+    cumSaving+=saving;cumCost+=om;
+    totalSaving+=saving;
+    yearLabels.push('Th '+y);
+    savingCumul.push(cumSaving.toFixed(1));
+    costCumul.push(cumCost.toFixed(1));
+    if(!payback&&cumSaving>=invest)payback=y;
+  }
+  const roi=totalSaving-invest-totalOM;
+  const totalEnergy=annualKwh*life;
+  const lcoe=(invest+totalOM)*1e6/totalEnergy;
+  s('cb-investasi',invest.toFixed(0));s('cb-penghematan',totalSaving.toFixed(1));s('cb-roi',roi.toFixed(1));
+  s('cb-payback',payback?payback.toFixed(0)+'thn':'> '+life+' thn');
+  s('cb-lcoe',lcoe.toFixed(0));s('cb-co2total',(annualKwh*life*0.82/1000).toFixed(0));
+  if(cbChartInstance)cbChartInstance.destroy();
+  cbChartInstance=new Chart(document.getElementById('cb-chart'),{
+    type:'line',
+    data:{labels:yearLabels,datasets:[
+      {label:'Kumulatif penghematan (Rp juta)',data:savingCumul,borderColor:'#22c55e',backgroundColor:'rgba(34,197,94,0.08)',fill:true,borderWidth:2,pointRadius:1,tension:.3},
+      {label:'Kumulatif biaya (Rp juta)',data:costCumul,borderColor:'#f87171',backgroundColor:'rgba(248,113,113,0.06)',fill:true,borderWidth:2,pointRadius:1,tension:.3},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#7a8ba0',font:{size:11}}},annotation:{}},scales:{x:{ticks:{color:'#7a8ba0',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'}},y:{ticks:{color:'#7a8ba0',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'},title:{display:true,text:'Rp Juta',color:'#7a8ba0',font:{size:10}}}}}
+  });
+}
+['cb-cap','cb-gen','cb-life','cb-capex','cb-om','cb-tariff','cb-escalate'].forEach(id=>document.getElementById(id).addEventListener('input',cbCalc));
+
+// ===== COMPARE =====
+function buildCompareChart(){
+  new Chart(document.getElementById('compare-chart'),{
+    type:'bar',
+    data:{labels:['Surya PV','Surya Termal','Angin','PLTA','Geothermal','Biomassa'],
+    datasets:[
+      {label:'Efisiensi tipikal (%)',data:[18,60,40,90,15,28],backgroundColor:['rgba(245,158,11,.7)','rgba(251,146,60,.7)','rgba(56,189,248,.7)','rgba(52,211,153,.7)','rgba(248,113,113,.7)','rgba(167,139,250,.7)'],borderRadius:4},
+      {label:'Kapasitas faktor (%)',data:[22,30,32,50,87,80],backgroundColor:['rgba(245,158,11,.25)','rgba(251,146,60,.25)','rgba(56,189,248,.25)','rgba(52,211,153,.25)','rgba(248,113,113,.25)','rgba(167,139,250,.25)'],borderRadius:4},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#7a8ba0',font:{size:11}}}},scales:{x:{ticks:{color:'#7a8ba0',font:{size:11}},grid:{color:'rgba(255,255,255,0.04)'}},y:{max:100,ticks:{color:'#7a8ba0',font:{size:11}},grid:{color:'rgba(255,255,255,0.04)'}}}}
+  });
+}
+
+let mixChartInstance=null;
+function buildMixChart(){
+  const solar=g('mix-solar'),wind=g('mix-wind'),hydro=g('mix-hydro'),geo=g('mix-geo'),bio=g('mix-bio');
+  s('mix-solar-val',solar);s('mix-wind-val',wind);s('mix-hydro-val',hydro);s('mix-geo-val',geo);s('mix-bio-val',bio);
+  const total=solar+wind+hydro+geo+bio;
+  s('mix-total',total+'%');
+  if(total>0){
+    const cf=(solar*.22+wind*.32+hydro*.5+geo*.87+bio*.8)/total;
+    const co2=(solar*20+wind*7+hydro*4+geo*38+bio*10)/total;
+    s('mix-cf',(cf*100).toFixed(1)+'%');s('mix-co2',co2.toFixed(1));
+  }
+  s('mix-status',total===100?'✓ Valid':total<100?'Kurang '+(100-total)+'%':'Lebih '+(total-100)+'%');
+  if(mixChartInstance)mixChartInstance.destroy();
+  mixChartInstance=new Chart(document.getElementById('mix-chart'),{
+    type:'doughnut',
+    data:{labels:['Surya PV','Angin','Air','Panas Bumi','Biomassa'],
+    datasets:[{data:[solar,wind,hydro,geo,bio],backgroundColor:['rgba(245,158,11,.8)','rgba(56,189,248,.8)','rgba(52,211,153,.8)','rgba(248,113,113,.8)','rgba(167,139,250,.8)'],borderWidth:0}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#7a8ba0',font:{size:11}}}}}
+  });
+}
+['mix-solar','mix-wind','mix-hydro','mix-geo','mix-bio'].forEach(id=>document.getElementById(id).addEventListener('input',buildMixChart));
+
+// ===== INDONESIA =====
+function buildIndonesiaChart(){
+  new Chart(document.getElementById('indonesia-chart'),{
+    type:'bar',
+    data:{labels:['Surya','Angin','PLTA','Geothermal','Biomassa'],
+    datasets:[
+      {label:'Potensi teknis (GW)',data:[2900,60,75,29,32],backgroundColor:'rgba(34,197,94,0.28)',borderRadius:4},
+      {label:'Terpasang 2023 (GW)',data:[0.8,0.1,6.3,2.3,1.9],backgroundColor:'rgba(34,197,94,0.8)',borderRadius:4},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{labels:{color:'#7a8ba0',font:{size:11}}}},
+    scales:{x:{type:'logarithmic',ticks:{color:'#7a8ba0',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'},title:{display:true,text:'GW (skala logaritmik)',color:'#7a8ba0',font:{size:10}}},y:{ticks:{color:'#7a8ba0',font:{size:11}},grid:{color:'rgba(255,255,255,0.04)'}}}}
+  });
+}
+
+// ===== WIND CHART =====
+function buildWindChart(){
+  const r=40,Cp=.40,rho=1.225,A=Math.PI*r*r;
+  const labels=[],data=[];
+  for(let v=0;v<=25;v++){labels.push(v);data.push(((Cp*.5*rho*A*Math.pow(v,3))/1000).toFixed(1));}
+  new Chart(document.getElementById('wind-chart'),{type:'line',data:{labels,datasets:[{label:'Daya (kW)',data,borderColor:'#38bdf8',backgroundColor:'rgba(56,189,248,0.08)',fill:true,borderWidth:2,pointRadius:1,tension:.4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#7a8ba0',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'},title:{display:true,text:'Kecepatan angin (m/s)',color:'#7a8ba0',font:{size:10}}},y:{ticks:{color:'#7a8ba0',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'},title:{display:true,text:'Daya (kW)',color:'#7a8ba0',font:{size:10}}}}}});
+}
+
+// ===== SOLAR ANGLE CHART =====
+function buildSolarAngleChart(){
+  const labels=[],data=[];
+  for(let a=0;a<=90;a+=5){labels.push(a+'°');data.push((2*800*Math.cos(a*Math.PI/180)*.20).toFixed(1));}
+  new Chart(document.getElementById('solar-angle-chart'),{type:'line',data:{labels,datasets:[{label:'Daya (W)',data,borderColor:'#f59e0b',backgroundColor:'rgba(245,158,11,0.08)',fill:true,borderWidth:2,pointRadius:3,tension:.4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#7a8ba0',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'},title:{display:true,text:'Sudut panel (°)',color:'#7a8ba0',font:{size:10}}},y:{ticks:{color:'#7a8ba0',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'},title:{display:true,text:'Daya (W)',color:'#7a8ba0',font:{size:10}}}}}});
+}
+
+// ===== INIT =====
+window.addEventListener('load',()=>{
+  chainEffCalc();
+  setChain('solar');
+  solarCalc();
+  thermalCalc();
+  windCalc();
+  windAnimLoop();
+  hydroCalc();
+  geoCalc();
+  bioCalc();
+  storageCalc();
+  cbCalc();
+  buildCompareChart();
+  buildIndonesiaChart();
+  buildWindChart();
+  buildSolarAngleChart();
+  setTimeout(buildMixChart,100);
+});
+</script>
+</body>
+</html>
