@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 11: Gelombang Mekanik — SMA Kelas 10</title>
+<style>
+:root {
+  --bg:      #f7f6f3;
+  --bg2:     #ffffff;
+  --bg3:     #eeecea;
+  --text:    #1a1916;
+  --text2:   #6b6860;
+  --text3:   #9e9b95;
+  --border:  rgba(0,0,0,0.09);
+  --border2: rgba(0,0,0,0.16);
+  --accent:  #1755c4;
+  --accent2: #0e3d8a;
+  --green:   #1a7a4a;
+  --amber:   #a05c00;
+  --red:     #b02020;
+  --purple:  #6535c0;
+  --r:       10px;
+  --rs:      6px;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#181816; --bg2:#222220; --bg3:#2c2c29;
+  --text:#e8e5de; --text2:#9e9b93; --text3:#6a6760;
+  --border:rgba(255,255,255,0.08); --border2:rgba(255,255,255,0.15);
+  --accent:#5588e8; --accent2:#7aaaf0;
+  --green:#4ab870; --amber:#d49020; --red:#e05050; --purple:#9a70e8;
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+
+/* Header */
+header{background:var(--bg2);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50}
+.logo{width:34px;height:34px;background:var(--accent);border-radius:8px;display:grid;place-items:center;color:#fff;font-size:17px;flex-shrink:0}
+header h1{font-size:15px;font-weight:600}
+header p{font-size:12px;color:var(--text2)}
+
+/* Nav */
+nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 20px;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+.nt{padding:10px 14px;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;border-radius:6px 6px 0 0;border:1px solid transparent;border-bottom:none;white-space:nowrap;background:none;transition:.15s}
+.nt:hover{color:var(--text);background:var(--bg3)}
+.nt.active{color:var(--accent);background:var(--bg2);border-color:var(--border);margin-bottom:-1px}
+
+/* Layout */
+main{padding:18px 20px;max-width:960px;margin:0 auto}
+.sec{display:none}.sec.active{display:block}
+.sec-title{font-size:17px;font-weight:600;margin-bottom:3px}
+.sec-desc{font-size:13px;color:var(--text2);margin-bottom:16px}
+
+/* Cards */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.card-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:620px){.two{grid-template-columns:1fr}}
+
+/* Formula */
+.fm{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:7px 12px;font-family:'Courier New',monospace;font-size:12px;color:var(--accent);margin:5px 0;line-height:1.6}
+
+/* Controls */
+.cr{display:flex;align-items:center;gap:8px;margin:7px 0}
+.cr label{font-size:12px;color:var(--text2);min-width:170px;flex-shrink:0}
+.cr input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
+.cv{font-size:13px;font-weight:600;min-width:56px;text-align:right;font-variant-numeric:tabular-nums}
+.cr select{padding:4px 8px;border:1px solid var(--border2);border-radius:var(--rs);background:var(--bg);color:var(--text);font-size:13px;cursor:pointer}
+
+/* Pills */
+.pills{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.pill{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 12px;text-align:center;min-width:100px}
+.pill .pl{font-size:10px;color:var(--text3);margin-bottom:2px;text-transform:uppercase;letter-spacing:.04em}
+.pill .pv{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums}
+
+/* Canvas */
+canvas{display:block;border-radius:var(--rs);background:var(--bg3);max-width:100%}
+
+/* Callout */
+.co{border-radius:var(--rs);padding:9px 13px;font-size:13px;margin:8px 0;line-height:1.6}
+.co-blue{background:#e8f0fb;color:#1a4fa0} .co-green{background:#e4f4ec;color:#1a6040}
+.co-amber{background:#fdf0d8;color:#7a4400} .co-red{background:#fce8e8;color:#901818}
+.co-purple{background:#eeebfb;color:#4a28a0}
+@media(prefers-color-scheme:dark){
+  .co-blue{background:#162340;color:#7aaaf0} .co-green{background:#0e2e1c;color:#4ab870}
+  .co-amber{background:#2e2000;color:#d49020} .co-red{background:#2e1010;color:#e05050}
+  .co-purple{background:#201840;color:#9a70e8}
+}
+
+/* Sub tabs */
+.stabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.st{padding:5px 14px;border-radius:999px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--border2);background:var(--bg);color:var(--text2);transition:.15s}
+.st.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* Radio */
+.rg{display:flex;gap:16px;flex-wrap:wrap;margin:8px 0}
+.rg label{display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer}
+
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;padding:6px 8px;border-bottom:1px solid var(--border);text-align:left;font-weight:600}
+td{padding:7px 8px;border-bottom:1px solid var(--border)}
+tr:last-child td{border-bottom:none}
+td:nth-child(2){font-family:monospace;color:var(--accent)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">〰</div>
+  <div>
+    <h1>Unit 11: Gelombang Mekanik</h1>
+    <p>SMA Kelas 10 · Kurikulum Merdeka</p>
+  </div>
+</header>
+
+<nav>
+  <div class="nt active" onclick="showSec('gelombang',this)">Generator Gelombang</div>
+  <div class="nt" onclick="showSec('interferensi',this)">Interferensi</div>
+  <div class="nt" onclick="showSec('stasioner',this)">Gelombang Stasioner</div>
+  <div class="nt" onclick="showSec('pipa',this)">Pipa Resonansi</div>
+  <div class="nt" onclick="showSec('doppler',this)">Efek Doppler</div>
+  <div class="nt" onclick="showSec('intensitas',this)">Intensitas Bunyi</div>
+</nav>
+
+<main>
+
+<!-- ═══════════════════════════════════
+     1. GENERATOR GELOMBANG
+═══════════════════════════════════ -->
+<div class="sec active" id="s-gelombang">
+  <div class="sec-title">Generator Gelombang</div>
+  <div class="sec-desc">Gelombang transversal vs longitudinal. Persamaan gelombang: y = A sin(ωt − kx)</div>
+
+  <div class="card">
+    <div class="card-title">Jenis Gelombang</div>
+    <div class="rg">
+      <label><input type="radio" name="wtype" value="transversal" checked onchange="resetWave()"> Transversal (getaran ⊥ arah rambat)</label>
+      <label><input type="radio" name="wtype" value="longitudinal" onchange="resetWave()"> Longitudinal (getaran ∥ arah rambat)</label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Parameter Gelombang</div>
+    <div class="two">
+      <div>
+        <div class="cr"><label>Amplitudo A (cm)</label><input type="range" id="wA" min="1" max="5" value="3" step="0.5" oninput="updateWave()"><span class="cv" id="wAv">3</span></div>
+        <div class="cr"><label>Frekuensi f (Hz)</label><input type="range" id="wf" min="0.5" max="4" value="1" step="0.5" oninput="updateWave()"><span class="cv" id="wfv">1</span></div>
+        <div class="cr"><label>Panjang gelombang λ (m)</label><input type="range" id="wlam" min="1" max="8" value="4" step="0.5" oninput="updateWave()"><span class="cv" id="wlamv">4</span></div>
+      </div>
+      <div class="pills" id="wave-pills"></div>
+    </div>
+    <canvas id="wave-c" height="150" style="margin-top:10px"></canvas>
+    <div style="margin-top:10px" id="wave-eq"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Persamaan &amp; Sifat Gelombang</div>
+    <div class="two">
+      <div>
+        <div class="fm">y = A sin(ωt − kx)  [gelombang maju +x]</div>
+        <div class="fm">y = A sin(ωt + kx)  [gelombang maju −x]</div>
+        <div class="fm">v = λ · f = λ/T</div>
+        <div class="fm">ω = 2πf = 2π/T</div>
+        <div class="fm">k = 2π/λ  (bilangan gelombang)</div>
+      </div>
+      <div>
+        <table>
+          <tr><th>Besaran</th><th>Rumus</th><th>Satuan</th></tr>
+          <tr><td>Amplitudo A</td><td>—</td><td>m / cm</td></tr>
+          <tr><td>Periode T</td><td>T = 1/f</td><td>sekon</td></tr>
+          <tr><td>Frekuensi f</td><td>f = 1/T</td><td>Hz</td></tr>
+          <tr><td>Cepat rambat v</td><td>v = λf</td><td>m/s</td></tr>
+          <tr><td>ω (ang. frek)</td><td>ω = 2πf</td><td>rad/s</td></tr>
+          <tr><td>k (bil. gelombang)</td><td>k = 2π/λ</td><td>rad/m</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     2. INTERFERENSI
+═══════════════════════════════════ -->
+<div class="sec" id="s-interferensi">
+  <div class="sec-title">Interferensi Dua Gelombang</div>
+  <div class="sec-desc">Prinsip superposisi: dua gelombang yang bertemu mengalami penambahan aljabar simpangan.</div>
+
+  <div class="card">
+    <div class="card-title">Pengaturan Gelombang</div>
+    <div class="two">
+      <div>
+        <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px">Gelombang 1 (biru)</div>
+        <div class="cr"><label>A₁ (cm)</label><input type="range" id="iA1" min="1" max="5" value="3" step="0.5" oninput="drawInterf()"><span class="cv" id="iA1v">3</span></div>
+        <div class="cr"><label>f₁ (Hz)</label><input type="range" id="if1" min="0.5" max="4" value="1" step="0.5" oninput="drawInterf()"><span class="cv" id="if1v">1</span></div>
+        <div class="cr"><label>φ₁ fase (°)</label><input type="range" id="ip1" min="0" max="360" value="0" step="10" oninput="drawInterf()"><span class="cv" id="ip1v">0°</span></div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px">Gelombang 2 (merah)</div>
+        <div class="cr"><label>A₂ (cm)</label><input type="range" id="iA2" min="1" max="5" value="3" step="0.5" oninput="drawInterf()"><span class="cv" id="iA2v">3</span></div>
+        <div class="cr"><label>f₂ (Hz)</label><input type="range" id="if2" min="0.5" max="4" value="1" step="0.5" oninput="drawInterf()"><span class="cv" id="if2v">1</span></div>
+        <div class="cr"><label>φ₂ fase (°)</label><input type="range" id="ip2" min="0" max="360" value="180" step="10" oninput="drawInterf()"><span class="cv" id="ip2v">180°</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Diagram Superposisi</div>
+    <canvas id="interf-c" height="220"></canvas>
+    <div style="margin-top:10px;display:flex;gap:16px;flex-wrap:wrap;align-items:center">
+      <span style="font-size:12px"><span style="color:#3b8bd4">■</span> Gelombang 1</span>
+      <span style="font-size:12px"><span style="color:#d04030">■</span> Gelombang 2</span>
+      <span style="font-size:12px"><span style="color:#1d9e75">■</span> Resultan (superposisi)</span>
+    </div>
+    <div id="interf-result" style="margin-top:10px"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Syarat Interferensi</div>
+    <div class="two">
+      <div class="co co-green">
+        <strong>Konstruktif (penguat):</strong><br>
+        Beda fase Δφ = 0°, 360°, 720°… (kelipatan 2π)<br>
+        Beda lintasan Δx = 0, λ, 2λ…<br>
+        <strong>A_hasil = A₁ + A₂</strong>
+      </div>
+      <div class="co co-red">
+        <strong>Destruktif (pelemah):</strong><br>
+        Beda fase Δφ = 180°, 540°… (kelipatan π ganjil)<br>
+        Beda lintasan Δx = ½λ, 3/2λ…<br>
+        <strong>A_hasil = |A₁ − A₂|</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     3. GELOMBANG STASIONER
+═══════════════════════════════════ -->
+<div class="sec" id="s-stasioner">
+  <div class="sec-title">Gelombang Stasioner (Berdiri)</div>
+  <div class="sec-desc">Dua gelombang identik berlawanan arah → simpul (node) dan perut (antinode) tetap di posisi sama.</div>
+
+  <div class="card">
+    <div class="card-title">Senar dengan Kedua Ujung Terikat</div>
+    <div class="fm">λₙ = 2L/n &nbsp;|&nbsp; fₙ = nv/2L &nbsp;(n = 1,2,3…)</div>
+    <div class="two" style="margin-top:10px">
+      <div>
+        <div class="cr"><label>Panjang senar L (m)</label><input type="range" id="sL" min="0.5" max="3" value="1" step="0.1" oninput="drawStanding()"><span class="cv" id="sLv">1.0 m</span></div>
+        <div class="cr"><label>Cepat rambat v (m/s)</label><input type="range" id="sv" min="50" max="400" value="200" step="10" oninput="drawStanding()"><span class="cv" id="svv">200 m/s</span></div>
+        <div class="cr"><label>Harmonik ke-n</label>
+          <select id="sn" onchange="drawStanding()">
+            <option value="1">n = 1 (nada dasar)</option>
+            <option value="2">n = 2 (harmonik ke-2)</option>
+            <option value="3">n = 3 (harmonik ke-3)</option>
+            <option value="4">n = 4 (harmonik ke-4)</option>
+            <option value="5">n = 5 (harmonik ke-5)</option>
+          </select>
+        </div>
+      </div>
+      <div class="pills" id="stand-pills"></div>
+    </div>
+    <canvas id="stand-c" height="180" style="margin-top:10px"></canvas>
+    <div id="stand-info" style="margin-top:10px"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Semua Harmonik Sekaligus</div>
+    <canvas id="harmonik-c" height="240"></canvas>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     4. PIPA RESONANSI
+═══════════════════════════════════ -->
+<div class="sec" id="s-pipa">
+  <div class="sec-title">Pipa Organa (Resonansi)</div>
+  <div class="sec-desc">Kolom udara dalam pipa menghasilkan gelombang stasioner bunyi.</div>
+
+  <div class="card">
+    <div class="card-title">Jenis Pipa</div>
+    <div class="rg">
+      <label><input type="radio" name="pipetype" value="terbuka" checked onchange="drawPipe()"> Pipa Terbuka (kedua ujung terbuka)</label>
+      <label><input type="radio" name="pipetype" value="tertutup" onchange="drawPipe()"> Pipa Tertutup (satu ujung tertutup)</label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Simulator Pipa Resonansi</div>
+    <div class="two">
+      <div>
+        <div class="cr"><label>Panjang pipa L (m)</label><input type="range" id="pL" min="0.1" max="2" value="0.5" step="0.05" oninput="drawPipe()"><span class="cv" id="pLv">0.50 m</span></div>
+        <div class="cr"><label>Cepat rambat bunyi v (m/s)</label><input type="range" id="pv" min="300" max="380" value="340" step="5" oninput="drawPipe()"><span class="cv" id="pvv">340 m/s</span></div>
+        <div class="cr"><label>Harmonik ke-n</label>
+          <select id="pn" onchange="drawPipe()">
+            <option value="1">n = 1 (nada dasar)</option>
+            <option value="2">n = 2</option>
+            <option value="3">n = 3</option>
+            <option value="4">n = 4</option>
+            <option value="5">n = 5</option>
+          </select>
+        </div>
+      </div>
+      <div class="pills" id="pipe-pills"></div>
+    </div>
+    <canvas id="pipe-c" height="200" style="margin-top:10px"></canvas>
+    <div id="pipe-info" style="margin-top:10px"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Perbandingan Pipa Terbuka vs Tertutup</div>
+    <div class="two">
+      <div>
+        <div class="fm">Pipa terbuka: fₙ = nv/2L (n=1,2,3,4…)</div>
+        <div class="co co-blue" style="margin-top:8px">Semua harmonik (ganjil & genap) ada.<br>Perut di kedua ujung.</div>
+      </div>
+      <div>
+        <div class="fm">Pipa tertutup: fₙ = nv/4L (n=1,3,5…)</div>
+        <div class="co co-amber" style="margin-top:8px">Hanya harmonik ganjil.<br>Simpul di ujung tertutup, perut di ujung terbuka.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     5. EFEK DOPPLER
+═══════════════════════════════════ -->
+<div class="sec" id="s-doppler">
+  <div class="sec-title">Efek Doppler</div>
+  <div class="sec-desc">Perubahan frekuensi yang didengar pengamat akibat gerak relatif sumber atau pengamat.</div>
+
+  <div class="card">
+    <div class="card-title">Kalkulator Efek Doppler</div>
+    <div class="fm">f' = f × (v ± vₒ) / (v ∓ vₛ)</div>
+    <div class="co co-blue" style="margin-bottom:12px">
+      Tanda atas: pengamat mendekati (+vₒ) / sumber mendekati (−vₛ) → f' naik<br>
+      Tanda bawah: pengamat menjauh (−vₒ) / sumber menjauh (+vₛ) → f' turun
+    </div>
+    <div class="two">
+      <div>
+        <div class="cr"><label>Frekuensi sumber f (Hz)</label><input type="range" id="df" min="100" max="2000" value="440" step="10" oninput="updateDoppler()"><span class="cv" id="dfv">440</span></div>
+        <div class="cr"><label>Kec. bunyi v (m/s)</label><input type="range" id="dv" min="300" max="380" value="340" step="5" oninput="updateDoppler()"><span class="cv" id="dvv">340</span></div>
+        <div class="cr"><label>Kec. sumber vₛ (m/s)</label><input type="range" id="dvs" min="0" max="100" value="0" oninput="updateDoppler()"><span class="cv" id="dvsv">0</span></div>
+        <div class="cr"><label>Kec. pengamat vₒ (m/s)</label><input type="range" id="dvo" min="0" max="100" value="0" oninput="updateDoppler()"><span class="cv" id="dvov">0</span></div>
+        <div class="rg" style="margin-top:8px">
+          <label><input type="radio" name="ddir" value="mendekati" checked onchange="updateDoppler()"> Saling mendekati</label>
+          <label><input type="radio" name="ddir" value="menjauh" onchange="updateDoppler()"> Saling menjauh</label>
+        </div>
+      </div>
+      <div>
+        <div class="pills" id="dopp-pills"></div>
+        <div id="dopp-eq" style="margin-top:10px"></div>
+      </div>
+    </div>
+    <canvas id="dopp-c" height="160" style="margin-top:14px"></canvas>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Contoh Nyata Efek Doppler</div>
+    <table>
+      <tr><th>Situasi</th><th>vₛ (m/s)</th><th>Efek</th></tr>
+      <tr><td>Mobil ambulans mendekat (60 km/h)</td><td>16.7</td><td>f' naik ~5%</td></tr>
+      <tr><td>Kereta cepat (200 km/h)</td><td>55.6</td><td>f' naik ~20%</td></tr>
+      <tr><td>Pesawat tempur (Mach 0.8)</td><td>272</td><td>f' naik ~5×</td></tr>
+      <tr><td>Radar kecepatan (pengamat diam)</td><td>—</td><td>Digunakan polisi lalu lintas</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     6. INTENSITAS BUNYI
+═══════════════════════════════════ -->
+<div class="sec" id="s-intensitas">
+  <div class="sec-title">Intensitas &amp; Taraf Intensitas Bunyi</div>
+  <div class="sec-desc">Intensitas bunyi berkurang kuadratik dengan jarak. Taraf intensitas diukur dalam desibel (dB).</div>
+
+  <div class="card">
+    <div class="card-title">Kalkulator Intensitas</div>
+    <div class="two">
+      <div>
+        <div class="fm">I = P / (4πr²) &nbsp;[sumber titik]</div>
+        <div class="fm">L = 10 log(I / I₀) &nbsp;dB &nbsp;[I₀ = 10⁻¹² W/m²]</div>
+        <div class="fm">L₂ = L₁ − 20 log(r₂/r₁)</div>
+        <div class="cr" style="margin-top:12px"><label>Daya sumber P (W)</label><input type="range" id="iP" min="0.001" max="100" value="1" step="0.1" oninput="updateIntensity()"><span class="cv" id="iPv">1.0 W</span></div>
+        <div class="cr"><label>Jarak r (m)</label><input type="range" id="ir" min="1" max="100" value="10" oninput="updateIntensity()"><span class="cv" id="irv">10 m</span></div>
+      </div>
+      <div>
+        <div class="pills" id="int-pills"></div>
+        <div id="int-info" style="margin-top:10px"></div>
+      </div>
+    </div>
+    <canvas id="int-c" height="160" style="margin-top:14px"></canvas>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Referensi Taraf Intensitas Bunyi</div>
+    <table>
+      <tr><th>Sumber Bunyi</th><th>L (dB)</th><th>I (W/m²)</th></tr>
+      <tr><td>Ambang dengar</td><td>0</td><td>10⁻¹²</td></tr>
+      <tr><td>Bisikan halus</td><td>20</td><td>10⁻¹⁰</td></tr>
+      <tr><td>Percakapan normal</td><td>60</td><td>10⁻⁶</td></tr>
+      <tr><td>Lalu lintas ramai</td><td>80</td><td>10⁻⁴</td></tr>
+      <tr><td>Konser musik rock</td><td>110</td><td>10⁻¹</td></tr>
+      <tr><td>Pesawat jet (dekat)</td><td>130</td><td>10</td></tr>
+      <tr><td>Ambang nyeri</td><td>140</td><td>10²</td></tr>
+    </table>
+  </div>
+</div>
+
+</main>
+
+<script>
+/* ══════════════════════════════════════
+   NAVIGATION
+══════════════════════════════════════ */
+function showSec(id, el) {
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nt').forEach(t => t.classList.remove('active'));
+  document.getElementById('s-' + id).classList.add('active');
+  el.classList.add('active');
+  requestAnimationFrame(() => requestAnimationFrame(() => redrawActive()));
+}
+
+function redrawActive() {
+  const id = document.querySelector('.sec.active')?.id;
+  if (id === 's-gelombang')    { updateWave(); }
+  if (id === 's-interferensi') { drawInterf(); }
+  if (id === 's-stasioner')    { drawStanding(); drawAllHarmonics(); }
+  if (id === 's-pipa')         { drawPipe(); }
+  if (id === 's-doppler')      { updateDoppler(); }
+  if (id === 's-intensitas')   { updateIntensity(); }
+}
+
+/* ══════════════════════════════════════
+   HELPERS
+══════════════════════════════════════ */
+function getCanvas(id, h) {
+  const cv = document.getElementById(id);
+  const W = cv.offsetWidth || cv.parentElement?.offsetWidth || 500;
+  const dpr = window.devicePixelRatio || 1;
+  if (cv.width !== Math.round(W*dpr) || cv.height !== Math.round(h*dpr)) {
+    cv.width  = Math.round(W * dpr);
+    cv.height = Math.round(h * dpr);
+  }
+  cv.style.width  = W + 'px';
+  cv.style.height = h + 'px';
+  const ctx = cv.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return { W, H: h, ctx };
+}
+const dark = () => matchMedia('(prefers-color-scheme:dark)').matches;
+const tc   = () => dark() ? '#c8c5bc' : '#2a2a28';
+const gc   = () => dark() ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)';
+
+function drawGrid(ctx, W, H, nx=10, ny=4) {
+  ctx.strokeStyle = gc(); ctx.lineWidth = 0.5;
+  for (let i=0;i<=nx;i++) { const x=i/nx*W; ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke(); }
+  for (let i=0;i<=ny;i++) { const y=i/ny*H; ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke(); }
+}
+
+function drawAxis(ctx, W, cy, col) {
+  ctx.strokeStyle = col || (dark()?'#444':'#ccc'); ctx.lineWidth = 1; ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(W, cy); ctx.stroke();
+}
+
+function arrowHead(ctx, x, y, angle, size, col) {
+  ctx.fillStyle = col; ctx.strokeStyle = col;
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+  ctx.lineTo(x - size*Math.cos(angle-0.35), y - size*Math.sin(angle-0.35));
+  ctx.lineTo(x - size*Math.cos(angle+0.35), y - size*Math.sin(angle+0.35));
+  ctx.closePath(); ctx.fill();
+}
+
+function pills(id, items) {
+  document.getElementById(id).innerHTML = items.map(([label,val,col])=>
+    `<div class="pill">${col?`<div class="pl" style="color:${col}">${label}</div>`:
+    `<div class="pl">${label}</div>`}<div class="pv" style="${col?`color:${col}`:''}">${val}</div></div>`
+  ).join('');
+}
+
+/* ══════════════════════════════════════
+   1. WAVE GENERATOR
+══════════════════════════════════════ */
+let waveT = 0, waveRAF = null;
+
+function updateWave() {
+  const A   = +document.getElementById('wA').value;
+  const f   = +document.getElementById('wf').value;
+  const lam = +document.getElementById('wlam').value;
+  document.getElementById('wAv').textContent   = A;
+  document.getElementById('wfv').textContent   = f;
+  document.getElementById('wlamv').textContent = lam;
+
+  const v = lam * f;
+  const T = 1 / f;
+  const k = (2 * Math.PI / lam).toFixed(3);
+  const w = (2 * Math.PI * f).toFixed(3);
+
+  pills('wave-pills', [
+    ['Cepat rambat v', v.toFixed(1) + ' m/s', null],
+    ['Periode T', T.toFixed(2) + ' s', null],
+    ['ω (ang. frek.)', w + ' rad/s', null],
+    ['k (bil. gel.)', k + ' rad/m', null],
+  ]);
+
+  document.getElementById('wave-eq').innerHTML =
+    `<div class="fm">y = ${A} sin(${w}t − ${k}x) &nbsp; [A=${A}cm, f=${f}Hz, λ=${lam}m, v=${v}m/s]</div>`;
+}
+
+function resetWave() { waveT = 0; updateWave(); }
+
+function animWave() {
+  waveT += 0.025;
+  const A    = +document.getElementById('wA').value;
+  const f    = +document.getElementById('wf').value;
+  const lam  = +document.getElementById('wlam').value;
+  const type = document.querySelector('input[name=wtype]:checked').value;
+
+  const { W, H, ctx } = getCanvas('wave-c', 150);
+  ctx.clearRect(0, 0, W, H);
+  drawGrid(ctx, W, H, 12, 4);
+
+  const cy = H / 2;
+  // Fixed physical window = 8m, so changing λ changes how many cycles are visible
+  const WINDOW = 8; // metres shown across full canvas width
+  const k  = 2 * Math.PI / lam;
+  const ww = 2 * Math.PI * f;
+  const scaleY = (H / 2 - 18) / 5;
+
+  drawAxis(ctx, W, cy);
+
+  if (type === 'transversal') {
+    ctx.strokeStyle = dark() ? '#5588e8' : '#1755c4';
+    ctx.lineWidth = 2.5; ctx.setLineDash([]);
+    ctx.beginPath();
+    for (let px = 0; px <= W; px++) {
+      const x = px / W * WINDOW;   // map pixel to physical metres
+      const y = cy - A * scaleY * Math.sin(ww * waveT - k * x);
+      px === 0 ? ctx.moveTo(px, y) : ctx.lineTo(px, y);
+    }
+    ctx.stroke();
+
+    // Moving particle dot at x=0
+    const py = cy - A * scaleY * Math.sin(ww * waveT);
+    ctx.fillStyle = '#e05030';
+    ctx.beginPath(); ctx.arc(0, py, 5, 0, Math.PI * 2); ctx.fill();
+
+    // λ bracket: show one wavelength
+    const lamPx = lam / WINDOW * W;
+    if (lamPx < W * 0.95) {
+      const bY = H - 10;
+      ctx.strokeStyle = dark() ? '#5588e8' : '#1755c4'; ctx.lineWidth = 1; ctx.setLineDash([]);
+      ctx.beginPath(); ctx.moveTo(0, bY); ctx.lineTo(lamPx, bY); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, bY - 4); ctx.lineTo(0, bY + 4); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(lamPx, bY - 4); ctx.lineTo(lamPx, bY + 4); ctx.stroke();
+      ctx.fillStyle = dark() ? '#5588e8' : '#1755c4'; ctx.font = '11px system-ui'; ctx.textAlign = 'center';
+      ctx.fillText('λ = ' + lam + ' m', lamPx / 2, bY - 4);
+    }
+
+    ctx.fillStyle = tc(); ctx.font = '11px system-ui'; ctx.textAlign = 'left';
+    ctx.fillText('Transversal — tampilan 8 m', 6, 14);
+
+  } else {
+    // Longitudinal: variable-density bands, spacing reflects λ
+    const nBands = 60;
+    for (let i = 0; i < nBands; i++) {
+      const x0 = i / nBands * W;
+      const x  = x0 / W * WINDOW;
+      const density = 0.5 + 0.5 * Math.cos(ww * waveT - k * x);
+      const alpha = 0.12 + 0.72 * density;
+      ctx.fillStyle = dark() ? `rgba(85,136,232,${alpha})` : `rgba(23,85,196,${alpha})`;
+      ctx.fillRect(x0, cy - 28, W / nBands + 0.5, 56);
+    }
+    // Particle arrows at fixed grid points
+    const nArrows = 10;
+    for (let i = 0; i < nArrows; i++) {
+      const x0  = (i + 0.5) / nArrows * W;
+      const x   = x0 / W * WINDOW;
+      const disp = A * 5 * Math.sin(ww * waveT - k * x);
+      ctx.strokeStyle = '#e05030'; ctx.lineWidth = 1.5; ctx.setLineDash([]);
+      ctx.beginPath(); ctx.moveTo(x0, cy); ctx.lineTo(x0 + disp, cy); ctx.stroke();
+      if (Math.abs(disp) > 2)
+        arrowHead(ctx, x0 + disp, cy, disp > 0 ? 0 : Math.PI, 6, '#e05030');
+    }
+    // λ bracket (distance between same-phase compressions)
+    const lamPx = lam / WINDOW * W;
+    if (lamPx < W * 0.95) {
+      const bY = H - 10;
+      ctx.strokeStyle = dark() ? '#5588e8' : '#1755c4'; ctx.lineWidth = 1; ctx.setLineDash([]);
+      ctx.beginPath(); ctx.moveTo(0, bY); ctx.lineTo(lamPx, bY); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, bY-4); ctx.lineTo(0, bY+4); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(lamPx, bY-4); ctx.lineTo(lamPx, bY+4); ctx.stroke();
+      ctx.fillStyle = dark() ? '#5588e8' : '#1755c4'; ctx.font = '11px system-ui'; ctx.textAlign = 'center';
+      ctx.fillText('λ = ' + lam + ' m', lamPx / 2, bY - 4);
+    }
+    ctx.fillStyle = tc(); ctx.font = '11px system-ui'; ctx.textAlign = 'left';
+    ctx.fillText('Longitudinal — tampilan 8 m', 6, 14);
+  }
+
+  waveRAF = requestAnimationFrame(animWave);
+}
+
+/* ══════════════════════════════════════
+   2. INTERFERENSI
+══════════════════════════════════════ */
+let interfT = 0, interfRAF = null;
+
+function drawInterf() {
+  const A1  = +document.getElementById('iA1').value;
+  const f1  = +document.getElementById('if1').value;
+  const p1  = +document.getElementById('ip1').value;
+  const A2  = +document.getElementById('iA2').value;
+  const f2  = +document.getElementById('if2').value;
+  const p2  = +document.getElementById('ip2').value;
+  document.getElementById('iA1v').textContent = A1;
+  document.getElementById('if1v').textContent = f1;
+  document.getElementById('ip1v').textContent = p1 + '°';
+  document.getElementById('iA2v').textContent = A2;
+  document.getElementById('if2v').textContent = f2;
+  document.getElementById('ip2v').textContent = p2 + '°';
+
+  if (interfRAF) cancelAnimationFrame(interfRAF);
+  interfT = 0;
+
+  function animate() {
+    interfT += 0.025;
+    const { W, H, ctx } = getCanvas('interf-c', 220);
+    ctx.clearRect(0, 0, W, H);
+    drawGrid(ctx, W, H, 12, 6);
+
+    const cy1 = H * 0.22, cy2 = H * 0.55, cy3 = H * 0.88;
+    const scY  = (H * 0.15) / 5;
+    const k1   = 2*Math.PI/4, k2 = 2*Math.PI/4;
+    const w1   = 2*Math.PI*f1, w2 = 2*Math.PI*f2;
+    const ph1  = p1*Math.PI/180, ph2 = p2*Math.PI/180;
+
+    // Track max resultant for label
+    let maxR = 0;
+
+    function drawWaveLine(cy, Amp, freq, phase, col, lw) {
+      ctx.strokeStyle = col; ctx.lineWidth = lw; ctx.setLineDash([]);
+      ctx.beginPath();
+      for (let px = 0; px <= W; px++) {
+        const x = px / W * 8;
+        const y = cy - Amp * scY * Math.sin(2*Math.PI*freq*interfT - 2*Math.PI/4*x + phase);
+        px === 0 ? ctx.moveTo(px, y) : ctx.lineTo(px, y);
+      }
+      ctx.stroke();
+    }
+
+    drawAxis(ctx, W, cy1); drawWaveLine(cy1, A1, f1, ph1, dark()?'#5588e8':'#1755c4', 2);
+    drawAxis(ctx, W, cy2); drawWaveLine(cy2, A2, f2, ph2, dark()?'#e05858':'#c02020', 2);
+
+    // Resultant
+    drawAxis(ctx, W, cy3);
+    ctx.strokeStyle = dark() ? '#3dbe85' : '#1d7a55'; ctx.lineWidth = 2.5; ctx.setLineDash([]);
+    ctx.beginPath();
+    for (let px = 0; px <= W; px++) {
+      const x = px / W * 8;
+      const y1r = A1 * Math.sin(2*Math.PI*f1*interfT - k1*x + ph1);
+      const y2r = A2 * Math.sin(2*Math.PI*f2*interfT - k2*x + ph2);
+      const yr  = y1r + y2r;
+      maxR = Math.max(maxR, Math.abs(yr));
+      px === 0 ? ctx.moveTo(px, cy3 - yr * scY) : ctx.lineTo(px, cy3 - yr * scY);
+    }
+    ctx.stroke();
+
+    // Row labels — drawn at top-left of each band, clipped to canvas width
+    ctx.font = '11px system-ui'; ctx.textAlign = 'left';
+    // Use short labels + clip with canvas save/restore
+    const labels = [
+      [dark()?'#5588e8':'#1755c4', `Gel 1  A=${A1} f=${f1}Hz φ=${p1}°`, cy1 - H*0.13],
+      [dark()?'#e05858':'#c02020', `Gel 2  A=${A2} f=${f2}Hz φ=${p2}°`, cy2 - H*0.13],
+      [dark()?'#3dbe85':'#1d7a55', 'Resultan (superposisi)',              cy3 - H*0.13],
+    ];
+    labels.forEach(([col, txt, y]) => {
+      ctx.save();
+      ctx.rect(4, 0, W - 8, H); ctx.clip();
+      ctx.fillStyle = col;
+      ctx.fillText(txt, 4, y);
+      ctx.restore();
+    });
+
+    // Separator lines
+    ctx.strokeStyle = gc(); ctx.lineWidth = 1; ctx.setLineDash([3,3]);
+    [H*0.38, H*0.72].forEach(y => { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); });
+    ctx.setLineDash([]);
+
+    interfRAF = requestAnimationFrame(animate);
+  }
+  animate();
+
+  // Interference type info
+  const dPhi = Math.abs(p2 - p1) % 360;
+  const dPhiNorm = Math.min(dPhi, 360 - dPhi);
+  const samef = Math.abs(f1 - f2) < 0.01;
+  let type = '', col = '';
+  if (!samef) {
+    type = `Frekuensi berbeda (f₁=${f1}, f₂=${f2}) → pelayangan (beat), frekuensi pelayangan = |f₁−f₂| = ${Math.abs(f1-f2).toFixed(1)} Hz`;
+    col = 'co-purple';
+  } else if (dPhiNorm < 20) {
+    type = `Beda fase ≈ 0° → Interferensi KONSTRUKTIF. A_maks = A₁+A₂ = ${A1+A2} cm`;
+    col = 'co-green';
+  } else if (dPhiNorm > 160 && dPhiNorm < 200) {
+    type = `Beda fase ≈ 180° → Interferensi DESTRUKTIF. A_min = |A₁−A₂| = ${Math.abs(A1-A2)} cm`;
+    col = 'co-red';
+  } else {
+    type = `Beda fase = ${dPhiNorm.toFixed(0)}° → Interferensi sebagian. A antara ${Math.abs(A1-A2)} dan ${A1+A2} cm`;
+    col = 'co-amber';
+  }
+  document.getElementById('interf-result').innerHTML = `<div class="co ${col}">${type}</div>`;
+}
+
+/* ══════════════════════════════════════
+   3. GELOMBANG STASIONER
+══════════════════════════════════════ */
+let standT = 0, standRAF = null;
+
+function drawStanding() {
+  const L  = +document.getElementById('sL').value;
+  const v  = +document.getElementById('sv').value;
+  const n  = +document.getElementById('sn').value;
+  document.getElementById('sLv').textContent = L.toFixed(1) + ' m';
+  document.getElementById('svv').textContent = v + ' m/s';
+
+  const lam = 2 * L / n;
+  const f   = v / lam;
+  const T   = 1 / f;
+
+  pills('stand-pills', [
+    ['λₙ', lam.toFixed(3) + ' m', null],
+    ['fₙ', f.toFixed(1) + ' Hz', null],
+    ['Periode T', T.toFixed(4) + ' s', null],
+    ['Jumlah simpul', (n+1) + ' titik', null],
+    ['Jumlah perut', n + ' titik', null],
+  ]);
+
+  document.getElementById('stand-info').innerHTML =
+    `<div class="fm">λ${n} = 2L/n = 2×${L}/${n} = ${lam.toFixed(3)} m &nbsp;|&nbsp; f${n} = v/λ = ${v}/${lam.toFixed(3)} = ${f.toFixed(1)} Hz</div>
+     <div class="co co-blue">Harmonik ke-${n}: ${n} perut, ${n+1} simpul. ${n===1?'Nada dasar (frekuensi paling rendah).':n===2?'Oktaf pertama (2× nada dasar).':'Harmonik ke-'+n+' ('+n+'× nada dasar).'}</div>`;
+
+  if (standRAF) cancelAnimationFrame(standRAF);
+
+  function animate() {
+    standT += 0.03;
+    const { W, H, ctx } = getCanvas('stand-c', 180);
+    ctx.clearRect(0, 0, W, H);
+    drawGrid(ctx, W, H, 12, 4);
+
+    const cy = H / 2;
+    const scY = (H / 2 - 20);
+    const kn = n * Math.PI / W; // k such that n half-waves fit in W
+
+    drawAxis(ctx, W, cy);
+
+    // Envelope (max displacement shape)
+    ctx.strokeStyle = dark() ? 'rgba(85,136,232,0.25)' : 'rgba(23,85,196,0.15)';
+    ctx.lineWidth = 1.5; ctx.setLineDash([4,3]);
+    ctx.beginPath();
+    for (let px=0; px<=W; px++) { ctx.lineTo(px, cy - scY * Math.sin(kn * px)); }
+    ctx.stroke();
+    ctx.beginPath();
+    for (let px=0; px<=W; px++) { ctx.lineTo(px, cy + scY * Math.sin(kn * px)); }
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Animated wave: y = A sin(kx) cos(ωt)
+    const wn = 2 * Math.PI * f;
+    const amp = Math.cos(wn * standT);
+    ctx.strokeStyle = dark() ? '#5588e8' : '#1755c4';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    for (let px=0; px<=W; px++) {
+      const y = cy - scY * Math.sin(kn * px) * amp;
+      px===0 ? ctx.moveTo(px,y) : ctx.lineTo(px,y);
+    }
+    ctx.stroke();
+
+    // Nodes (simpul) — red dots
+    ctx.fillStyle = '#e05030';
+    for (let i=0; i<=n; i++) {
+      const px = i / n * W;
+      ctx.beginPath(); ctx.arc(px, cy, 5, 0, Math.PI*2); ctx.fill();
+    }
+    // Antinodes (perut) — green dots
+    ctx.fillStyle = '#1d9e75';
+    for (let i=0; i<n; i++) {
+      const px = (i + 0.5) / n * W;
+      ctx.beginPath(); ctx.arc(px, cy, 5, 0, Math.PI*2); ctx.fill();
+    }
+
+    // Legend (top-right, no overlap with dots)
+    ctx.font = '11px system-ui'; ctx.textAlign = 'right';
+    ctx.fillStyle = '#e05030'; ctx.fillText('● Simpul (node)', W - 6, 14);
+    ctx.fillStyle = '#1d9e75'; ctx.fillText('● Perut (antinode)', W - 6, 28);
+    ctx.fillStyle = tc(); ctx.textAlign = 'left';
+    ctx.fillText('n=' + n + ', L=' + L + 'm', 6, 14);
+
+    // Wall indicators
+    ctx.fillStyle = dark() ? '#444' : '#bbb';
+    ctx.fillRect(0, cy - 30, 4, 60);
+    ctx.fillRect(W - 4, cy - 30, 4, 60);
+
+    standRAF = requestAnimationFrame(animate);
+  }
+  animate();
+  drawAllHarmonics();
+}
+
+function drawAllHarmonics() {
+  const L = +document.getElementById('sL').value;
+  const v = +document.getElementById('sv').value;
+  const { W, H, ctx } = getCanvas('harmonik-c', 240);
+  ctx.clearRect(0, 0, W, H);
+
+  const nMax = 5;
+  const rowH = H / nMax;
+  const col = dark() ? '#5588e8' : '#1755c4';
+  const tc_ = tc();
+
+  for (let n=1; n<=nMax; n++) {
+    const y0 = (n - 0.5) * rowH;
+    const amp = rowH * 0.36;
+    const f = n * v / (2 * L);
+
+    // Axis
+    ctx.strokeStyle = dark() ? '#333' : '#e0ddd8'; ctx.lineWidth = 0.5; ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(40, y0); ctx.lineTo(W - 100, y0); ctx.stroke();
+
+    // Wave shape
+    ctx.strokeStyle = col; ctx.lineWidth = 2;
+    ctx.beginPath();
+    for (let px = 0; px <= W - 140; px++) {
+      const y = y0 - amp * Math.sin(n * Math.PI * px / (W - 140));
+      px===0 ? ctx.moveTo(px + 40, y) : ctx.lineTo(px + 40, y);
+    }
+    ctx.stroke();
+
+    // Nodes
+    ctx.fillStyle = '#e05030';
+    for (let i=0; i<=n; i++) {
+      const px = 40 + i / n * (W - 140);
+      ctx.beginPath(); ctx.arc(px, y0, 3.5, 0, Math.PI*2); ctx.fill();
+    }
+
+    // Labels on right side — stacked, no overlap
+    ctx.font = '12px system-ui'; ctx.textAlign = 'left'; ctx.fillStyle = tc_;
+    ctx.fillText('n=' + n, W - 95, y0 - 10);
+    ctx.fillStyle = dark() ? '#888' : '#666';
+    ctx.font = '11px system-ui';
+    ctx.fillText('f=' + f.toFixed(0) + 'Hz', W - 95, y0 + 5);
+
+    // Left label
+    ctx.textAlign = 'right'; ctx.fillStyle = tc_;
+    ctx.fillText('H' + n, 34, y0 + 4);
+
+    // Separator
+    if (n < nMax) {
+      ctx.strokeStyle = dark() ? '#2a2a27' : '#eeecea'; ctx.lineWidth = 1; ctx.setLineDash([]);
+      ctx.beginPath(); ctx.moveTo(0, n * rowH); ctx.lineTo(W, n * rowH); ctx.stroke();
+    }
+  }
+}
+
+/* ══════════════════════════════════════
+   4. PIPA RESONANSI
+══════════════════════════════════════ */
+let pipeT = 0, pipeRAF = null;
+
+function drawPipe() {
+  const L    = +document.getElementById('pL').value;
+  const v    = +document.getElementById('pv').value;
+  const nRaw = +document.getElementById('pn').value;
+  const type = document.querySelector('input[name=pipetype]:checked').value;
+  document.getElementById('pLv').textContent = L.toFixed(2) + ' m';
+  document.getElementById('pvv').textContent = v + ' m/s';
+
+  // For closed pipe: only odd harmonics
+  const n = type === 'tertutup' ? (2 * nRaw - 1) : nRaw;
+  const f = type === 'tertutup' ? n * v / (4 * L) : n * v / (2 * L);
+  const lam = v / f;
+
+  pills('pipe-pills', [
+    ['Harmonik n', (type==='tertutup' ? 'n=' + n + ' (ganjil)' : 'n=' + n), null],
+    ['Frekuensi f', f.toFixed(1) + ' Hz', null],
+    ['λ', lam.toFixed(3) + ' m', null],
+  ]);
+
+  document.getElementById('pipe-info').innerHTML = type === 'terbuka'
+    ? `<div class="fm">f${n} = n·v/(2L) = ${n}×${v}/(2×${L}) = ${f.toFixed(1)} Hz</div><div class="co co-blue">Pipa terbuka: perut di kedua ujung. Semua harmonik tersedia.</div>`
+    : `<div class="fm">f${n} = n·v/(4L) = ${n}×${v}/(4×${L}) = ${f.toFixed(1)} Hz &nbsp;(n=${n}, hanya ganjil)</div><div class="co co-amber">Pipa tertutup: simpul di ujung tertutup, perut di ujung terbuka. Hanya harmonik ganjil.</div>`;
+
+  if (pipeRAF) cancelAnimationFrame(pipeRAF);
+
+  function animate() {
+    pipeT += 0.025;
+    const { W, H, ctx } = getCanvas('pipe-c', 200);
+    ctx.clearRect(0, 0, W, H);
+
+    const dark_ = dark();
+    const pipeLeft  = 70;
+    const pipeRight = W - 50;
+    const pipeTop   = H * 0.22;
+    const pipeBot   = H * 0.78;
+    const pipeW     = pipeRight - pipeLeft;
+    const pipeCy    = (pipeTop + pipeBot) / 2;
+    const pipeH     = pipeBot - pipeTop;
+    const wallCol   = dark_ ? '#4a4a46' : '#b0ada4';
+    const wallThick = 6;
+
+    // ── Pipe interior background (subtle, not distracting) ──
+    ctx.fillStyle = dark_ ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)';
+    ctx.fillRect(pipeLeft, pipeTop, pipeW, pipeH);
+
+    // ── Pipe walls (top and bottom bars) ──
+    ctx.fillStyle = wallCol;
+    ctx.fillRect(pipeLeft, pipeTop - wallThick, pipeW, wallThick);  // top wall
+    ctx.fillRect(pipeLeft, pipeBot, pipeW, wallThick);               // bottom wall
+
+    // ── End caps ──
+    if (type === 'tertutup') {
+      // Left: solid closed end
+      ctx.fillStyle = dark_ ? '#666' : '#888';
+      ctx.fillRect(pipeLeft - wallThick, pipeTop - wallThick, wallThick, pipeH + wallThick * 2);
+      // Right: open (no cap, just wall edge)
+    } else {
+      // Both open — no cap
+    }
+
+    // ── End labels ──
+    ctx.font = 'bold 11px system-ui'; ctx.textAlign = 'center';
+    ctx.fillStyle = dark_ ? '#aaa' : '#555';
+    if (type === 'tertutup') {
+      ctx.fillText('Tertutup', pipeLeft - wallThick / 2, pipeTop - wallThick - 8);
+    } else {
+      ctx.fillText('Terbuka', pipeLeft, pipeTop - wallThick - 8);
+    }
+    ctx.fillText('Terbuka', pipeRight, pipeTop - wallThick - 8);
+
+    // ── Central axis line ──
+    ctx.strokeStyle = dark_ ? '#333' : '#ddd'; ctx.lineWidth = 0.5; ctx.setLineDash([3,3]);
+    ctx.beginPath(); ctx.moveTo(pipeLeft, pipeCy); ctx.lineTo(pipeRight, pipeCy); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // ── Animated displacement curve ──
+    const wn = 2 * Math.PI * f;
+    const ampCos = Math.cos(wn * pipeT);   // time factor
+    const curveAmp = pipeH * 0.38;
+
+    ctx.strokeStyle = dark_ ? '#5588e8' : '#1755c4';
+    ctx.lineWidth = 2.5; ctx.setLineDash([]);
+    ctx.beginPath();
+    for (let px = 0; px <= pipeW; px++) {
+      const xNorm = px / pipeW;
+      let spatialAmp;
+      if (type === 'terbuka') {
+        // Open pipe: displacement antinodes at both ends → sin(nπx/L)
+        spatialAmp = Math.sin(n * Math.PI * xNorm);
+      } else {
+        // Closed at left (x=0): displacement node at 0, antinode at open end
+        // Pattern: cos((2n-1)πx/(2L)) = cos(nπx/(2L)) for n-th harmonic we picked
+        spatialAmp = Math.cos(n * Math.PI * xNorm / 2);
+      }
+      const y = pipeCy - curveAmp * spatialAmp * ampCos;
+      px === 0 ? ctx.moveTo(pipeLeft + px, y) : ctx.lineTo(pipeLeft + px, y);
+    }
+    ctx.stroke();
+
+    // ── Envelope (static max shape, very faint) ──
+    ctx.strokeStyle = dark_ ? 'rgba(85,136,232,0.2)' : 'rgba(23,85,196,0.18)';
+    ctx.lineWidth = 1; ctx.setLineDash([4,3]);
+    [1, -1].forEach(sign => {
+      ctx.beginPath();
+      for (let px = 0; px <= pipeW; px++) {
+        const xNorm = px / pipeW;
+        const sp = type === 'terbuka' ? Math.sin(n * Math.PI * xNorm) : Math.cos(n * Math.PI * xNorm / 2);
+        const y = pipeCy - curveAmp * sp * sign;
+        px === 0 ? ctx.moveTo(pipeLeft + px, y) : ctx.lineTo(pipeLeft + px, y);
+      }
+      ctx.stroke();
+    });
+    ctx.setLineDash([]);
+
+    // ── Node dots (simpul) — red ──
+    ctx.fillStyle = '#e05030';
+    const nodePositions = [];
+    if (type === 'terbuka') {
+      // Nodes at x = i/n for i = 0..n  (but open pipe nodes are interior, not ends)
+      // Actually for open pipe: displacement nodes at x = (2i+1)/(2n) for i=0..n-1
+      // and displacement antinodes (perut) at 0, 1/n, 2/n... (the ends)
+      // Correct: standing wave sin(nπx/L) has zeros at x = 0, L/n, 2L/n... L
+      for (let i = 0; i <= n; i++) nodePositions.push(i / n);
+    } else {
+      // Closed pipe: cos(nπx/2L) → zeros where nπx/2L = π/2 + kπ → x = L(2k+1)/n
+      // For n-th odd harmonic: zeros at xNorm = (2k+1)/n, k=0,1,...
+      for (let k = 0; k < n; k++) {
+        const pos = (2 * k + 1) / n;
+        if (pos <= 1) nodePositions.push(pos);
+      }
+    }
+    nodePositions.forEach(pos => {
+      ctx.beginPath(); ctx.arc(pipeLeft + pos * pipeW, pipeCy, 5, 0, Math.PI * 2); ctx.fill();
+    });
+
+    // ── Antinode dots (perut) — green ──
+    ctx.fillStyle = '#1d9e75';
+    const antinodePositions = [];
+    if (type === 'terbuka') {
+      // Antinodes at x = (i+0.5)/n
+      for (let i = 0; i < n; i++) antinodePositions.push((i + 0.5) / n);
+    } else {
+      // Antinodes at x = 2k/n (including x=0 is a node, so start from 0 and even multiples)
+      antinodePositions.push(0); // actually closed end is displacement node — skip
+      for (let k = 1; k <= n; k++) {
+        const pos = 2 * k / n;
+        if (pos <= 1.001) antinodePositions.push(pos);
+      }
+    }
+    antinodePositions.forEach(pos => {
+      if (pos >= 0 && pos <= 1) {
+        ctx.beginPath(); ctx.arc(pipeLeft + pos * pipeW, pipeCy, 5, 0, Math.PI * 2); ctx.fill();
+      }
+    });
+
+    // ── Length dimension ──
+    const dimY = pipeBot + wallThick + 18;
+    ctx.strokeStyle = dark_ ? '#555' : '#bbb'; ctx.lineWidth = 1; ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(pipeLeft, dimY); ctx.lineTo(pipeRight, dimY); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(pipeLeft, dimY-4); ctx.lineTo(pipeLeft, dimY+4); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(pipeRight, dimY-4); ctx.lineTo(pipeRight, dimY+4); ctx.stroke();
+    ctx.fillStyle = tc(); ctx.font = '11px system-ui'; ctx.textAlign = 'center';
+    ctx.fillText('L = ' + L.toFixed(2) + ' m', (pipeLeft + pipeRight) / 2, dimY + 14);
+
+    // ── Legend ──
+    ctx.font = '11px system-ui'; ctx.textAlign = 'right';
+    ctx.fillStyle = '#e05030'; ctx.fillText('● Simpul (node)', W - 4, H - 14);
+    ctx.fillStyle = '#1d9e75'; ctx.fillText('● Perut (antinode)', W - 4, H - 2);
+
+    pipeRAF = requestAnimationFrame(animate);
+  }
+  animate();
+}
+
+/* ══════════════════════════════════════
+   5. DOPPLER
+══════════════════════════════════════ */
+let doppT = 0, doppRAF = null;
+
+function updateDoppler() {
+  const f   = +document.getElementById('df').value;
+  const v   = +document.getElementById('dv').value;
+  const vs  = +document.getElementById('dvs').value;
+  const vo  = +document.getElementById('dvo').value;
+  const dir = document.querySelector('input[name=ddir]:checked').value;
+  document.getElementById('dfv').textContent  = f;
+  document.getElementById('dvv').textContent  = v;
+  document.getElementById('dvsv').textContent = vs;
+  document.getElementById('dvov').textContent = vo;
+
+  const fp = dir === 'mendekati'
+    ? f * (v + vo) / (v - vs)
+    : f * (v - vo) / (v + vs);
+
+  const delta = fp - f;
+  const pct = (delta / f * 100).toFixed(1);
+
+  pills('dopp-pills', [
+    ['f sumber', f + ' Hz', null],
+    ['f terdengar f\'', fp.toFixed(1) + ' Hz', delta > 0 ? 'var(--green)' : delta < 0 ? 'var(--red)' : null],
+    ['Perubahan', (delta >= 0 ? '+' : '') + delta.toFixed(1) + ' Hz', null],
+    ['Persentase', (delta >= 0 ? '+' : '') + pct + '%', null],
+  ]);
+
+  document.getElementById('dopp-eq').innerHTML =
+    `<div class="fm">f' = ${f}×(${v}${dir==='mendekati'?(vo>0?'+'+vo:''):(vo>0?'−'+vo:'')}) / (${v}${dir==='mendekati'?(vs>0?'−'+vs:''):(vs>0?'+'+vs:'')}) = ${fp.toFixed(1)} Hz</div>
+     <div class="co ${delta > 0.5 ? 'co-green' : delta < -0.5 ? 'co-red' : 'co-blue'}">
+       ${delta > 0.5 ? '📈 f\' > f: sumber mendekati pengamat → nada lebih tinggi'
+         : delta < -0.5 ? '📉 f\' < f: sumber menjauh dari pengamat → nada lebih rendah'
+         : '🔵 Tidak ada gerak relatif → f\' = f'}
+     </div>`;
+
+  if (doppRAF) cancelAnimationFrame(doppRAF);
+
+  function animate() {
+    doppT += 0.018;
+    const { W, H, ctx } = getCanvas('dopp-c', 160);
+    ctx.clearRect(0, 0, W, H);
+
+    const dark_ = dark();
+    const srcX = dir === 'mendekati' ? W * 0.25 + (doppT * vs * 0.8) % (W * 0.3) : W * 0.65 - (doppT * vs * 0.5) % (W * 0.25);
+    const obsX = dir === 'mendekati' ? W * 0.75 - (doppT * vo * 0.5) % (W * 0.2) : W * 0.35 + (doppT * vo * 0.5) % (W * 0.15);
+    const cy = H / 2;
+
+    // Source (speaker icon)
+    ctx.fillStyle = dark_ ? '#5588e8' : '#1755c4';
+    ctx.beginPath(); ctx.arc(srcX, cy, 10, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#fff'; ctx.font = '10px system-ui'; ctx.textAlign = 'center';
+    ctx.fillText('S', srcX, cy + 4);
+
+    // Observer (ear icon)
+    ctx.fillStyle = dark_ ? '#3dbe85' : '#1d7a55';
+    ctx.beginPath(); ctx.arc(obsX, cy, 10, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.fillText('P', obsX, cy + 4);
+
+    // Wavefronts (circles emanating from source)
+    const nWaves = 5;
+    const baseSpacing = dir === 'mendekati' ? 28 : 22;
+    for (let i = 1; i <= nWaves; i++) {
+      const phase = (doppT * 3 + i * 0.8) % (nWaves * 0.8);
+      const r = phase * baseSpacing;
+      // Compress waves toward observer if approaching
+      const alpha = 1 - phase / (nWaves * 0.8);
+      if (r > 0 && alpha > 0) {
+        ctx.strokeStyle = dark_
+          ? `rgba(85,136,232,${alpha * 0.6})`
+          : `rgba(23,85,196,${alpha * 0.5})`;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.arc(srcX, cy, r, 0, Math.PI*2); ctx.stroke();
+      }
+    }
+
+    // Labels
+    ctx.fillStyle = tc(); ctx.font = '11px system-ui'; ctx.textAlign = 'center';
+    ctx.fillText('Sumber (' + (vs > 0 ? 'v=' + vs + 'm/s' : 'diam') + ')', srcX, cy + 22);
+    ctx.fillText('Pengamat (' + (vo > 0 ? 'v=' + vo + 'm/s' : 'diam') + ')', obsX, cy + 22);
+
+    // Arrow for direction
+    if (vs > 0 || vo > 0) {
+      const arrowY = cy - 28;
+      ctx.strokeStyle = dark_ ? '#e8a020' : '#a06000'; ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      const ax1 = Math.min(srcX, obsX) + 15, ax2 = Math.max(srcX, obsX) - 15;
+      ctx.moveTo(ax1, arrowY); ctx.lineTo(ax2, arrowY); ctx.stroke();
+      arrowHead(ctx, dir === 'mendekati' ? ax2 : ax1, arrowY, dir === 'mendekati' ? 0 : Math.PI, 7, dark_ ? '#e8a020' : '#a06000');
+      ctx.fillStyle = dark_ ? '#e8a020' : '#a06000'; ctx.font = '10px system-ui'; ctx.textAlign = 'center';
+      ctx.fillText(dir === 'mendekati' ? 'Mendekati' : 'Menjauh', (ax1+ax2)/2, arrowY - 6);
+    }
+
+    // f display
+    ctx.font = 'bold 12px system-ui'; ctx.textAlign = 'left';
+    ctx.fillStyle = dark_ ? '#5588e8' : '#1755c4'; ctx.fillText('f = ' + f + ' Hz', 6, 16);
+    ctx.textAlign = 'right';
+    ctx.fillStyle = delta > 0.5 ? (dark_?'#3dbe85':'#1d7a55') : delta < -0.5 ? (dark_?'#e05858':'#c02020') : (dark_?'#888':'#555');
+    ctx.fillText("f' = " + fp.toFixed(0) + ' Hz', W - 6, 16);
+
+    doppRAF = requestAnimationFrame(animate);
+  }
+  animate();
+}
+
+/* ══════════════════════════════════════
+   6. INTENSITAS
+══════════════════════════════════════ */
+function updateIntensity() {
+  const P = +document.getElementById('iP').value;
+  const r = +document.getElementById('ir').value;
+  document.getElementById('iPv').textContent = P.toFixed(1) + ' W';
+  document.getElementById('irv').textContent = r + ' m';
+
+  const I0 = 1e-12;
+  const I  = P / (4 * Math.PI * r * r);
+  const L  = 10 * Math.log10(I / I0);
+
+  // Reference: L at r=1m
+  const I1 = P / (4 * Math.PI);
+  const L1 = 10 * Math.log10(I1 / I0);
+
+  pills('int-pills', [
+    ['Intensitas I', I.toExponential(2) + ' W/m²', null],
+    ['Taraf L', L.toFixed(1) + ' dB', L > 85 ? 'var(--red)' : L > 60 ? 'var(--amber)' : null],
+    ['L pada r=1m', L1.toFixed(1) + ' dB', null],
+  ]);
+
+  let cat = '', catCol = 'co-blue';
+  if (L >= 130)     { cat = '⚠️ Berbahaya — merusak pendengaran segera'; catCol = 'co-red'; }
+  else if (L >= 85) { cat = '⚠️ Berbahaya jika paparan lama (>85 dB)'; catCol = 'co-amber'; }
+  else if (L >= 60) { cat = '🗣️ Tingkat percakapan normal'; catCol = 'co-blue'; }
+  else if (L >= 30) { cat = '🤫 Tenang (perpustakaan, bisikan)'; catCol = 'co-green'; }
+  else              { cat = '🔇 Sangat tenang / hampir tak terdengar'; catCol = 'co-green'; }
+
+  document.getElementById('int-info').innerHTML =
+    `<div class="fm">I = P/(4πr²) = ${P.toFixed(1)}/(4π×${r}²) = ${I.toExponential(3)} W/m²</div>
+     <div class="fm">L = 10 log(I/I₀) = 10 log(${I.toExponential(2)}/10⁻¹²) = ${L.toFixed(1)} dB</div>
+     <div class="co ${catCol}" style="margin-top:6px">${cat}</div>`;
+
+  // Draw I vs r graph
+  const { W, H, ctx } = getCanvas('int-c', 160);
+  ctx.clearRect(0, 0, W, H);
+  drawGrid(ctx, W, H, 10, 4);
+
+  const rMax = 100, margin = 10;
+  const plotW = W - margin * 2;
+  const plotH = H - margin * 2;
+
+  // I(r) curve
+  ctx.strokeStyle = dark() ? '#5588e8' : '#1755c4'; ctx.lineWidth = 2; ctx.setLineDash([]);
+  ctx.beginPath();
+  for (let px = 1; px <= plotW; px++) {
+    const ri = px / plotW * rMax + 1;
+    const Ii = P / (4 * Math.PI * ri * ri);
+    const Li = 10 * Math.log10(Ii / I0);
+    const y = margin + plotH * (1 - Math.max(0, Math.min(1, (Li - 20) / 120)));
+    px === 1 ? ctx.moveTo(px + margin, y) : ctx.lineTo(px + margin, y);
+  }
+  ctx.stroke();
+
+  // Current point
+  const curX = margin + (r / rMax) * plotW;
+  const curL = L;
+  const curY = margin + plotH * (1 - Math.max(0, Math.min(1, (curL - 20) / 120)));
+  ctx.fillStyle = '#e05030';
+  ctx.beginPath(); ctx.arc(curX, curY, 5, 0, Math.PI*2); ctx.fill();
+
+  // Labels
+  ctx.fillStyle = tc(); ctx.font = '11px system-ui'; ctx.textAlign = 'left';
+  ctx.fillText('Taraf Intensitas (dB) vs Jarak (m)', margin, margin - 1);
+  ctx.textAlign = 'right';
+  ctx.fillText('r=' + r + 'm, L=' + L.toFixed(1) + 'dB', W - margin, margin - 1);
+
+  // Axis labels
+  ctx.fillStyle = dark() ? '#555' : '#bbb'; ctx.font = '10px system-ui'; ctx.textAlign = 'left';
+  ctx.fillText('140dB', 2, margin + 6);
+  ctx.fillText('20dB', 2, margin + plotH);
+  ctx.textAlign = 'center';
+  ctx.fillText('1m', margin, H - 1);
+  ctx.fillText('100m', W - margin, H - 1);
+}
+
+/* ══════════════════════════════════════
+   INIT
+══════════════════════════════════════ */
+window.addEventListener('load', () => {
+  updateWave();
+  animWave();
+  // Pre-init other tabs silently
+  setTimeout(() => {
+    drawInterf();
+    drawStanding();
+    drawAllHarmonics();
+    drawPipe();
+    updateDoppler();
+    updateIntensity();
+  }, 100);
+});
+
+window.addEventListener('resize', () => {
+  redrawActive();
+});
+</script>
+</body>
+</html>
