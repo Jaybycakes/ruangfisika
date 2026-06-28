@@ -2,11 +2,33 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import {
   ChevronRight, Maximize2, Pause, Play, RotateCcw, BookOpen,
-  Gauge, Activity, Settings2,
+  Gauge, Activity, Settings2, Ruler, ArrowRightLeft,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { getUnit } from "@/lib/curriculum";
+import { getUnit, Unit } from "@/lib/curriculum";
 import { ParabolaSimulation } from "@/components/simulations/ParabolaSimulation";
+import { MeasurementSimulation, MeasurementReading } from "@/components/simulations/MeasurementSimulation";
+
+// ─── Unit Converter helpers ────────────────────────────────────────────────
+const CONV_UNITS: Record<string, { v: string; label: string; toBase: number }[]> = {
+  length:      [{ v: 'mm', label: 'mm', toBase: 0.001 }, { v: 'cm', label: 'cm', toBase: 0.01 }, { v: 'm', label: 'm', toBase: 1 }, { v: 'km', label: 'km', toBase: 1000 }],
+  mass:        [{ v: 'mg', label: 'mg', toBase: 1e-6 }, { v: 'g', label: 'g', toBase: 0.001 }, { v: 'kg', label: 'kg', toBase: 1 }, { v: 'ton', label: 'ton', toBase: 1000 }],
+  time:        [{ v: 'ms', label: 'ms', toBase: 0.001 }, { v: 's', label: 's', toBase: 1 }, { v: 'min', label: 'min', toBase: 60 }, { v: 'jam', label: 'jam', toBase: 3600 }],
+  temperature: [{ v: 'C', label: '°C', toBase: 1 }, { v: 'K', label: 'K', toBase: 1 }, { v: 'F', label: '°F', toBase: 1 }],
+};
+
+function convertValue(val: number, from: string, to: string, qty: string): number {
+  if (qty === 'temperature') {
+    const toCelsius = (v: number, u: string) => u === 'K' ? v - 273.15 : u === 'F' ? (v - 32) * 5 / 9 : v;
+    const fromCelsius = (v: number, u: string) => u === 'K' ? v + 273.15 : u === 'F' ? v * 9 / 5 + 32 : v;
+    return fromCelsius(toCelsius(val, from), to);
+  }
+  const units = CONV_UNITS[qty];
+  const f = units.find(u => u.v === from);
+  const t = units.find(u => u.v === to);
+  if (!f || !t) return val;
+  return (val * f.toBase) / t.toBase;
+}
 
 export const Route = createFileRoute("/simulasi/$unitId")({
   head: ({ params }) => {
@@ -42,7 +64,9 @@ export const Route = createFileRoute("/simulasi/$unitId")({
 
 function Workspace() {
   const { unit } = Route.useLoaderData();
-  
+
+  if (unit.id === 'pengukuran') return <MeasurementWorkspace unit={unit} />;
+
   // Redirect to HTML files for specific units
   useEffect(() => {
     if (unit.id === 'energi-terbarukan') {
@@ -214,6 +238,288 @@ function Workspace() {
     </div>
   );
 }
+
+// ─── Measurement Workspace ────────────────────────────────────────────────
+function MeasurementWorkspace({ unit }: { unit: Unit }) {
+  const [tool, setTool] = useState<'ruler' | 'vernier' | 'micrometer'>('ruler');
+  const [trueLength, setTrueLength] = useState(83.4);
+  const [showTrue, setShowTrue] = useState(false);
+  const [triggerMeasure, setTriggerMeasure] = useState(0);
+  const [readings, setReadings] = useState<MeasurementReading[]>([]);
+  const [convQty, setConvQty] = useState('length');
+  const [convVal, setConvVal] = useState(1);
+  const [convFrom, setConvFrom] = useState('m');
+  const [convTo, setConvTo] = useState('cm');
+
+  const handleMeasure = (r: MeasurementReading) =>
+    setReadings(prev => [...prev.slice(-9), r]);
+
+  const mean = readings.length > 0
+    ? readings.reduce((s, r) => s + r.value, 0) / readings.length
+    : null;
+  const stdDev = readings.length > 1 && mean !== null
+    ? Math.sqrt(readings.reduce((s, r) => s + Math.pow(r.value - mean, 2), 0) / (readings.length - 1))
+    : null;
+
+  const handleReset = () => setReadings([]);
+
+  const toggleFullscreen = () => {
+    if (typeof document === 'undefined') return;
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.documentElement.requestFullscreen?.();
+  };
+
+  const TOOL_OPTIONS = [
+    { v: 'ruler' as const,      label: 'Penggaris',       sub: '±0.5 mm' },
+    { v: 'vernier' as const,    label: 'Jangka Sorong',   sub: '±0.05 mm' },
+    { v: 'micrometer' as const, label: 'Mikrometer',      sub: '±0.005 mm' },
+  ];
+
+  const handleQtyChange = (qty: string) => {
+    setConvQty(qty);
+    setConvFrom(CONV_UNITS[qty][0].v);
+    setConvTo(CONV_UNITS[qty][1].v);
+  };
+
+  const convResult = convertValue(convVal, convFrom, convTo, convQty);
+  const convResultStr = Math.abs(convResult) >= 1e-4
+    ? convResult.toPrecision(6).replace(/\.?0+$/, '')
+    : convResult.toExponential(3);
+
+  return (
+    <div className="flex min-h-screen flex-col bg-background">
+      {/* Header */}
+      <header className="border-b border-border bg-card">
+        <div className="flex h-14 items-center gap-3 px-4 sm:px-6">
+          <nav aria-label="breadcrumb" className="flex min-w-0 items-center gap-1.5 text-sm">
+            <Link to="/" className="shrink-0 text-muted-foreground hover:text-foreground">Dashboard</Link>
+            <ChevronRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+            <span className="shrink-0 text-muted-foreground">Semester {unit.semester}</span>
+            <ChevronRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+            <span className="truncate font-semibold text-foreground">{unit.title}</span>
+          </nav>
+          <div className="ml-auto flex items-center gap-2">
+            <Link to="/panduan/$unitId" params={{ unitId: unit.id }}
+              className="inline-flex items-center gap-1.5 rounded-md border border-border bg-background px-3 py-1.5 text-xs font-medium text-foreground hover:bg-secondary">
+              <BookOpen className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Panduan Guru</span>
+            </Link>
+            <button onClick={toggleFullscreen}
+              className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-background text-foreground hover:bg-secondary"
+              aria-label="Layar penuh">
+              <Maximize2 className="h-4 w-4" />
+            </button>
+            <ThemeToggle />
+          </div>
+        </div>
+      </header>
+
+      {/* Body */}
+      <div className="flex flex-1 flex-col lg:flex-row">
+        {/* Main canvas */}
+        <div className="flex flex-1 flex-col">
+          <div className="relative flex-1 border-b border-border bg-secondary/30 p-4 sm:p-6">
+            <div className="relative h-[420px] w-full overflow-hidden rounded-lg border border-border bg-background lg:h-full lg:min-h-[420px]">
+              <div className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-md bg-card/80 px-2.5 py-1 text-[11px] font-medium text-muted-foreground backdrop-blur z-10">
+                <span className={`h-1.5 w-1.5 rounded-full ${readings.length > 0 ? 'bg-accent' : 'bg-muted-foreground'}`} />
+                {readings.length > 0 ? `${readings.length} pengukuran` : 'Siap'}
+              </div>
+
+              <MeasurementSimulation
+                tool={tool}
+                trueLength={trueLength}
+                triggerMeasure={triggerMeasure}
+                onMeasure={handleMeasure}
+              />
+
+              <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full border border-border bg-card/90 px-2 py-1.5 shadow-card backdrop-blur z-10">
+                <button
+                  onClick={() => setTriggerMeasure(prev => prev + 1)}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-accent px-4 py-1.5 text-xs font-semibold text-accent-foreground hover:opacity-90"
+                >
+                  <Ruler className="h-3.5 w-3.5" />
+                  Ukur
+                </button>
+                <button
+                  onClick={handleReset}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs font-medium text-foreground hover:bg-secondary"
+                >
+                  <RotateCcw className="h-3.5 w-3.5" /> Reset
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom panels */}
+          <div className="grid grid-cols-1 gap-4 p-4 sm:p-6 lg:grid-cols-2">
+            <Panel title="Data Pengukuran" icon={<Gauge className="h-4 w-4" />}>
+              {readings.length === 0 ? (
+                <p className="text-sm text-muted-foreground">Belum ada data. Klik "Ukur" untuk memulai.</p>
+              ) : (
+                <table className="w-full text-left text-sm">
+                  <thead className="text-xs uppercase tracking-wide text-muted-foreground">
+                    <tr>
+                      <th className="pb-2 font-medium">No.</th>
+                      <th className="pb-2 font-medium">Bacaan (mm)</th>
+                      <th className="pb-2 font-medium">±δ (mm)</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border text-foreground">
+                    {readings.map((r, i) => (
+                      <tr key={i}>
+                        <td className="py-1.5 tabular-nums text-muted-foreground">{i + 1}</td>
+                        <td className="py-1.5 tabular-nums font-medium">{r.value.toFixed(r.decimals)}</td>
+                        <td className="py-1.5 tabular-nums text-muted-foreground">{r.uncertainty.toFixed(r.decimals + 1)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </Panel>
+
+            <Panel title="Analisis Kesalahan" icon={<Activity className="h-4 w-4" />}>
+              {readings.length < 2 ? (
+                <p className="text-sm text-muted-foreground">Lakukan minimal 2 pengukuran untuk analisis statistik.</p>
+              ) : (
+                <div className="space-y-2.5 text-sm">
+                  <Row label="Jumlah data (n)" value={`${readings.length}`} />
+                  {mean !== null && (
+                    <Row label="Rata-rata (x̄)" value={`${mean.toFixed(readings[0].decimals + 1)} mm`} />
+                  )}
+                  {stdDev !== null && (
+                    <Row label="Simpangan baku (s)" value={`${stdDev.toFixed(readings[0].decimals + 2)} mm`} />
+                  )}
+                  {showTrue && mean !== null && (
+                    <Row
+                      label="Kesalahan relatif"
+                      value={`${(Math.abs(mean - trueLength) / trueLength * 100).toFixed(2)}%`}
+                      highlight
+                    />
+                  )}
+                  {mean !== null && stdDev !== null && (
+                    <div className="mt-1 rounded-md bg-secondary/60 px-3 py-2 text-xs font-mono text-foreground">
+                      x̄ = ({mean.toFixed(readings[0].decimals + 1)} ± {stdDev.toFixed(readings[0].decimals + 2)}) mm
+                    </div>
+                  )}
+                </div>
+              )}
+            </Panel>
+          </div>
+        </div>
+
+        {/* Right sidebar */}
+        <aside className="w-full shrink-0 border-t border-border bg-sidebar text-sidebar-foreground lg:w-[340px] lg:border-l lg:border-t-0">
+          <div className="flex items-center gap-2 border-b border-sidebar-border px-5 py-4">
+            <Settings2 className="h-4 w-4 text-sidebar-primary" />
+            <h2 className="text-sm font-semibold">Parameter & Konversi</h2>
+          </div>
+
+          <div className="space-y-5 p-5">
+            {/* Tool selector */}
+            <SidebarSection label="Alat Ukur">
+              <div className="space-y-1.5">
+                {TOOL_OPTIONS.map(opt => (
+                  <button key={opt.v} onClick={() => setTool(opt.v)}
+                    className={`flex w-full items-center justify-between rounded-md border px-3 py-2 text-left text-sm transition-colors ${
+                      tool === opt.v
+                        ? 'border-accent bg-accent/10 font-medium text-accent-foreground'
+                        : 'border-sidebar-border bg-background text-foreground hover:bg-secondary'
+                    }`}
+                  >
+                    <span className="flex items-center gap-2">
+                      <span className={`h-2 w-2 rounded-full ${tool === opt.v ? 'bg-accent' : 'bg-muted'}`} />
+                      {opt.label}
+                    </span>
+                    <span className="text-xs text-muted-foreground">{opt.sub}</span>
+                  </button>
+                ))}
+              </div>
+            </SidebarSection>
+
+            <Slider
+              label="Panjang Benda"
+              unit="mm"
+              min={10} max={150} step={0.1}
+              value={trueLength}
+              onChange={setTrueLength}
+            />
+
+            <Toggle label="Tampilkan Nilai Sejati" checked={showTrue} onChange={setShowTrue} />
+
+            {showTrue && (
+              <div className="rounded-md border border-accent/30 bg-accent/8 px-3 py-2 text-sm">
+                <span className="text-muted-foreground">Nilai sejati: </span>
+                <span className="font-semibold tabular-nums text-accent">{trueLength.toFixed(2)} mm</span>
+              </div>
+            )}
+
+            <div className="border-t border-sidebar-border" />
+
+            {/* Unit Converter */}
+            <SidebarSection label="Konverter Satuan">
+              <Field label="Besaran">
+                <select value={convQty} onChange={e => handleQtyChange(e.target.value)}
+                  className="h-9 w-full rounded-md border border-sidebar-border bg-background px-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring/40">
+                  <option value="length">Panjang</option>
+                  <option value="mass">Massa</option>
+                  <option value="time">Waktu</option>
+                  <option value="temperature">Suhu</option>
+                </select>
+              </Field>
+
+              <div className="mt-2 flex items-center gap-2">
+                <input
+                  type="number"
+                  value={convVal}
+                  onChange={e => setConvVal(Number(e.target.value))}
+                  className="h-9 min-w-0 flex-1 rounded-md border border-sidebar-border bg-background px-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring/40"
+                />
+                <select value={convFrom} onChange={e => setConvFrom(e.target.value)}
+                  className="h-9 rounded-md border border-sidebar-border bg-background px-2 text-sm text-foreground focus:outline-none">
+                  {CONV_UNITS[convQty].map(u => <option key={u.v} value={u.v}>{u.label}</option>)}
+                </select>
+              </div>
+
+              <div className="my-1.5 flex items-center justify-center gap-1 text-xs text-muted-foreground">
+                <ArrowRightLeft className="h-3 w-3" /> konversi ke
+              </div>
+
+              <div className="flex items-center gap-2">
+                <div className="flex h-9 min-w-0 flex-1 items-center rounded-md border border-sidebar-border bg-secondary/50 px-2.5">
+                  <span className="truncate text-sm font-semibold tabular-nums text-foreground">{convResultStr}</span>
+                </div>
+                <select value={convTo} onChange={e => setConvTo(e.target.value)}
+                  className="h-9 rounded-md border border-sidebar-border bg-background px-2 text-sm text-foreground focus:outline-none">
+                  {CONV_UNITS[convQty].map(u => <option key={u.v} value={u.v}>{u.label}</option>)}
+                </select>
+              </div>
+            </SidebarSection>
+          </div>
+        </aside>
+      </div>
+    </div>
+  );
+}
+
+function Row({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
+  return (
+    <div className="flex items-center justify-between">
+      <span className="text-muted-foreground">{label}</span>
+      <span className={`font-semibold tabular-nums ${highlight ? 'text-accent' : 'text-foreground'}`}>{value}</span>
+    </div>
+  );
+}
+
+function SidebarSection({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-sidebar-foreground/55">{label}</p>
+      {children}
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 
 function Panel({ title, icon, children }: { title: string; icon: React.ReactNode; children: React.ReactNode }) {
   return (
