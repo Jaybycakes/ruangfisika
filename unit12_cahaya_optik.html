@@ -1,0 +1,1673 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 12: Cahaya & Optik — SMA Kelas 10</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #f5f5f3;
+    --bg3: #eeede9;
+    --text: #1a1a18;
+    --text2: #5a5955;
+    --text3: #8a8880;
+    --border: rgba(0,0,0,0.1);
+    --border2: rgba(0,0,0,0.18);
+    --blue: #1a5fa8;
+    --blue-bg: #e8f0fb;
+    --green: #1a7a4a;
+    --green-bg: #e6f4ec;
+    --amber: #a05c00;
+    --amber-bg: #fdf0d8;
+    --red: #b02020;
+    --red-bg: #fce8e8;
+    --purple: #6040c0;
+    --purple-bg: #eeebfb;
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1c1a;
+      --bg2: #252523;
+      --bg3: #2e2e2b;
+      --text: #e8e6df;
+      --text2: #9e9b93;
+      --text3: #6e6b63;
+      --border: rgba(255,255,255,0.09);
+      --border2: rgba(255,255,255,0.16);
+      --blue: #5590e0;
+      --blue-bg: #162340;
+      --green: #4ab870;
+      --green-bg: #0e2e1c;
+      --amber: #d49020;
+      --amber-bg: #2e2000;
+      --red: #e05050;
+      --red-bg: #2e1010;
+      --purple: #9070e0;
+      --purple-bg: #201840;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.5; }
+
+  /* ── Header ── */
+  header { border-bottom: 1px solid var(--border); padding: 14px 20px; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; background: var(--bg); z-index: 100; }
+  .logo { width: 32px; height: 32px; background: var(--blue); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 16px; flex-shrink: 0; }
+  header h1 { font-size: 15px; font-weight: 600; }
+  header p { font-size: 12px; color: var(--text2); }
+
+  /* ── Nav tabs ── */
+  nav { display: flex; gap: 2px; padding: 10px 20px 0; border-bottom: 1px solid var(--border); overflow-x: auto; scrollbar-width: none; }
+  nav::-webkit-scrollbar { display: none; }
+  .nav-tab { padding: 8px 14px; font-size: 13px; font-weight: 500; color: var(--text2); cursor: pointer; border-radius: var(--radius-sm) var(--radius-sm) 0 0; border: 1px solid transparent; border-bottom: none; white-space: nowrap; background: none; transition: color .15s, background .15s; }
+  .nav-tab:hover { color: var(--text); background: var(--bg2); }
+  .nav-tab.active { color: var(--blue); background: var(--bg); border-color: var(--border); border-bottom-color: var(--bg); margin-bottom: -1px; }
+
+  /* ── Layout ── */
+  main { padding: 20px; max-width: 900px; margin: 0 auto; }
+  .section { display: none; }
+  .section.active { display: block; }
+  .section-title { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+  .section-desc { font-size: 13px; color: var(--text2); margin-bottom: 18px; }
+
+  /* ── Cards ── */
+  .card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 14px; }
+  .card-title { font-size: 13px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 12px; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
+
+  /* ── Formula box ── */
+  .formula { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px; font-family: 'Courier New', monospace; font-size: 13px; color: var(--blue); margin: 6px 0; }
+
+  /* ── Controls ── */
+  .ctrl-row { display: flex; align-items: center; gap: 10px; margin: 8px 0; }
+  .ctrl-row label { font-size: 12px; color: var(--text2); min-width: 160px; }
+  .ctrl-row input[type=range] { flex: 1; accent-color: var(--blue); height: 4px; }
+  .ctrl-val { font-size: 13px; font-weight: 600; min-width: 60px; text-align: right; color: var(--text); }
+
+  /* ── Result pills ── */
+  .results { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .result-pill { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; text-align: center; min-width: 110px; }
+  .result-pill .rp-label { font-size: 11px; color: var(--text3); margin-bottom: 2px; }
+  .result-pill .rp-val { font-size: 17px; font-weight: 600; color: var(--text); }
+
+  /* ── Canvas ── */
+  canvas { display: block; width: 100%; max-width: 100%; border-radius: var(--radius-sm); background: var(--bg3); box-sizing: border-box; }
+
+  /* ── Info boxes ── */
+  .info { font-size: 12px; color: var(--text2); line-height: 1.7; margin: 8px 0; }
+  .callout { border-radius: var(--radius-sm); padding: 10px 14px; font-size: 13px; margin: 8px 0; }
+  .callout-blue { background: var(--blue-bg); color: var(--blue); }
+  .callout-green { background: var(--green-bg); color: var(--green); }
+  .callout-amber { background: var(--amber-bg); color: var(--amber); }
+  .callout-red { background: var(--red-bg); color: var(--red); }
+  .callout-purple { background: var(--purple-bg); color: var(--purple); }
+
+  /* ── Radio / Select ── */
+  .radio-group { display: flex; gap: 12px; flex-wrap: wrap; margin: 8px 0; }
+  .radio-group label { display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer; }
+  select { padding: 6px 10px; border-radius: var(--radius-sm); border: 1px solid var(--border2); background: var(--bg); color: var(--text); font-size: 13px; }
+
+  /* ── Sub-tabs ── */
+  .sub-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+  .sub-tab { padding: 5px 14px; border-radius: 999px; font-size: 12px; font-weight: 500; cursor: pointer; border: 1px solid var(--border2); background: var(--bg); color: var(--text2); transition: all .15s; }
+  .sub-tab.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+
+  /* ── Summary table ── */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; font-size: 11px; color: var(--text3); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; padding: 6px 8px; border-bottom: 1px solid var(--border); }
+  td { padding: 7px 8px; border-bottom: 1px solid var(--border); }
+  tr:last-child td { border-bottom: none; }
+  td:nth-child(2) { font-family: monospace; color: var(--blue); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">💡</div>
+  <div>
+    <h1>Unit 12: Cahaya &amp; Optik</h1>
+    <p>SMA Kelas 10 · Kurikulum Merdeka</p>
+  </div>
+</header>
+
+<nav id="main-nav">
+  <div class="nav-tab active" onclick="showSection('pemantulan',this)">Pemantulan</div>
+  <div class="nav-tab" onclick="showSection('pembiasan',this)">Pembiasan &amp; TIR</div>
+  <div class="nav-tab" onclick="showSection('cermin',this)">Cermin</div>
+  <div class="nav-tab" onclick="showSection('lensa',this)">Lensa</div>
+  <div class="nav-tab" onclick="showSection('dispersi',this)">Dispersi</div>
+  <div class="nav-tab" onclick="showSection('mata',this)">Mata &amp; Cacat</div>
+  <div class="nav-tab" onclick="showSection('alat',this)">Alat Optik</div>
+</nav>
+
+<main>
+
+<!-- ══════════════════════════════════════════════
+     1. PEMANTULAN
+══════════════════════════════════════════════ -->
+<div class="section active" id="s-pemantulan">
+  <div class="section-title">Pemantulan Cahaya</div>
+  <div class="section-desc">Hukum pemantulan: sudut datang = sudut pantul (θᵢ = θᵣ), diukur terhadap garis normal.</div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Hukum Pemantulan</div>
+      <div class="formula">θᵢ = θᵣ</div>
+      <div class="ctrl-row">
+        <label>Sudut datang θᵢ (°)</label>
+        <input type="range" id="ref-ang" min="5" max="85" value="40" oninput="drawReflection()">
+        <span class="ctrl-val" id="ref-ang-v">40°</span>
+      </div>
+      <canvas id="ref-c" height="200"></canvas>
+      <div class="results" id="ref-res"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Cermin Datar</div>
+      <div class="info">Bayangan pada cermin datar bersifat: maya, tegak, sama besar, dan jarak bayangan = jarak benda.</div>
+      <div class="formula">dᵢ = dₒ &nbsp;|&nbsp; M = 1 &nbsp;|&nbsp; sifat: maya, tegak</div>
+      <div class="ctrl-row">
+        <label>Jarak benda dₒ (cm)</label>
+        <input type="range" id="flat-d" min="5" max="30" value="15" oninput="drawFlatMirror()">
+        <span class="ctrl-val" id="flat-d-v">15 cm</span>
+      </div>
+      <canvas id="flat-c" height="200"></canvas>
+      <div class="callout callout-blue" id="flat-info">Bayangan: maya, tegak, dᵢ = 15 cm, M = 1×</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     2. PEMBIASAN & TIR
+══════════════════════════════════════════════ -->
+<div class="section" id="s-pembiasan">
+  <div class="section-title">Pembiasan &amp; Pemantulan Total Dalam</div>
+  <div class="section-desc">Cahaya membelok saat berpindah medium karena perubahan kecepatan rambat.</div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Hukum Snell</div>
+      <div class="formula">n₁ · sin θ₁ = n₂ · sin θ₂ &nbsp;|&nbsp; n = c/v</div>
+      <div class="ctrl-row">
+        <label>n₁ (medium atas)</label>
+        <input type="range" id="sn-n1" min="1.0" max="2.5" value="1.0" step="0.05" oninput="drawSnell()">
+        <span class="ctrl-val" id="sn-n1-v">1.00</span>
+      </div>
+      <div class="ctrl-row">
+        <label>n₂ (medium bawah)</label>
+        <input type="range" id="sn-n2" min="1.0" max="2.5" value="1.50" step="0.05" oninput="drawSnell()">
+        <span class="ctrl-val" id="sn-n2-v">1.50</span>
+      </div>
+      <div class="ctrl-row">
+        <label>Sudut datang θ₁ (°)</label>
+        <input type="range" id="sn-th" min="1" max="89" value="45" oninput="drawSnell()">
+        <span class="ctrl-val" id="sn-th-v">45°</span>
+      </div>
+      <canvas id="sn-c" height="220"></canvas>
+      <div id="sn-res" style="margin-top:10px"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Pemantulan Total Dalam (TIR)</div>
+      <div class="formula">sin θc = n₂/n₁ &nbsp; (n₁ &gt; n₂)</div>
+      <div class="info">TIR terjadi ketika sudut datang &gt; sudut kritis θc. Contoh: serat optik, berlian, mirage.</div>
+      <div class="ctrl-row">
+        <label>n₁ (lebih rapat, bawah)</label>
+        <input type="range" id="tir-n1" min="1.3" max="2.5" value="1.5" step="0.05" oninput="drawTIR()">
+        <span class="ctrl-val" id="tir-n1-v">1.50</span>
+      </div>
+      <div class="ctrl-row">
+        <label>n₂ (lebih renggang, atas)</label>
+        <input type="range" id="tir-n2" min="1.0" max="1.5" value="1.0" step="0.05" oninput="drawTIR()">
+        <span class="ctrl-val" id="tir-n2-v">1.00</span>
+      </div>
+      <div class="ctrl-row">
+        <label>Sudut datang θ (°)</label>
+        <input type="range" id="tir-th" min="1" max="89" value="35" oninput="drawTIR()">
+        <span class="ctrl-val" id="tir-th-v">35°</span>
+      </div>
+      <canvas id="tir-c" height="220"></canvas>
+      <div id="tir-res" style="margin-top:8px"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Indeks Bias Berbagai Medium</div>
+    <table>
+      <tr><th>Medium</th><th>n</th><th>v cahaya (m/s)</th><th>Keterangan</th></tr>
+      <tr><td>Vakum / Udara</td><td>1.000</td><td>3.00 × 10⁸</td><td>Referensi</td></tr>
+      <tr><td>Air</td><td>1.333</td><td>2.25 × 10⁸</td><td>Kolam, sungai</td></tr>
+      <tr><td>Kaca crown</td><td>1.520</td><td>1.97 × 10⁸</td><td>Kacamata biasa</td></tr>
+      <tr><td>Kaca flint</td><td>1.700</td><td>1.76 × 10⁸</td><td>Lensa kamera</td></tr>
+      <tr><td>Berlian</td><td>2.417</td><td>1.24 × 10⁸</td><td>θc = 24.4°</td></tr>
+      <tr><td>Serat optik (inti)</td><td>1.620</td><td>1.85 × 10⁸</td><td>Telekomunikasi</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     3. CERMIN LENGKUNG
+══════════════════════════════════════════════ -->
+<div class="section" id="s-cermin">
+  <div class="section-title">Cermin Lengkung</div>
+  <div class="section-desc">Cermin cekung (konvergen) dan cermin cembung (divergen). Persamaan cermin: 1/f = 1/dₒ + 1/dᵢ</div>
+
+  <div class="card">
+    <div class="card-title">Jenis Cermin</div>
+    <div class="radio-group">
+      <label><input type="radio" name="mir-type" value="cekung" checked onchange="drawMirror()"> Cermin Cekung (f > 0)</label>
+      <label><input type="radio" name="mir-type" value="cembung" onchange="drawMirror()"> Cermin Cembung (f < 0)</label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Simulator Diagram Sinar</div>
+    <div class="formula">1/f = 1/dₒ + 1/dᵢ &nbsp;|&nbsp; M = -dᵢ/dₒ = hᵢ/hₒ &nbsp;|&nbsp; f = R/2</div>
+    <div class="two-col">
+      <div>
+        <div class="ctrl-row">
+          <label>Panjang fokus |f| (cm)</label>
+          <input type="range" id="mir-f" min="5" max="25" value="10" oninput="drawMirror()">
+          <span class="ctrl-val" id="mir-f-v">10</span>
+        </div>
+        <div class="ctrl-row">
+          <label>Jarak benda dₒ (cm)</label>
+          <input type="range" id="mir-do" min="2" max="40" value="20" oninput="drawMirror()">
+          <span class="ctrl-val" id="mir-do-v">20</span>
+        </div>
+        <div class="ctrl-row">
+          <label>Tinggi benda hₒ (cm)</label>
+          <input type="range" id="mir-h" min="1" max="10" value="5" oninput="drawMirror()">
+          <span class="ctrl-val" id="mir-h-v">5</span>
+        </div>
+      </div>
+      <div id="mir-result-box">
+        <div class="results" id="mir-res"></div>
+        <div id="mir-sifat" style="margin-top:8px"></div>
+      </div>
+    </div>
+    <canvas id="mir-c" height="240"></canvas>
+    <div id="mir-eq" style="margin-top:10px"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Tabel Bayangan Cermin Cekung (Posisi Benda vs Sifat Bayangan)</div>
+    <table>
+      <tr><th>Posisi Benda</th><th>Posisi Bayangan</th><th>Sifat Bayangan</th></tr>
+      <tr><td>dₒ &gt; 2f (di luar pusat kelengkungan)</td><td>f &lt; dᵢ &lt; 2f</td><td>Nyata, terbalik, diperkecil</td></tr>
+      <tr><td>dₒ = 2f (di pusat kelengkungan)</td><td>dᵢ = 2f</td><td>Nyata, terbalik, sama besar</td></tr>
+      <tr><td>f &lt; dₒ &lt; 2f (antara f dan 2f)</td><td>dᵢ &gt; 2f</td><td>Nyata, terbalik, diperbesar</td></tr>
+      <tr><td>dₒ = f (di titik fokus)</td><td>dᵢ = ∞</td><td>Cahaya sejajar / tidak terbentuk</td></tr>
+      <tr><td>dₒ &lt; f (di dalam fokus)</td><td>dᵢ &lt; 0 (di belakang cermin)</td><td>Maya, tegak, diperbesar</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     4. LENSA
+══════════════════════════════════════════════ -->
+<div class="section" id="s-lensa">
+  <div class="section-title">Lensa Tipis</div>
+  <div class="section-desc">Lensa cembung (konvergen, f > 0) dan lensa cekung (divergen, f < 0). Sama dengan cermin, tapi bayangan nyata di sisi berlawanan.</div>
+
+  <div class="card">
+    <div class="card-title">Jenis Lensa</div>
+    <div class="radio-group">
+      <label><input type="radio" name="lens-type" value="cembung" checked onchange="drawLens()"> Lensa Cembung / Konvergen (f > 0)</label>
+      <label><input type="radio" name="lens-type" value="cekung" onchange="drawLens()"> Lensa Cekung / Divergen (f < 0)</label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Simulator Diagram Sinar Lensa</div>
+    <div class="formula">1/f = 1/dₒ + 1/dᵢ &nbsp;|&nbsp; M = -dᵢ/dₒ &nbsp;|&nbsp; P = 1/f (dioptri, f dalam meter)</div>
+    <div class="two-col">
+      <div>
+        <div class="ctrl-row">
+          <label>Panjang fokus |f| (cm)</label>
+          <input type="range" id="lens-f" min="5" max="25" value="10" oninput="drawLens()">
+          <span class="ctrl-val" id="lens-f-v">10</span>
+        </div>
+        <div class="ctrl-row">
+          <label>Jarak benda dₒ (cm)</label>
+          <input type="range" id="lens-do" min="2" max="50" value="20" oninput="drawLens()">
+          <span class="ctrl-val" id="lens-do-v">20</span>
+        </div>
+        <div class="ctrl-row">
+          <label>Tinggi benda hₒ (cm)</label>
+          <input type="range" id="lens-h" min="1" max="10" value="5" oninput="drawLens()">
+          <span class="ctrl-val" id="lens-h-v">5</span>
+        </div>
+      </div>
+      <div>
+        <div class="results" id="lens-res"></div>
+        <div id="lens-sifat" style="margin-top:8px"></div>
+      </div>
+    </div>
+    <canvas id="lens-c" height="240"></canvas>
+    <div id="lens-eq" style="margin-top:10px"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     5. DISPERSI
+══════════════════════════════════════════════ -->
+<div class="section" id="s-dispersi">
+  <div class="section-title">Dispersi Cahaya &amp; Prisma</div>
+  <div class="section-desc">Cahaya putih terdiri dari semua warna spektrum. Karena n berbeda untuk tiap panjang gelombang, prisma memisahkan warna (dispersi).</div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Simulator Prisma</div>
+      <div class="ctrl-row">
+        <label>Sudut prisma α (°)</label>
+        <input type="range" id="pr-ang" min="20" max="70" value="45" oninput="drawPrism()">
+        <span class="ctrl-val" id="pr-ang-v">45°</span>
+      </div>
+      <div class="ctrl-row">
+        <label>Sudut datang θ₁ (°)</label>
+        <input type="range" id="pr-th" min="10" max="70" value="40" oninput="drawPrism()">
+        <span class="ctrl-val" id="pr-th-v">40°</span>
+      </div>
+      <canvas id="pr-c" height="260"></canvas>
+    </div>
+    <div class="card">
+      <div class="card-title">Spektrum Warna Cahaya</div>
+      <div class="info">Panjang gelombang cahaya tampak (nm):</div>
+      <canvas id="spec-c" height="80"></canvas>
+      <table style="margin-top:10px">
+        <tr><th>Warna</th><th>λ (nm)</th><th>n kaca crown</th></tr>
+        <tr><td>🔴 Merah</td><td>700</td><td>1.514</td></tr>
+        <tr><td>🟠 Jingga</td><td>620</td><td>1.516</td></tr>
+        <tr><td>🟡 Kuning</td><td>580</td><td>1.518</td></tr>
+        <tr><td>🟢 Hijau</td><td>530</td><td>1.521</td></tr>
+        <tr><td>🔵 Biru</td><td>470</td><td>1.526</td></tr>
+        <tr><td>🟣 Ungu</td><td>420</td><td>1.532</td></tr>
+      </table>
+      <div class="callout callout-amber" style="margin-top:10px">
+        Semakin pendek λ → n lebih besar → dibiaskan lebih banyak. Ungu paling dibelokkan, merah paling sedikit.
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Fenomena Dispersi di Alam</div>
+    <div class="two-col">
+      <div>
+        <div class="callout callout-blue" style="margin-bottom:8px">
+          🌈 <strong>Pelangi:</strong> Tetes air hujan bertindak sebagai prisma. Cahaya matahari dibiaskan masuk, dipantulkan total dalam, lalu dibiaskan keluar → spektrum warna terurai.
+        </div>
+        <div class="callout callout-green">
+          💎 <strong>Kilau Berlian:</strong> n = 2.417 (sangat tinggi), θc = 24.4° (sangat kecil). Hampir semua cahaya mengalami TIR berulang di dalam berlian → berkilau.
+        </div>
+      </div>
+      <div>
+        <div class="callout callout-purple" style="margin-bottom:8px">
+          🌅 <strong>Langit Biru:</strong> Bukan dispersi, melainkan hamburan Rayleigh. Panjang gelombang pendek (biru) dihamburkan lebih kuat oleh molekul udara.
+        </div>
+        <div class="callout callout-red">
+          📡 <strong>Serat Optik:</strong> Menggunakan TIR untuk memandu cahaya tanpa kehilangan sinyal sepanjang ribuan km.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     6. MATA & CACAT
+══════════════════════════════════════════════ -->
+<div class="section" id="s-mata">
+  <div class="section-title">Mata Manusia &amp; Cacat Mata</div>
+  <div class="section-desc">Mata normal (emetropi) dapat melihat jelas dari 25 cm (titik dekat / PP) hingga tak terhingga (titik jauh / PR).</div>
+
+  <div class="sub-tabs">
+    <div class="sub-tab active" onclick="showEyeTab('normal',this)">Mata Normal</div>
+    <div class="sub-tab" onclick="showEyeTab('miopi',this)">Miopi (rabun jauh)</div>
+    <div class="sub-tab" onclick="showEyeTab('hipermetropi',this)">Hipermetropi (rabun dekat)</div>
+    <div class="sub-tab" onclick="showEyeTab('presbiopi',this)">Presbiopi</div>
+  </div>
+
+  <div id="eye-content"></div>
+
+  <div class="card">
+    <div class="card-title">Kalkulator Kacamata Koreksi</div>
+    <div class="formula">P = 1/f (dioptri) &nbsp;|&nbsp; f dalam meter</div>
+    <div class="two-col">
+      <div>
+        <div class="ctrl-row">
+          <label>Jenis cacat mata</label>
+          <select id="kac-type" onchange="calcKacamata()">
+            <option value="miopi">Miopi</option>
+            <option value="hipermetropi">Hipermetropi</option>
+          </select>
+        </div>
+        <div class="ctrl-row" id="kac-row1">
+          <label>Titik jauh (PR) aktual (m)</label>
+          <input type="range" id="kac-pr" min="0.5" max="5" value="2" step="0.5" oninput="calcKacamata()">
+          <span class="ctrl-val" id="kac-pr-v">2.0 m</span>
+        </div>
+        <div class="ctrl-row" id="kac-row2" style="display:none">
+          <label>Titik dekat (PP) aktual (cm)</label>
+          <input type="range" id="kac-pp" min="30" max="100" value="50" step="5" oninput="calcKacamata()">
+          <span class="ctrl-val" id="kac-pp-v">50 cm</span>
+        </div>
+      </div>
+      <div id="kac-res"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     7. ALAT OPTIK
+══════════════════════════════════════════════ -->
+<div class="section" id="s-alat">
+  <div class="section-title">Alat Optik</div>
+  <div class="section-desc">Alat optik memanfaatkan sifat lensa dan cermin untuk memperbesar atau memfokuskan cahaya.</div>
+
+  <div class="sub-tabs">
+    <div class="sub-tab active" onclick="showToolTab('lup',this)">Lup</div>
+    <div class="sub-tab" onclick="showToolTab('kamera',this)">Kamera</div>
+    <div class="sub-tab" onclick="showToolTab('mikro',this)">Mikroskop</div>
+    <div class="sub-tab" onclick="showToolTab('teleskop',this)">Teleskop</div>
+  </div>
+
+  <div id="tool-content"></div>
+</div>
+
+</main>
+
+<script>
+/* ══════════════════ NAVIGATION ══════════════════ */
+function showSection(id, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('s-' + id).classList.add('active');
+  el.classList.add('active');
+  // rAF ensures the browser has painted the section visible before we measure widths
+  requestAnimationFrame(() => requestAnimationFrame(() => redrawAll()));
+}
+
+function redrawAll() {
+  const active = document.querySelector('.section.active');
+  if (!active) return;
+  const id = active.id;
+  if (id === 's-pemantulan') { drawReflection(); drawFlatMirror(); }
+  if (id === 's-pembiasan') { drawSnell(); drawTIR(); }
+  if (id === 's-cermin') { drawMirror(); }
+  if (id === 's-lensa') { drawLens(); }
+  if (id === 's-dispersi') { drawPrism(); drawSpectrum(); }
+  if (id === 's-mata') { /* handled by tab */ }
+  if (id === 's-alat') { /* handled by tab */ }
+}
+
+/* ══════════════════ HELPERS ══════════════════ */
+function resizeCanvas(cv, h) {
+  // Read the *current* CSS width of the canvas element itself (set by the grid/flex parent).
+  // We must NOT set cv.style.width here — that's what causes the feedback loop where
+  // each draw call expands the canvas, which expands the parent, which gives a bigger
+  // width next time, which grows it further.
+  // Instead we just honour whatever width the layout already gave us.
+  const W = cv.offsetWidth || cv.parentElement?.offsetWidth || 480;
+  const dpr = window.devicePixelRatio || 1;
+  // Only resize the backing store if dimensions actually changed (avoids unnecessary clears)
+  if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(h * dpr)) {
+    cv.width  = Math.round(W * dpr);
+    cv.height = Math.round(h * dpr);
+  }
+  // Always keep CSS size pinned to logical px so the element doesn't grow
+  cv.style.width  = W + 'px';
+  cv.style.height = h + 'px';
+  const ctx = cv.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return { W, ctx };
+}
+function isDark() { return window.matchMedia('(prefers-color-scheme: dark)').matches; }
+function textCol() { return isDark() ? '#c8c5bc' : '#2a2a28'; }
+function gridCol() { return isDark() ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)'; }
+function fmtNum(n, d=2) { return isFinite(n) ? n.toFixed(d) : '∞'; }
+
+function resultPills(container, items) {
+  container.innerHTML = items.map(([label, val, color]) =>
+    `<div class="result-pill" style="${color?`border-color:${color};`:''}">`+
+    `<div class="rp-label">${label}</div>`+
+    `<div class="rp-val" style="${color?`color:${color}`:''}">${val}</div></div>`
+  ).join('');
+}
+
+/* ══════════════════ 1. PEMANTULAN ══════════════════ */
+function drawReflection() {
+  const ang = +document.getElementById('ref-ang').value;
+  document.getElementById('ref-ang-v').textContent = ang + '°';
+  const cv = document.getElementById('ref-c');
+  const { W, ctx } = resizeCanvas(cv, 220);
+  ctx.clearRect(0, 0, W, 220);
+  const cx = W / 2, cy = 165, r = ang * Math.PI / 180;
+  const L = Math.min(130, W * 0.44);
+  const dark = isDark(), tc = textCol();
+
+  // Mirror surface
+  ctx.strokeStyle = dark ? '#5590e0' : '#1a5fa8'; ctx.lineWidth = 3; ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(cx - W*0.35, cy); ctx.lineTo(cx + W*0.35, cy); ctx.stroke();
+  // Hatching below mirror
+  ctx.strokeStyle = dark ? '#333' : '#ccc'; ctx.lineWidth = 1;
+  for (let x = cx - W*0.35; x < cx + W*0.35; x += 14) {
+    ctx.beginPath(); ctx.moveTo(x, cy); ctx.lineTo(x + 10, cy + 10); ctx.stroke();
+  }
+
+  // Normal (dashed)
+  ctx.setLineDash([6, 5]); ctx.strokeStyle = dark ? '#555' : '#bbb'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(cx, cy - L - 10); ctx.lineTo(cx, cy + 20); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = dark ? '#555' : '#aaa'; ctx.font = '11px system-ui'; ctx.textAlign = 'center';
+  ctx.fillText('Normal', cx, cy - L - 14);
+
+  function arrow(x1, y1, x2, y2, col) {
+    ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = 2.5; ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+    const a = Math.atan2(y2 - y1, x2 - x1);
+    ctx.beginPath(); ctx.moveTo(x2, y2);
+    ctx.lineTo(x2 - 11*Math.cos(a-0.32), y2 - 11*Math.sin(a-0.32));
+    ctx.lineTo(x2 - 11*Math.cos(a+0.32), y2 - 11*Math.sin(a+0.32));
+    ctx.closePath(); ctx.fill();
+  }
+
+  // Incoming ray (from top-left toward cx,cy)
+  arrow(cx - L*Math.sin(r), cy - L*Math.cos(r), cx, cy, '#e8a020');
+  // Reflected ray (from cx,cy to top-right)
+  arrow(cx, cy, cx + L*Math.sin(r), cy - L*Math.cos(r), '#d04030');
+
+  // Angle arcs
+  const arcR = 44;
+  ctx.strokeStyle = '#e8a020'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.arc(cx, cy, arcR, -Math.PI/2 - r, -Math.PI/2); ctx.stroke();
+  ctx.strokeStyle = '#d04030';
+  ctx.beginPath(); ctx.arc(cx, cy, arcR, -Math.PI/2, -Math.PI/2 + r); ctx.stroke();
+
+  // Angle labels
+  const midIn = -Math.PI/2 - r/2, midRef = -Math.PI/2 + r/2;
+  ctx.font = 'bold 13px system-ui';
+  ctx.fillStyle = '#e8a020'; ctx.textAlign = 'center';
+  ctx.fillText('θᵢ=' + ang + '°', cx + (arcR+16)*Math.cos(midIn), cy + (arcR+16)*Math.sin(midIn));
+  ctx.fillStyle = '#d04030';
+  ctx.fillText('θᵣ=' + ang + '°', cx + (arcR+16)*Math.cos(midRef), cy + (arcR+16)*Math.sin(midRef));
+
+  // Ray labels
+  ctx.font = '12px system-ui';
+  ctx.fillStyle = '#e8a020'; ctx.textAlign = 'right';
+  ctx.fillText('Sinar datang', cx - L*Math.sin(r) - 4, cy - L*Math.cos(r) - 6);
+  ctx.fillStyle = '#d04030'; ctx.textAlign = 'left';
+  ctx.fillText('Sinar pantul', cx + L*Math.sin(r) + 4, cy - L*Math.cos(r) - 6);
+
+  // Result
+  ctx.fillStyle = dark ? '#4ab870' : '#1a7a4a'; ctx.font = 'bold 13px system-ui'; ctx.textAlign = 'center';
+  ctx.fillText('θᵢ = θᵣ = ' + ang + '° ✓', cx, cy + 40);
+  ctx.fillStyle = tc; ctx.font = '11px system-ui';
+  ctx.fillText('Hukum Pemantulan: sudut datang = sudut pantul', cx, cy + 56);
+
+  resultPills(document.getElementById('ref-res'), [
+    ['Sudut datang θᵢ', ang + '°', null],
+    ['Sudut pantul θᵣ', ang + '°', '#1a5fa8'],
+    ['θᵢ = θᵣ ?', 'YA ✓', '#1a7a4a'],
+  ]);
+}
+
+function drawFlatMirror() {
+  const d = +document.getElementById('flat-d').value;
+  document.getElementById('flat-d-v').textContent = d + ' cm';
+  const cv = document.getElementById('flat-c');
+  const { W, ctx } = resizeCanvas(cv, 200);
+  ctx.clearRect(0, 0, W, 200);
+  const dark = isDark(), tc = textCol();
+
+  // positions: mirror at 58%, object left, image right
+  const mx = Math.round(W * 0.58), axisY = 120;
+  const px = Math.min(55, d * 3.5); // pixel offset for object/image from mirror
+  const objX = Math.max(30, mx - px), imgX = Math.min(W - 20, mx + px);
+  const arrowH = 55;
+
+  // ── Mirror ──
+  ctx.strokeStyle = dark ? '#5590e0' : '#1a5fa8'; ctx.lineWidth = 3; ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(mx, 20); ctx.lineTo(mx, 185); ctx.stroke();
+  ctx.strokeStyle = dark ? '#333' : '#ccc'; ctx.lineWidth = 1;
+  for (let y = 20; y < 185; y += 13) { ctx.beginPath(); ctx.moveTo(mx, y); ctx.lineTo(mx + 9, y + 9); ctx.stroke(); }
+
+  // ── Optical axis ──
+  ctx.strokeStyle = dark ? '#333' : '#e0ddd8'; ctx.lineWidth = 1; ctx.setLineDash([4, 3]);
+  ctx.beginPath(); ctx.moveTo(10, axisY); ctx.lineTo(W - 10, axisY); ctx.stroke(); ctx.setLineDash([]);
+
+  // ── Object arrow ──
+  ctx.strokeStyle = '#e05030'; ctx.fillStyle = '#e05030'; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.moveTo(objX, axisY); ctx.lineTo(objX, axisY - arrowH); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(objX, axisY - arrowH); ctx.lineTo(objX-6, axisY-arrowH+12); ctx.lineTo(objX+6, axisY-arrowH+12); ctx.closePath(); ctx.fill();
+
+  // ── Image arrow (dashed, same height) ──
+  ctx.strokeStyle = '#888'; ctx.fillStyle = '#888'; ctx.lineWidth = 1.8; ctx.setLineDash([5, 4]);
+  ctx.beginPath(); ctx.moveTo(imgX, axisY); ctx.lineTo(imgX, axisY - arrowH); ctx.stroke(); ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(imgX, axisY - arrowH); ctx.lineTo(imgX-6, axisY-arrowH+12); ctx.lineTo(imgX+6, axisY-arrowH+12); ctx.closePath(); ctx.fill();
+
+  // ── Ray from object tip to mirror then to image tip ──
+  ctx.strokeStyle = '#e8a020'; ctx.lineWidth = 1.5; ctx.setLineDash([4, 3]);
+  ctx.beginPath(); ctx.moveTo(objX, axisY - arrowH); ctx.lineTo(mx, axisY - arrowH); ctx.lineTo(imgX, axisY - arrowH); ctx.stroke(); ctx.setLineDash([]);
+
+  // ── Labels ──
+  ctx.font = '12px system-ui'; ctx.textAlign = 'center';
+  ctx.fillStyle = '#e05030'; ctx.fillText('Benda', objX, axisY + 16);
+  ctx.fillStyle = '#888'; ctx.fillText('Bayangan (maya)', imgX, axisY + 16);
+  ctx.fillStyle = tc;
+  ctx.fillText('dₒ = ' + d + ' cm', objX, axisY + 30);
+  ctx.fillText('dᵢ = ' + d + ' cm', imgX, axisY + 30);
+  ctx.fillStyle = dark ? '#5590e0' : '#1a5fa8'; ctx.font = 'bold 11px system-ui';
+  ctx.fillText('Cermin Datar', mx, 14);
+
+  document.getElementById('flat-info').textContent = `Bayangan: maya, tegak, dᵢ = ${d} cm, M = 1× (sama besar)`;
+}
+
+/* ══════════════════ 2. SNELL & TIR ══════════════════ */
+function drawSnell() {
+  const n1 = +document.getElementById('sn-n1').value;
+  const n2 = +document.getElementById('sn-n2').value;
+  const th1 = +document.getElementById('sn-th').value;
+  document.getElementById('sn-n1-v').textContent = n1.toFixed(2);
+  document.getElementById('sn-n2-v').textContent = n2.toFixed(2);
+  document.getElementById('sn-th-v').textContent = th1 + '°';
+
+  const cv = document.getElementById('sn-c');
+  const { W, ctx } = resizeCanvas(cv, 260);
+  ctx.clearRect(0, 0, W, 260);
+
+  const cx = W / 2, cy = 120, L = Math.min(100, W * 0.38);
+  const r1 = th1 * Math.PI / 180;
+  const sinTh2 = (n1 / n2) * Math.sin(r1);
+  const tir = Math.abs(sinTh2) > 1;
+  const r2 = tir ? null : Math.asin(sinTh2);
+  const dark = isDark(), tc = textCol();
+
+  // Medium fill (lower)
+  ctx.fillStyle = dark ? 'rgba(50,100,180,0.18)' : 'rgba(100,160,255,0.13)';
+  ctx.fillRect(0, cy, W, 260 - cy);
+
+  // Medium labels
+  ctx.font = '13px system-ui'; ctx.fillStyle = dark ? '#7aacee' : '#1a5fa8';
+  ctx.textAlign = 'left';
+  ctx.fillText('Medium 1  n₁ = ' + n1.toFixed(2), 10, cy - 14);
+  ctx.fillText('Medium 2  n₂ = ' + n2.toFixed(2), 10, cy + 20);
+
+  // Boundary line
+  ctx.strokeStyle = dark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.2)';
+  ctx.lineWidth = 1.5; ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(W, cy); ctx.stroke();
+
+  // Normal (dashed)
+  ctx.setLineDash([6, 5]);
+  ctx.strokeStyle = dark ? '#555' : '#bbb'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(cx, cy - L - 15); ctx.lineTo(cx, cy + L + 15); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // ── Incoming ray ──
+  const ix = cx - L * Math.sin(r1), iy = cy - L * Math.cos(r1);
+  ctx.strokeStyle = '#e8a020'; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.moveTo(ix, iy); ctx.lineTo(cx, cy); ctx.stroke();
+  // arrowhead at boundary
+  const a1 = Math.atan2(cy - iy, cx - ix);
+  ctx.fillStyle = '#e8a020';
+  ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx - 10*Math.cos(a1-0.3), cy - 10*Math.sin(a1-0.3)); ctx.lineTo(cx - 10*Math.cos(a1+0.3), cy - 10*Math.sin(a1+0.3)); ctx.closePath(); ctx.fill();
+
+  // ── Reflected ray (partial, dashed) ──
+  ctx.strokeStyle = dark ? '#aaa' : '#888'; ctx.lineWidth = 1.2; ctx.setLineDash([4, 4]);
+  ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + L * 0.55 * Math.sin(r1), cy - L * 0.55 * Math.cos(r1)); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = dark ? '#888' : '#666'; ctx.font = '11px system-ui'; ctx.textAlign = 'left';
+  ctx.fillText('pantul', cx + L * 0.55 * Math.sin(r1) + 4, cy - L * 0.55 * Math.cos(r1));
+
+  // ── Refracted or TIR ──
+  if (!tir && r2 !== null) {
+    const rx = cx + L * Math.sin(r2), ry = cy + L * Math.cos(r2);
+    ctx.strokeStyle = '#1d9e75'; ctx.lineWidth = 2.5; ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(rx, ry); ctx.stroke();
+    const a2 = Math.atan2(ry - cy, rx - cx);
+    ctx.fillStyle = '#1d9e75';
+    ctx.beginPath(); ctx.moveTo(rx, ry); ctx.lineTo(rx - 10*Math.cos(a2-0.3), ry - 10*Math.sin(a2-0.3)); ctx.lineTo(rx - 10*Math.cos(a2+0.3), ry - 10*Math.sin(a2+0.3)); ctx.closePath(); ctx.fill();
+    // angle arc for θ₂
+    ctx.strokeStyle = '#1d9e75'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(cx, cy, 34, Math.PI/2, Math.PI/2 + r2); ctx.stroke();
+    ctx.fillStyle = '#1d9e75'; ctx.font = '12px system-ui'; ctx.textAlign = 'left';
+    ctx.fillText('θ₂=' + (r2*180/Math.PI).toFixed(1)+'°', cx + 36*Math.sin(r2/2+0.1), cy + 36*Math.cos(r2/2+0.1) + 4);
+  } else {
+    // TIR — show reflected ray solid and red
+    ctx.strokeStyle = '#d04030'; ctx.lineWidth = 2.5; ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + L * Math.sin(r1), cy - L * Math.cos(r1)); ctx.stroke();
+    ctx.fillStyle = '#d04030'; ctx.font = '12px system-ui'; ctx.textAlign = 'center';
+    ctx.fillText('⚠ Pemantulan Total!', cx, cy - L * Math.cos(r1) - 8);
+  }
+
+  // ── θ₁ angle arc ──
+  ctx.strokeStyle = '#e8a020'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.arc(cx, cy, 38, -Math.PI/2, -Math.PI/2 + r1); ctx.stroke();
+  ctx.fillStyle = '#e8a020'; ctx.font = '12px system-ui'; ctx.textAlign = 'right';
+  ctx.fillText('θ₁=' + th1 + '°', cx - 40*Math.sin(r1/2) - 2, cy - 40*Math.cos(r1/2) + 4);
+
+  // ── Legend labels ──
+  ctx.textAlign = 'left'; ctx.font = '11px system-ui'; ctx.fillStyle = '#e8a020';
+  ctx.fillText('→ Sinar datang', ix + 6, iy - 4);
+
+  // ── Results ──
+  const v1 = (3e8 / n1 / 1e8).toFixed(3), v2 = (3e8 / n2 / 1e8).toFixed(3);
+  const el = document.getElementById('sn-res');
+  if (tir) {
+    el.innerHTML = `<div class="callout callout-red">⚠️ sin θ₂ = ${sinTh2.toFixed(3)} &gt; 1 → tidak mungkin. Terjadi Pemantulan Total Dalam!</div>
+    <div class="formula">n₁ sin θ₁ = ${n1.toFixed(2)} × sin ${th1}° = ${(n1*Math.sin(r1)).toFixed(4)}</div>`;
+  } else {
+    el.innerHTML = `<div class="formula">n₁ sin θ₁ = ${n1.toFixed(2)} × sin ${th1}° = ${(n1*Math.sin(r1)).toFixed(4)}</div>
+    <div class="formula">θ₂ = arcsin(${sinTh2.toFixed(4)}) = ${(r2*180/Math.PI).toFixed(2)}°</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+      <div class="result-pill"><div class="rp-label">θ₂ (biasan)</div><div class="rp-val">${(r2*180/Math.PI).toFixed(1)}°</div></div>
+      <div class="result-pill"><div class="rp-label">v di n₁</div><div class="rp-val">${v1}×10⁸ m/s</div></div>
+      <div class="result-pill"><div class="rp-label">v di n₂</div><div class="rp-val">${v2}×10⁸ m/s</div></div>
+    </div>`;
+  }
+}
+
+function drawTIR() {
+  const n1 = +document.getElementById('tir-n1').value;
+  const n2 = +document.getElementById('tir-n2').value;
+  const th = +document.getElementById('tir-th').value;
+  document.getElementById('tir-n1-v').textContent = n1.toFixed(2);
+  document.getElementById('tir-n2-v').textContent = n2.toFixed(2);
+  document.getElementById('tir-th-v').textContent = th + '°';
+
+  const cv = document.getElementById('tir-c');
+  const { W, ctx } = resizeCanvas(cv, 220);
+  ctx.clearRect(0, 0, W, 220);
+  const cx = W / 2, cy = 130, L = 100;
+  const thetaC = Math.asin(n2 / n1) * 180 / Math.PI;
+  const isTIR = th >= thetaC;
+  const r = th * Math.PI / 180;
+  const sinOut = (n1 / n2) * Math.sin(r);
+
+  // Dense medium (bottom)
+  ctx.fillStyle = isDark() ? 'rgba(180,120,30,0.12)' : 'rgba(180,120,30,0.08)';
+  ctx.fillRect(0, cy, W, 90);
+  ctx.strokeStyle = isDark() ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.15)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(W, cy); ctx.stroke();
+  ctx.setLineDash([5, 4]); ctx.strokeStyle = isDark() ? '#555' : '#ccc';
+  ctx.beginPath(); ctx.moveTo(cx, 20); ctx.lineTo(cx, 210); ctx.stroke(); ctx.setLineDash([]);
+
+  // Incoming ray (from bottom)
+  ctx.strokeStyle = '#e8a020'; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.moveTo(cx - L * Math.sin(r), cy + L * Math.cos(r)); ctx.lineTo(cx, cy); ctx.stroke();
+
+  if (isTIR) {
+    // Total internal reflection
+    ctx.strokeStyle = '#d04030'; ctx.lineWidth = 2.5;
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + L * Math.sin(r), cy + L * Math.cos(r)); ctx.stroke();
+    ctx.fillStyle = '#d04030'; ctx.font = '11px system-ui'; ctx.textAlign = 'center';
+    ctx.fillText('PEMANTULAN TOTAL!', cx, cy - 20);
+  } else {
+    // Refracted ray goes out top
+    const r2 = Math.asin(sinOut);
+    ctx.strokeStyle = '#1d9e75'; ctx.lineWidth = 2.5;
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + L * Math.sin(r2), cy - L * Math.cos(r2)); ctx.stroke();
+    // Weak reflected
+    ctx.strokeStyle = isDark() ? '#555' : '#bbb'; ctx.lineWidth = 1.5; ctx.setLineDash([3, 3]);
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + L * Math.sin(r) * 0.5, cy + L * Math.cos(r) * 0.5); ctx.stroke(); ctx.setLineDash([]);
+  }
+
+  const tc = textCol(); ctx.font = '12px system-ui'; ctx.fillStyle = tc; ctx.textAlign = 'left';
+  ctx.fillText('n₂ = ' + n2.toFixed(2) + ' (atas)', 6, cy - 12);
+  ctx.fillText('n₁ = ' + n1.toFixed(2) + ' (bawah, rapat)', 6, cy + 18);
+
+  const resEl = document.getElementById('tir-res');
+  resEl.innerHTML = `
+    <div class="formula">θc = arcsin(n₂/n₁) = arcsin(${n2.toFixed(2)}/${n1.toFixed(2)}) = ${thetaC.toFixed(1)}°</div>
+    ${isTIR
+      ? `<div class="callout callout-red">🔴 θ = ${th}° &gt; θc = ${thetaC.toFixed(1)}° → Pemantulan Total Dalam terjadi!</div>`
+      : `<div class="callout callout-green">🟢 θ = ${th}° &lt; θc = ${thetaC.toFixed(1)}° → Cahaya keluar (dibiaskan).</div>`}
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+      <div class="result-pill"><div class="rp-label">Sudut kritis θc</div><div class="rp-val">${thetaC.toFixed(1)}°</div></div>
+      <div class="result-pill"><div class="rp-label">Status</div><div class="rp-val" style="color:${isTIR?'#b02020':'#1a7a4a'}">${isTIR?'TIR ✓':'Dibiaskan'}</div></div>
+    </div>`;
+}
+
+/* ══════════════════ 3. CERMIN ══════════════════ */
+function getMirrorType() { return document.querySelector('input[name="mir-type"]:checked').value; }
+
+function drawMirror() {
+  const type = getMirrorType();
+  const fRaw = +document.getElementById('mir-f').value;
+  const f = type === 'cembung' ? -fRaw : fRaw;
+  const doVal = +document.getElementById('mir-do').value;
+  const ho = +document.getElementById('mir-h').value;
+  document.getElementById('mir-f-v').textContent = fRaw;
+  document.getElementById('mir-do-v').textContent = doVal;
+  document.getElementById('mir-h-v').textContent = ho;
+
+  const di = 1 / (1 / f - 1 / doVal);
+  const M = isFinite(di) ? -di / doVal : null;
+  const hi = M !== null ? M * ho : null;
+
+  const isNyata = isFinite(di) && di > 0;
+  const isMaya = isFinite(di) && di < 0;
+  const isTegak = M !== null && M > 0;
+  const sifat = !isFinite(di) ? 'Bayangan di ∞' : `${isNyata ? 'Nyata' : 'Maya'}, ${isTegak ? 'Tegak' : 'Terbalik'}, ${M !== null ? (Math.abs(M) > 1.01 ? 'Diperbesar' : Math.abs(M) < 0.99 ? 'Diperkecil' : 'Sama besar') : ''}`;
+
+  resultPills(document.getElementById('mir-res'), [
+    ['Jarak bayangan dᵢ', isFinite(di) ? di.toFixed(1) + ' cm' : '∞', null],
+    ['Perbesaran M', M !== null ? M.toFixed(3) + '×' : '—', null],
+    ['Tinggi bayangan hᵢ', hi !== null ? hi.toFixed(1) + ' cm' : '—', null],
+  ]);
+  document.getElementById('mir-sifat').innerHTML =
+    `<div class="callout ${isNyata ? 'callout-blue' : isMaya ? 'callout-amber' : 'callout-green'}">${sifat}</div>`;
+  document.getElementById('mir-eq').innerHTML =
+    `<div class="formula">1/dᵢ = 1/f − 1/dₒ = 1/${f} − 1/${doVal} → dᵢ = ${fmtNum(di)} cm</div>
+     <div class="formula">M = −dᵢ/dₒ = −${fmtNum(di)}/${doVal} = ${M !== null ? M.toFixed(3) : '—'}</div>
+     <div class="formula">R = 2f = ${2 * Math.abs(f)} cm</div>`;
+
+  drawMirrorDiagram(type, f, doVal, ho, di, M, hi);
+}
+
+function drawMirrorDiagram(type, f, doVal, ho, di, M, hi) {
+  const cv = document.getElementById('mir-c');
+  const { W, ctx } = resizeCanvas(cv, 280);
+  ctx.clearRect(0, 0, W, 280);
+
+  // Layout: mirror sits at right (mirX), objects/images measured leftward from it
+  const mirX = W - 30;  // mirror at right edge
+  const cy = 140;       // optical axis y
+  const fAbs = Math.abs(f);
+
+  // Scale: fit doVal and image comfortably. Max usable width = mirX - 20
+  const maxDist = Math.max(doVal, isFinite(di) ? Math.abs(di) : fAbs * 3, fAbs * 2.5);
+  const scale = Math.min(7, (mirX - 30) / (maxDist + 5));
+
+  // Clamp helper so nothing draws outside canvas
+  const clampX = x => Math.max(6, Math.min(W - 6, x));
+
+  const dark = isDark();
+  const axisCol = dark ? '#3a3a38' : '#d5d3cc';
+  const markerCol = dark ? '#666' : '#999';
+  const tc = textCol();
+
+  // ── Principal axis ──
+  ctx.strokeStyle = axisCol; ctx.lineWidth = 1; ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(6, cy); ctx.lineTo(W - 6, cy); ctx.stroke();
+
+  // ── Mirror arc ──
+  // Concave (cekung): curves toward the left (reflecting surface faces left)
+  // Convex (cembung): curves toward the right (reflecting surface faces right)
+  const mirH = 90; // half-height of mirror aperture
+  ctx.strokeStyle = type === 'cekung' ? '#d85a30' : '#5590e0';
+  ctx.lineWidth = 3.5; ctx.setLineDash([]);
+  if (type === 'cekung') {
+    // Arc bulges to the LEFT — center of curvature is to the left
+    const R = fAbs * scale * 2; // radius of curvature = 2f
+    const arcCx = mirX - R;     // center of the circle is left of mirror
+    const halfAngle = Math.asin(mirH / R);
+    ctx.beginPath();
+    ctx.arc(arcCx, cy, R, -halfAngle, halfAngle);
+    ctx.stroke();
+    // Hatching on back of mirror (right side)
+    ctx.strokeStyle = dark ? '#444' : '#bbb'; ctx.lineWidth = 1;
+    for (let yy = cy - mirH; yy <= cy + mirH; yy += 14) {
+      const dx = Math.sqrt(R * R - Math.pow(yy - cy, 2));
+      const hx = arcCx + dx;
+      if (hx < W) { ctx.beginPath(); ctx.moveTo(hx, yy); ctx.lineTo(hx + 10, yy + 10); ctx.stroke(); }
+    }
+  } else {
+    // Convex: arc bulges to the RIGHT — center of curvature is to the right
+    const R = fAbs * scale * 2;
+    const arcCx = mirX + R;
+    const halfAngle = Math.asin(mirH / R);
+    ctx.beginPath();
+    ctx.arc(arcCx, cy, R, Math.PI - halfAngle, Math.PI + halfAngle);
+    ctx.stroke();
+    ctx.strokeStyle = dark ? '#444' : '#bbb'; ctx.lineWidth = 1;
+    for (let yy = cy - mirH; yy <= cy + mirH; yy += 14) {
+      const dx = Math.sqrt(R * R - Math.pow(yy - cy, 2));
+      const hx = arcCx - dx;
+      if (hx < W) { ctx.beginPath(); ctx.moveTo(hx, yy); ctx.lineTo(hx + 10, yy + 10); ctx.stroke(); }
+    }
+  }
+
+  // ── Focus F and Centre C markers (both to the LEFT of mirror for concave; right/virtual for convex) ──
+  // For concave: F is at mirX - f*scale, C is at mirX - 2f*scale (real, in front)
+  // For convex:  F is at mirX + f*scale (virtual, behind mirror) — we show it dashed
+  const fX = clampX(mirX - fAbs * scale);
+  const cX = clampX(mirX - 2 * fAbs * scale);
+  ctx.font = 'bold 12px system-ui'; ctx.textAlign = 'center';
+
+  if (type === 'cekung') {
+    ctx.fillStyle = dark ? '#e8a020' : '#b07800';
+    ctx.beginPath(); ctx.arc(fX, cy, 5, 0, Math.PI * 2); ctx.fill();
+    ctx.fillText('F', fX, cy + 18);
+    ctx.fillStyle = markerCol;
+    ctx.beginPath(); ctx.arc(cX, cy, 5, 0, Math.PI * 2); ctx.fill();
+    ctx.fillText('C', cX, cy + 18);
+  } else {
+    // Virtual F behind mirror (right side) — draw dashed
+    const vfX = clampX(mirX + fAbs * scale);
+    ctx.strokeStyle = dark ? '#e8a020' : '#b07800'; ctx.lineWidth = 1; ctx.setLineDash([4, 3]);
+    ctx.beginPath(); ctx.arc(vfX, cy, 5, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = dark ? '#e8a020' : '#b07800';
+    ctx.fillText('F(v)', vfX, cy + 18);
+  }
+
+  // ── Object arrow (to the left of mirror) ──
+  const objX = clampX(mirX - doVal * scale);
+  const objPx = Math.min(80, ho * (mirH * 0.8 / 10));  // cap pixel height
+  ctx.strokeStyle = '#e05030'; ctx.lineWidth = 2.5; ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(objX, cy); ctx.lineTo(objX, cy - objPx); ctx.stroke();
+  // arrowhead
+  ctx.fillStyle = '#e05030';
+  ctx.beginPath(); ctx.moveTo(objX, cy - objPx); ctx.lineTo(objX - 6, cy - objPx + 12); ctx.lineTo(objX + 6, cy - objPx + 12); ctx.closePath(); ctx.fill();
+  ctx.font = '11px system-ui'; ctx.fillStyle = dark ? '#e05030' : '#b03010'; ctx.textAlign = 'center';
+  ctx.fillText('Benda', objX, cy + 18);
+  ctx.fillStyle = tc; ctx.fillText('dₒ=' + doVal + 'cm', objX, cy + 30);
+
+  // ── Reflected rays (3 canonical rays for concave) ──
+  const tipX = objX, tipY = cy - objPx;
+
+  function arrowHead(x1, y1, x2, y2, col, dashArr=[]) {
+    ctx.strokeStyle = col; ctx.lineWidth = 1.5; ctx.setLineDash(dashArr);
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+    ctx.setLineDash([]);
+    // small arrowhead at end
+    const ang = Math.atan2(y2 - y1, x2 - x1);
+    ctx.fillStyle = col;
+    ctx.beginPath(); ctx.moveTo(x2, y2);
+    ctx.lineTo(x2 - 9 * Math.cos(ang - 0.35), y2 - 9 * Math.sin(ang - 0.35));
+    ctx.lineTo(x2 - 9 * Math.cos(ang + 0.35), y2 - 9 * Math.sin(ang + 0.35));
+    ctx.closePath(); ctx.fill();
+  }
+
+  if (type === 'cekung' && isFinite(di)) {
+    const imgX = clampX(mirX - di * scale);
+    const imgPx = Math.min(80, Math.abs(hi) * (mirH * 0.8 / 10));
+    const imgTop = cy - (M < 0 ? -imgPx : imgPx); // inverted if M<0
+
+    // Ray 1: Parallel to axis → reflects through F
+    arrowHead(tipX, tipY, mirX, tipY, '#3b8bd4');           // to mirror
+    arrowHead(mirX, tipY, imgX, cy - (M < 0 ? -imgPx : imgPx), '#3b8bd4');  // through F to image
+
+    // Ray 2: Through F → reflects parallel to axis
+    arrowHead(tipX, tipY, fX, cy, '#9460d0');               // through F
+    arrowHead(fX, cy, mirX, tipY + (cy - tipY) * (mirX - fX) / (fX - tipX), '#9460d0');
+
+    // Ray 3: Through C → reflects back on itself (hits mirror perpendicularly)
+    if (cX > 10 && cX < mirX - 5) {
+      const yAtMir = tipY + (cy - tipY) * (mirX - tipX) / (cX - tipX);
+      arrowHead(tipX, tipY, mirX, yAtMir, '#1d9e75');
+      arrowHead(mirX, yAtMir, imgX, cy - (M < 0 ? -imgPx : imgPx), '#1d9e75');
+    }
+
+    // ── Image arrow ──
+    const realImg = di > 0;
+    ctx.strokeStyle = realImg ? '#1d9e75' : '#888';
+    ctx.lineWidth = 2.5; ctx.setLineDash(realImg ? [] : [5, 4]);
+    ctx.beginPath(); ctx.moveTo(imgX, cy); ctx.lineTo(imgX, cy - (M < 0 ? -imgPx : imgPx)); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = realImg ? '#1d9e75' : '#888';
+    const arrowDir = M < 0 ? -1 : 1;
+    ctx.beginPath(); ctx.moveTo(imgX, cy - (M < 0 ? -imgPx : imgPx));
+    ctx.lineTo(imgX - 6, cy - (M < 0 ? -imgPx : imgPx) + 12 * arrowDir);
+    ctx.lineTo(imgX + 6, cy - (M < 0 ? -imgPx : imgPx) + 12 * arrowDir);
+    ctx.closePath(); ctx.fill();
+    ctx.font = '11px system-ui'; ctx.fillStyle = realImg ? (dark ? '#1d9e75' : '#0e6040') : '#888'; ctx.textAlign = 'center';
+    ctx.fillText(realImg ? 'Bayangan nyata' : 'Bayangan maya', imgX, cy + 18);
+    ctx.fillStyle = tc; ctx.fillText('dᵢ=' + di.toFixed(1) + 'cm', imgX, cy + 30);
+
+  } else if (type === 'cembung' && isFinite(di)) {
+    // Convex: virtual image behind mirror
+    const imgX = clampX(mirX - di * scale); // di < 0 so imgX > mirX (behind)
+    const imgPx = Math.min(60, Math.abs(hi) * (mirH * 0.8 / 10));
+
+    // Ray 1: parallel to axis → reflects as if from virtual F (behind)
+    arrowHead(tipX, tipY, mirX, tipY, '#3b8bd4');
+    // reflected ray goes leftward (diverges), extension dashed behind mirror
+    const extX = clampX(mirX + 60);
+    arrowHead(mirX, tipY, clampX(tipX - 40), tipY + 20, '#3b8bd4'); // diverging reflected
+    ctx.strokeStyle = '#3b8bd4'; ctx.lineWidth = 1; ctx.setLineDash([4, 3]);
+    ctx.beginPath(); ctx.moveTo(mirX, tipY); ctx.lineTo(extX, tipY); ctx.stroke(); ctx.setLineDash([]);
+
+    // Ray 2: aimed at virtual F behind mirror → reflects parallel
+    arrowHead(tipX, tipY, mirX, cy - (tipY - cy) * 0.6, '#9460d0');
+    arrowHead(mirX, cy - (tipY - cy) * 0.6, clampX(tipX - 50), cy - (tipY - cy) * 0.6 + 15, '#9460d0');
+
+    // Virtual image (dashed arrow behind mirror)
+    ctx.strokeStyle = '#888'; ctx.lineWidth = 2; ctx.setLineDash([5, 4]);
+    ctx.beginPath(); ctx.moveTo(imgX, cy); ctx.lineTo(imgX, cy - imgPx); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#888'; ctx.font = '11px system-ui'; ctx.textAlign = 'center';
+    ctx.fillText('Bayangan maya', imgX, cy + 18);
+    ctx.fillStyle = tc; ctx.fillText('dᵢ=' + Math.abs(di).toFixed(1) + 'cm', imgX, cy + 30);
+  }
+
+  // ── Legend ──
+  ctx.textAlign = 'left'; ctx.font = '11px system-ui';
+  const legendItems = [
+    ['#3b8bd4', 'Sinar sejajar sumbu'],
+    ['#9460d0', 'Sinar melalui F'],
+    ['#1d9e75', 'Sinar melalui C'],
+  ];
+  if (type === 'cekung') {
+    legendItems.forEach(([col, label], i) => {
+      ctx.fillStyle = col; ctx.fillRect(8, 8 + i * 16, 18, 3);
+      ctx.fillStyle = tc; ctx.fillText(label, 30, 14 + i * 16);
+    });
+  }
+
+  // Mirror label
+  ctx.fillStyle = type === 'cekung' ? '#d85a30' : '#5590e0';
+  ctx.textAlign = 'right'; ctx.font = 'bold 11px system-ui';
+  ctx.fillText(type === 'cekung' ? 'Cermin Cekung' : 'Cermin Cembung', W - 5, 14);
+  ctx.textAlign = 'left';
+}
+
+/* ══════════════════ 4. LENSA ══════════════════ */
+function getLensType() { return document.querySelector('input[name="lens-type"]:checked').value; }
+
+function drawLens() {
+  const type = getLensType();
+  const fRaw = +document.getElementById('lens-f').value;
+  const f = type === 'cekung' ? -fRaw : fRaw;
+  const doVal = +document.getElementById('lens-do').value;
+  const ho = +document.getElementById('lens-h').value;
+  document.getElementById('lens-f-v').textContent = fRaw;
+  document.getElementById('lens-do-v').textContent = doVal;
+  document.getElementById('lens-h-v').textContent = ho;
+
+  const di = 1 / (1 / f - 1 / doVal);
+  const M = isFinite(di) ? -di / doVal : null;
+  const hi = M !== null ? M * ho : null;
+  const P = (1 / (f / 100)).toFixed(2); // f in meters
+
+  const isNyata = isFinite(di) && di > 0;
+  const isMaya = isFinite(di) && di < 0;
+  const isTegak = M !== null && M > 0;
+  const sifat = !isFinite(di) ? 'Bayangan di ∞' : `${isNyata ? 'Nyata' : 'Maya'}, ${isTegak ? 'Tegak' : 'Terbalik'}, ${M !== null ? (Math.abs(M) > 1.01 ? 'Diperbesar' : Math.abs(M) < 0.99 ? 'Diperkecil' : 'Sama besar') : ''}`;
+
+  resultPills(document.getElementById('lens-res'), [
+    ['Jarak bayangan dᵢ', isFinite(di) ? di.toFixed(1) + ' cm' : '∞', null],
+    ['Perbesaran M', M !== null ? M.toFixed(3) + '×' : '—', null],
+    ['Kekuatan P', P + ' D', '#6040c0'],
+  ]);
+  document.getElementById('lens-sifat').innerHTML =
+    `<div class="callout ${isNyata ? 'callout-blue' : isMaya ? 'callout-amber' : 'callout-green'}">${sifat}</div>`;
+  document.getElementById('lens-eq').innerHTML =
+    `<div class="formula">1/dᵢ = 1/f − 1/dₒ = 1/${f} − 1/${doVal} → dᵢ = ${fmtNum(di)} cm</div>
+     <div class="formula">M = −dᵢ/dₒ = ${M !== null ? M.toFixed(3) : '—'} &nbsp;|&nbsp; P = 1/f = ${P} dioptri</div>`;
+
+  drawLensDiagram(type, f, doVal, ho, di, M, hi);
+}
+
+function drawLensDiagram(type, f, doVal, ho, di, M, hi) {
+  const cv = document.getElementById('lens-c');
+  const { W, ctx } = resizeCanvas(cv, 280);
+  ctx.clearRect(0, 0, W, 280);
+
+  // Lens sits at center-ish, object to the left, image to the right
+  const lx = Math.round(W * 0.42); // lens x position
+  const cy = 140;
+  const fAbs = Math.abs(f);
+  const dark = isDark();
+  const tc = textCol();
+
+  // Scale: fit both object and image
+  const maxDist = Math.max(doVal + 5, isFinite(di) ? Math.abs(di) + 5 : fAbs * 3, fAbs * 2.5);
+  const halfW = Math.min(lx - 15, W - lx - 15);
+  const scale = Math.min(6, halfW / maxDist);
+  const clamp = x => Math.max(6, Math.min(W - 6, x));
+
+  // ── Optical axis ──
+  ctx.strokeStyle = dark ? '#3a3a38' : '#d0cec8'; ctx.lineWidth = 1; ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(6, cy); ctx.lineTo(W - 6, cy); ctx.stroke();
+
+  // ── Lens body (vertical double-ended arrow shape) ──
+  const lensH = 85;
+  ctx.strokeStyle = type === 'cembung' ? '#d85a30' : '#5590e0'; ctx.lineWidth = 2.5; ctx.setLineDash([]);
+
+  if (type === 'cembung') {
+    // Convex lens: biconvex shape using two arcs
+    const R = lensH * 1.2;
+    ctx.beginPath(); ctx.arc(lx - R + 18, cy, R, -Math.asin(lensH / R), Math.asin(lensH / R)); ctx.stroke();
+    ctx.beginPath(); ctx.arc(lx + R - 18, cy, R, Math.PI - Math.asin(lensH / R), Math.PI + Math.asin(lensH / R)); ctx.stroke();
+    // Arrow tips on the vertical line
+    ctx.fillStyle = type === 'cembung' ? '#d85a30' : '#5590e0';
+    // top arrow
+    ctx.beginPath(); ctx.moveTo(lx, cy - lensH); ctx.lineTo(lx - 7, cy - lensH + 13); ctx.lineTo(lx + 7, cy - lensH + 13); ctx.closePath(); ctx.fill();
+    // bottom arrow
+    ctx.beginPath(); ctx.moveTo(lx, cy + lensH); ctx.lineTo(lx - 7, cy + lensH - 13); ctx.lineTo(lx + 7, cy + lensH - 13); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(lx, cy - lensH + 13); ctx.lineTo(lx, cy + lensH - 13); ctx.stroke();
+  } else {
+    // Concave lens: biconcave shape
+    const R = lensH * 1.2;
+    ctx.beginPath(); ctx.arc(lx + R - 18, cy, R, Math.PI - Math.asin(lensH / R), Math.PI + Math.asin(lensH / R)); ctx.stroke();
+    ctx.beginPath(); ctx.arc(lx - R + 18, cy, R, -Math.asin(lensH / R), Math.asin(lensH / R)); ctx.stroke();
+    ctx.fillStyle = '#5590e0';
+    // top arrow pointing inward
+    ctx.beginPath(); ctx.moveTo(lx, cy - lensH); ctx.lineTo(lx - 7, cy - lensH + 13); ctx.lineTo(lx + 7, cy - lensH + 13); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(lx, cy + lensH); ctx.lineTo(lx - 7, cy + lensH - 13); ctx.lineTo(lx + 7, cy + lensH - 13); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(lx, cy - lensH + 13); ctx.lineTo(lx, cy + lensH - 13); ctx.stroke();
+  }
+
+  // ── Focus points F and F' ──
+  const fLeft  = clamp(lx - fAbs * scale);  // F  (same side as object, for convex real focus)
+  const fRight = clamp(lx + fAbs * scale);  // F' (image side)
+  ctx.font = 'bold 12px system-ui'; ctx.textAlign = 'center';
+  const fCol = dark ? '#e8a020' : '#b07800';
+  ctx.fillStyle = fCol;
+  ctx.beginPath(); ctx.arc(fLeft, cy, 5, 0, Math.PI * 2); ctx.fill();
+  ctx.fillText(type === 'cembung' ? 'F' : 'F(v)', fLeft, cy + 18);
+  ctx.beginPath(); ctx.arc(fRight, cy, 5, 0, Math.PI * 2); ctx.fill();
+  ctx.fillText(type === 'cembung' ? "F'" : "F'(v)", fRight, cy + 18);
+
+  // ── Object arrow ──
+  const objX = clamp(lx - doVal * scale);
+  const objPx = Math.min(70, ho * 7);
+  ctx.strokeStyle = '#e05030'; ctx.lineWidth = 2.5; ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(objX, cy); ctx.lineTo(objX, cy - objPx); ctx.stroke();
+  ctx.fillStyle = '#e05030';
+  ctx.beginPath(); ctx.moveTo(objX, cy - objPx); ctx.lineTo(objX - 6, cy - objPx + 12); ctx.lineTo(objX + 6, cy - objPx + 12); ctx.closePath(); ctx.fill();
+  ctx.font = '11px system-ui'; ctx.fillStyle = tc; ctx.textAlign = 'center';
+  ctx.fillText('dₒ=' + doVal + 'cm', objX, cy + 30);
+
+  const tipX = objX, tipY = cy - objPx;
+
+  // ── Ray helper ──
+  function ray(x1, y1, x2, y2, col, dash=[]) {
+    ctx.strokeStyle = col; ctx.lineWidth = 1.6; ctx.setLineDash(dash);
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); ctx.setLineDash([]);
+    const ang = Math.atan2(y2 - y1, x2 - x1);
+    ctx.fillStyle = col;
+    ctx.beginPath(); ctx.moveTo(x2, y2);
+    ctx.lineTo(x2 - 9 * Math.cos(ang - 0.35), y2 - 9 * Math.sin(ang - 0.35));
+    ctx.lineTo(x2 - 9 * Math.cos(ang + 0.35), y2 - 9 * Math.sin(ang + 0.35));
+    ctx.closePath(); ctx.fill();
+  }
+
+  if (isFinite(di) && M !== null) {
+    const imgX = clamp(lx + di * scale);
+    const imgPx = Math.min(70, Math.abs(hi) * 7);
+    const imgTopY = cy - (M > 0 ? imgPx : -imgPx); // M<0 means inverted
+
+    if (type === 'cembung') {
+      // Ray 1: parallel to axis → refracts through F'
+      ray(tipX, tipY, lx, tipY, '#3b8bd4');
+      ray(lx, tipY, imgX, imgTopY, '#3b8bd4');
+      // Ray 2: through optical center → straight
+      ray(tipX, tipY, imgX, imgTopY, '#9460d0');
+      // Ray 3: through F → refracts parallel
+      if (Math.abs(fLeft - tipX) > 5) {
+        const slope = (tipY - cy) / (tipX - fLeft);
+        const yAtLens = cy + slope * (lx - fLeft);
+        ray(tipX, tipY, lx, yAtLens, '#1d9e75');
+        ray(lx, yAtLens, imgX, imgTopY, '#1d9e75');
+      }
+    } else {
+      // Diverging lens
+      ray(tipX, tipY, lx, tipY, '#3b8bd4');
+      // diverges as if from virtual F (left side)
+      const vfX = fLeft; // virtual focus on same side as object
+      // extension dashed to virtual focus
+      const slope1 = (imgTopY - tipY) / (imgX - tipX);
+      ray(tipX, tipY, lx, tipY, '#3b8bd4');
+      ray(lx, tipY, clamp(lx + 80), tipY + 80 * (tipY - cy) / (lx - vfX + 1), '#3b8bd4');
+      // Ray 2: center
+      ray(tipX, tipY, imgX, imgTopY, '#9460d0');
+    }
+
+    // ── Image ──
+    const realImg = di > 0;
+    ctx.strokeStyle = realImg ? '#1d9e75' : '#888'; ctx.lineWidth = 2.5; ctx.setLineDash(realImg ? [] : [5, 4]);
+    ctx.beginPath(); ctx.moveTo(imgX, cy); ctx.lineTo(imgX, imgTopY); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = realImg ? '#1d9e75' : '#888';
+    const dir = M > 0 ? 1 : -1;
+    ctx.beginPath(); ctx.moveTo(imgX, imgTopY); ctx.lineTo(imgX - 6, imgTopY + 12 * dir); ctx.lineTo(imgX + 6, imgTopY + 12 * dir); ctx.closePath(); ctx.fill();
+    ctx.font = '11px system-ui'; ctx.textAlign = 'center'; ctx.fillStyle = tc;
+    ctx.fillText(realImg ? 'Bayangan nyata' : 'Bayangan maya', imgX, cy + 18);
+    ctx.fillText('dᵢ=' + di.toFixed(1) + 'cm', imgX, cy + 30);
+  }
+
+  // ── Legend ──
+  ctx.textAlign = 'left'; ctx.font = '11px system-ui';
+  [['#3b8bd4','Sejajar sumbu'],['#9460d0','Melalui pusat optik'],['#1d9e75','Melalui F']].forEach(([c,l],i)=>{
+    ctx.fillStyle = c; ctx.fillRect(8, 8 + i * 16, 18, 3);
+    ctx.fillStyle = tc; ctx.fillText(l, 30, 14 + i * 16);
+  });
+  ctx.fillStyle = type === 'cembung' ? '#d85a30' : '#5590e0';
+  ctx.textAlign = 'right'; ctx.font = 'bold 11px system-ui';
+  ctx.fillText(type === 'cembung' ? 'Lensa Cembung' : 'Lensa Cekung', W - 5, 14);
+  ctx.textAlign = 'left';
+}
+
+/* ══════════════════ 5. DISPERSI ══════════════════ */
+function drawPrism() {
+  const alpha = +document.getElementById('pr-ang').value;  // apex angle °
+  const th1   = +document.getElementById('pr-th').value;   // incidence angle °
+  document.getElementById('pr-ang-v').textContent = alpha + '°';
+  document.getElementById('pr-th-v').textContent  = th1  + '°';
+
+  const cv = document.getElementById('pr-c');
+  const { W, ctx } = resizeCanvas(cv, 300);
+  ctx.clearRect(0, 0, W, 300);
+  const dark = isDark(), tc = textCol();
+
+  // ── Use a simple upright isoceles prism ──
+  // Apex at top-centre, base at bottom. Apex angle = alpha.
+  // Left face makes angle (90 - alpha/2) with horizontal.
+  // We fix the prism centre and derive vertices from alpha.
+
+  const H = 300;
+  const prismH = Math.min(H * 0.55, 155);      // fixed visual height
+  const halfBase = prismH * Math.tan((alpha/2) * Math.PI/180);
+  const cx = W * 0.40;                          // prism horizontal centre
+  const apexY = H * 0.08;
+  const baseY  = apexY + prismH;
+
+  const p1 = [cx,             apexY];           // apex
+  const p2 = [cx - halfBase,  baseY];           // bottom-left
+  const p3 = [cx + halfBase,  baseY];           // bottom-right
+
+  // Guard: if halfBase is too wide, bail gracefully
+  if (halfBase > W * 0.48) {
+    ctx.fillStyle = tc; ctx.font = '13px system-ui'; ctx.textAlign = 'center';
+    ctx.fillText('Sudut prisma terlalu besar untuk ditampilkan', W/2, H/2);
+    return;
+  }
+
+  // Draw prism
+  ctx.fillStyle = dark ? 'rgba(80,130,220,0.18)' : 'rgba(100,160,255,0.12)';
+  ctx.beginPath(); ctx.moveTo(...p1); ctx.lineTo(...p2); ctx.lineTo(...p3); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = dark ? '#5590e0' : '#1a5fa8'; ctx.lineWidth = 2; ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(...p1); ctx.lineTo(...p2); ctx.lineTo(...p3); ctx.closePath(); ctx.stroke();
+
+  // Alpha label
+  ctx.fillStyle = tc; ctx.font = 'bold 12px system-ui'; ctx.textAlign = 'center';
+  ctx.fillText('α=' + alpha + '°', cx, apexY + prismH * 0.32);
+
+  // ── Left face normal points outward-left ──
+  // Left face direction: from p1 down to p2
+  // Face vector (normalised):
+  const lx = p2[0]-p1[0], ly = p2[1]-p1[1];
+  const lLen = Math.hypot(lx, ly);
+  const lu = lx/lLen, lv = ly/lLen;           // unit along left face (downward-left)
+  // Outward normal of left face (perpendicular, pointing left/outside):
+  const lnx = -lv, lny = lu;                  // rotate face 90° CCW
+  // Make sure it points outward (to the left of the prism, x should be negative-ish)
+  const lnxF = lnx < 0 ? lnx : -lnx;
+  const lnyF = lnx < 0 ? lny : -lny;
+
+  // ── Entry point: fixed fraction along left face ──
+  const t = 0.42;
+  const ex0 = p1[0] + t * lx, ey0 = p1[1] + t * ly;
+
+  // ── Colours: crown glass dispersion ──
+  const colorData = [
+    { col:'#ff3030', n:1.514, label:'Merah' },
+    { col:'#ff8800', n:1.516, label:'Jingga' },
+    { col:'#d4d400', n:1.518, label:'Kuning' },
+    { col:'#20b820', n:1.521, label:'Hijau'  },
+    { col:'#2255ee', n:1.526, label:'Biru'   },
+    { col:'#9920ee', n:1.532, label:'Ungu'   },
+  ];
+
+  const th1r = th1 * Math.PI / 180;
+  const alphaR = alpha * Math.PI / 180;
+
+  // ── Incoming ray direction ──
+  // Incoming ray angle th1 is measured from the LEFT FACE OUTWARD NORMAL.
+  // Ray comes from the left. The outward normal points left (lnxF < 0).
+  // The incoming ray direction (pointing toward entry point) is:
+  //   d = -lnF rotated by th1 (toward the face's downward direction)
+  // Using rotation: rotate the inward normal (pointing into prism) by -th1
+  const inNx = -lnxF, inNy = -lnyF;   // inward normal of left face
+  // Rotate inward normal by -th1 around z-axis to get incoming ray dir
+  const inDx = inNx * Math.cos(-th1r) - inNy * Math.sin(-th1r);
+  const inDy = inNx * Math.sin(-th1r) + inNy * Math.cos(-th1r);
+
+  // Draw incoming ray
+  const inLen = Math.min(cx - halfBase - 10, 70);
+  ctx.strokeStyle = dark ? '#bbb' : '#555'; ctx.lineWidth = 2; ctx.setLineDash([]);
+  ctx.beginPath();
+  ctx.moveTo(ex0 - inDx * inLen, ey0 - inDy * inLen);
+  ctx.lineTo(ex0, ey0);
+  ctx.stroke();
+  ctx.fillStyle = dark ? '#aaa' : '#444'; ctx.font = '11px system-ui'; ctx.textAlign = 'right';
+  ctx.fillText('Cahaya putih  θ₁=' + th1 + '°', ex0 - inDx * inLen - 4, ey0 - inDy * inLen);
+
+  // ── Right face ──
+  const rx = p3[0]-p1[0], ry = p3[1]-p1[1];
+  const rLen = Math.hypot(rx, ry);
+  const ru = rx/rLen, rv = ry/rLen;
+  // Outward normal of right face (pointing right/outside):
+  const rnx = rv, rny = -ru;
+  const rnxF = rnx > 0 ? rnx : -rnx;
+  const rnyF = rnx > 0 ? rny : -rny;
+
+  const rayOutLen = Math.min(W - cx - halfBase - 6, 80);
+
+  colorData.forEach(({ col, n, label }, i) => {
+    // === Refraction at left face ===
+    // n_air * sin(th1) = n * sin(th2)
+    const sinTh2 = Math.sin(th1r) / n;
+    if (sinTh2 > 1) return;
+    const th2r = Math.asin(sinTh2);
+
+    // Refracted ray inside prism: rotate inward normal by +th2
+    // (same transverse direction as incoming ray)
+    const refDx = inNx * Math.cos(th2r) - inNy * Math.sin(th2r);
+    const refDy = inNx * Math.sin(th2r) + inNy * Math.cos(th2r);
+
+    // === Find intersection with right face (p1 → p3) ===
+    // entry + s*refD = p1 + u*(p3-p1)
+    const denom = refDx * ry - refDy * rx;
+    if (Math.abs(denom) < 1e-9) return;
+    const s = ((p1[0]-ex0)*ry - (p1[1]-ey0)*rx) / denom;
+    if (s <= 0) return;
+    const xx = ex0 + s * refDx;
+    const yy = ey0 + s * refDy;
+
+    // === Refraction at right face ===
+    // Angle of incidence on right face = angle between refD and inward normal of right face
+    const inNRx = -rnxF, inNRy = -rnyF;   // inward normal of right face
+    const cosInc = refDx * inNRx + refDy * inNRy;
+    const thIncR = Math.acos(Math.max(0, Math.min(1, cosInc)));
+
+    // n * sin(thInc) = n_air * sin(thExit)
+    const sinThExit = n * Math.sin(thIncR);
+    if (sinThExit > 1) return; // TIR
+    const thExitR = Math.asin(sinThExit);
+
+    // Exit ray direction: rotate outward normal of right face by thExit
+    // (same transverse direction as the internal ray relative to right face normal)
+    // Transverse component: cross product refD × inNR (z component)
+    const cross = refDx * inNRy - refDy * inNRx;
+    const sign = cross >= 0 ? 1 : -1;
+    // Rotate outward normal (rnxF, rnyF) by thExit in the sign direction
+    const outDx = rnxF * Math.cos(thExitR) + sign * rnyF * Math.sin(thExitR);
+    const outDy = rnyF * Math.cos(thExitR) - sign * rnxF * Math.sin(thExitR);
+
+    // Draw internal ray (single dashed line for first colour only)
+    if (i === 0) {
+      ctx.strokeStyle = dark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.10)';
+      ctx.lineWidth = 1; ctx.setLineDash([4,3]);
+      ctx.beginPath(); ctx.moveTo(ex0, ey0); ctx.lineTo(xx, yy); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // Exit ray
+    const endX = xx + outDx * rayOutLen;
+    const endY = yy + outDy * rayOutLen;
+    ctx.strokeStyle = col; ctx.lineWidth = 2.4; ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(xx, yy); ctx.lineTo(endX, endY); ctx.stroke();
+
+    // Labels for red and violet only
+    if (i === 0 || i === colorData.length - 1) {
+      ctx.fillStyle = col; ctx.font = 'bold 10px system-ui'; ctx.textAlign = 'left';
+      if (endX + 4 < W - 2) ctx.fillText(label, endX + 3, endY + 3);
+    }
+  });
+
+  // ── Bottom note ──
+  ctx.fillStyle = dark ? '#666' : '#999'; ctx.font = '11px system-ui'; ctx.textAlign = 'center';
+  ctx.fillText('n ungu (1.532) > n merah (1.514) → ungu lebih dibelokkan', W/2, H - 6);
+}
+
+function drawSpectrum() {
+  const cv = document.getElementById('spec-c');
+  const { W, ctx } = resizeCanvas(cv, 80);
+  ctx.clearRect(0, 0, W, 80);
+  const grad = ctx.createLinearGradient(0, 0, W, 0);
+  grad.addColorStop(0, '#ff0000');
+  grad.addColorStop(0.17, '#ff8000');
+  grad.addColorStop(0.33, '#ffff00');
+  grad.addColorStop(0.5, '#00e000');
+  grad.addColorStop(0.67, '#0060ff');
+  grad.addColorStop(0.83, '#4b0082');
+  grad.addColorStop(1, '#8b00ff');
+  ctx.fillStyle = grad;
+  ctx.beginPath(); ctx.roundRect(0, 10, W, 44, 6); ctx.fill();
+  const tc = textCol(); ctx.fillStyle = tc; ctx.font = '11px system-ui'; ctx.textAlign = 'center';
+  ctx.fillText('700nm', 12, 68); ctx.fillText('620', W*0.17, 68); ctx.fillText('580', W*0.33, 68);
+  ctx.fillText('530', W*0.5, 68); ctx.fillText('470', W*0.67, 68); ctx.fillText('420nm', W-12, 68);
+  ctx.fillText('Merah', 28, 8); ctx.fillText('Ungu', W - 20, 8);
+}
+
+/* ══════════════════ 6. MATA ══════════════════ */
+const eyeData = {
+  normal: {
+    title: 'Mata Normal (Emetropi)',
+    color: 'callout-green',
+    desc: 'Mata normal memiliki titik dekat (Punctum Proximum / PP) = 25 cm dan titik jauh (Punctum Remotum / PR) = tak terhingga (∞). Bayangan benda jatuh tepat di retina.',
+    items: ['Titik dekat (PP): 25 cm', 'Titik jauh (PR): ∞ (tak terhingga)', 'Daya akomodasi: besar', 'Tidak perlu kacamata koreksi'],
+    formula: null,
+  },
+  miopi: {
+    title: 'Miopi / Rabun Jauh (Nearsighted)',
+    color: 'callout-red',
+    desc: 'Bola mata terlalu panjang atau kornea terlalu cembung. Bayangan benda jauh jatuh di depan retina. Hanya bisa melihat dekat dengan jelas. Dikoreksi dengan lensa cekung (divergen, f < 0).',
+    items: ['PP < 25 cm (lebih dekat dari normal)', 'PR < ∞ (tidak bisa melihat jauh)', 'Dikoreksi: lensa CEKUNG (negatif)', 'P = −1/PR (PR dalam meter)'],
+    formula: 'P = −1/PR &nbsp; (PR = titik jauh dalam meter, negatif)',
+  },
+  hipermetropi: {
+    title: 'Hipermetropi / Rabun Dekat (Farsighted)',
+    color: 'callout-amber',
+    desc: 'Bola mata terlalu pendek atau kornea terlalu datar. Bayangan benda dekat jatuh di belakang retina. Sulit melihat dekat. Dikoreksi dengan lensa cembung (konvergen, f > 0).',
+    items: ['PP > 25 cm (titik dekat lebih jauh dari normal)', 'PR = ∞ (masih bisa lihat jauh)', 'Dikoreksi: lensa CEMBUNG (positif)', 'P = 1/0.25 − 1/PP'],
+    formula: 'P = 1/0.25 − 1/PP &nbsp; (PP = titik dekat dalam meter)',
+  },
+  presbiopi: {
+    title: 'Presbiopi / Mata Tua',
+    color: 'callout-purple',
+    desc: 'Gabungan miopi dan hipermetropi akibat penuaan. Lensa mata kehilangan elastisitas sehingga sulit berakomodasi. PP menjauh dan PR mendekat. Dikoreksi dengan kacamata bifokal.',
+    items: ['PP > 25 cm (tidak bisa lihat dekat)', 'PR < ∞ (tidak bisa lihat jauh)', 'Terjadi pada usia 40 tahun ke atas', 'Koreksi: kacamata bifokal (dua lensa berbeda)'],
+    formula: null,
+  },
+};
+
+function showEyeTab(id, el) {
+  document.querySelectorAll('#s-mata .sub-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  const d = eyeData[id];
+  document.getElementById('eye-content').innerHTML = `
+    <div class="card">
+      <div class="card-title">${d.title}</div>
+      <div class="callout ${d.color}" style="margin-bottom:10px">${d.desc}</div>
+      ${d.formula ? `<div class="formula">${d.formula}</div>` : ''}
+      <ul style="margin:10px 0 0 16px;font-size:13px;color:var(--text2);line-height:2">
+        ${d.items.map(i => `<li>${i}</li>`).join('')}
+      </ul>
+    </div>`;
+}
+
+function calcKacamata() {
+  const type = document.getElementById('kac-type').value;
+  const prSlider = document.getElementById('kac-row1');
+  const ppSlider = document.getElementById('kac-row2');
+  if (type === 'miopi') { prSlider.style.display = ''; ppSlider.style.display = 'none'; }
+  else { prSlider.style.display = 'none'; ppSlider.style.display = ''; }
+
+  const pr = +document.getElementById('kac-pr').value;
+  const pp = +document.getElementById('kac-pp').value;
+  document.getElementById('kac-pr-v').textContent = pr.toFixed(1) + ' m';
+  document.getElementById('kac-pp-v').textContent = pp + ' cm';
+
+  let html = '';
+  if (type === 'miopi') {
+    const P = -(1 / pr);
+    const f = -pr * 100;
+    html = `<div class="formula">P = −1/PR = −1/${pr} = ${P.toFixed(2)} D</div>
+            <div class="formula">f = ${f.toFixed(0)} cm (lensa cekung)</div>
+            <div class="results">
+              <div class="result-pill"><div class="rp-label">Kekuatan lensa</div><div class="rp-val" style="color:#b02020">${P.toFixed(2)} D</div></div>
+              <div class="result-pill"><div class="rp-label">Jenis lensa</div><div class="rp-val">Cekung (−)</div></div>
+              <div class="result-pill"><div class="rp-label">Fokus f</div><div class="rp-val">${f.toFixed(0)} cm</div></div>
+            </div>`;
+  } else {
+    const ppM = pp / 100;
+    const P = 1 / 0.25 - 1 / ppM;
+    const f = 1 / P * 100;
+    html = `<div class="formula">P = 1/0.25 − 1/${ppM.toFixed(2)} = ${P.toFixed(2)} D</div>
+            <div class="formula">f = ${f.toFixed(1)} cm (lensa cembung)</div>
+            <div class="results">
+              <div class="result-pill"><div class="rp-label">Kekuatan lensa</div><div class="rp-val" style="color:#1a5fa8">+${P.toFixed(2)} D</div></div>
+              <div class="result-pill"><div class="rp-label">Jenis lensa</div><div class="rp-val">Cembung (+)</div></div>
+              <div class="result-pill"><div class="rp-label">Fokus f</div><div class="rp-val">${f.toFixed(1)} cm</div></div>
+            </div>`;
+  }
+  document.getElementById('kac-res').innerHTML = html;
+}
+
+/* ══════════════════ 7. ALAT OPTIK ══════════════════ */
+function showToolTab(id, el) {
+  document.querySelectorAll('#s-alat .sub-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  const c = document.getElementById('tool-content');
+
+  if (id === 'lup') {
+    c.innerHTML = `
+    <div class="card">
+      <div class="card-title">Lup / Kaca Pembesar</div>
+      <div class="formula">M = 25/f + 1 &nbsp;(berakomodasi maksimum, PP = 25cm)</div>
+      <div class="formula">M = 25/f &nbsp;(tak berakomodasi / mata rileks, f dalam cm)</div>
+      <div class="ctrl-row"><label>Panjang fokus f (cm)</label><input type="range" id="lup-f" min="2" max="20" value="5" oninput="calcLup()"><span class="ctrl-val" id="lup-f-v">5</span></div>
+      <div id="lup-res" style="margin-top:12px"></div>
+      <div class="info" style="margin-top:10px">Lup menggunakan lensa cembung tunggal. Benda diletakkan di antara F dan lensa (dₒ &lt; f) agar bayangan maya tegak diperbesar.</div>
+    </div>`;
+    calcLup();
+  } else if (id === 'kamera') {
+    c.innerHTML = `
+    <div class="card">
+      <div class="card-title">Kamera</div>
+      <div class="formula">1/f = 1/dₒ + 1/dᵢ &nbsp;|&nbsp; M = dᵢ/dₒ &nbsp;(bayangan nyata terbalik di film/sensor)</div>
+      <div class="two-col">
+        <div>
+          <div class="ctrl-row"><label>Jarak benda dₒ (m)</label><input type="range" id="cam-do" min="0.5" max="20" value="5" step="0.5" oninput="calcCamera()"><span class="ctrl-val" id="cam-do-v">5</span></div>
+          <div class="ctrl-row"><label>Panjang fokus f (mm)</label><input type="range" id="cam-f" min="14" max="200" value="50" oninput="calcCamera()"><span class="ctrl-val" id="cam-f-v">50</span></div>
+        </div>
+        <div id="cam-res"></div>
+      </div>
+      <div class="two-col" style="margin-top:12px">
+        <div class="callout callout-blue">📸 <strong>Diafragma (f-stop):</strong> Mengatur besar lubang masuk cahaya. f/2 → banyak cahaya, DOF dangkal. f/16 → sedikit cahaya, DOF dalam.</div>
+        <div class="callout callout-green">⏱️ <strong>Shutter speed:</strong> Mengatur lamanya sensor terkena cahaya. Cepat (1/1000s) → beku gerak. Lambat (1/30s) → motion blur.</div>
+      </div>
+    </div>`;
+    calcCamera();
+  } else if (id === 'mikro') {
+    c.innerHTML = `
+    <div class="card">
+      <div class="card-title">Mikroskop</div>
+      <div class="formula">M = Mₒb × Mₒk = (L/fₒb) × (25/fₒk) &nbsp;(berakomodasi)</div>
+      <div class="formula">M = (L/fₒb) × (25/fₒk) &nbsp;|&nbsp; L = panjang tabung (jarak antara lensa)</div>
+      <div class="two-col">
+        <div>
+          <div class="ctrl-row"><label>Fokus objektif fₒb (mm)</label><input type="range" id="mk-fob" min="1" max="20" value="4" oninput="calcMikro()"><span class="ctrl-val" id="mk-fob-v">4</span></div>
+          <div class="ctrl-row"><label>Fokus okuler fₒk (cm)</label><input type="range" id="mk-fok" min="1" max="10" value="2.5" step="0.5" oninput="calcMikro()"><span class="ctrl-val" id="mk-fok-v">2.5</span></div>
+          <div class="ctrl-row"><label>Panjang tabung L (cm)</label><input type="range" id="mk-L" min="10" max="30" value="16" oninput="calcMikro()"><span class="ctrl-val" id="mk-L-v">16</span></div>
+        </div>
+        <div id="mk-res"></div>
+      </div>
+      <div class="info" style="margin-top:10px">Mikroskop menggunakan dua lensa cembung. Lensa objektif (fₒb kecil) membentuk bayangan nyata diperbesar. Lensa okuler memperbesar bayangan itu lagi seperti lup.</div>
+    </div>`;
+    calcMikro();
+  } else {
+    c.innerHTML = `
+    <div class="card">
+      <div class="card-title">Teleskop / Teropong</div>
+      <div class="formula">M = fₒb / fₒk &nbsp;(perbesaran anguler)</div>
+      <div class="formula">d = fₒb + fₒk &nbsp;(panjang teleskop saat tak berakomodasi)</div>
+      <div class="two-col">
+        <div>
+          <div class="ctrl-row"><label>Fokus objektif fₒb (cm)</label><input type="range" id="tel-fob" min="20" max="200" value="100" step="5" oninput="calcTeleskop()"><span class="ctrl-val" id="tel-fob-v">100</span></div>
+          <div class="ctrl-row"><label>Fokus okuler fₒk (cm)</label><input type="range" id="tel-fok" min="2" max="30" value="10" oninput="calcTeleskop()"><span class="ctrl-val" id="tel-fok-v">10</span></div>
+        </div>
+        <div id="tel-res"></div>
+      </div>
+      <div class="two-col" style="margin-top:12px">
+        <div class="callout callout-blue">🔭 <strong>Teleskop bintang:</strong> Dua lensa cembung. Objektif besar (fₒb besar) → menangkap cahaya banyak. Okuler kecil (fₒk kecil) → perbesaran besar.</div>
+        <div class="callout callout-amber">🏔️ <strong>Teropong bumi:</strong> Ditambah lensa pembalik sehingga bayangan akhir tegak. Teropong panggung menggunakan prisma atau lensa cekung okuler.</div>
+      </div>
+    </div>`;
+    calcTeleskop();
+  }
+}
+
+function calcLup() {
+  const f = +document.getElementById('lup-f').value;
+  document.getElementById('lup-f-v').textContent = f;
+  const M1 = 25 / f + 1;
+  const M2 = 25 / f;
+  document.getElementById('lup-res').innerHTML = `
+    <div class="formula">Berakomodasi maks: M = 25/${f} + 1 = ${M1.toFixed(2)}×</div>
+    <div class="formula">Tak berakomodasi: M = 25/${f} = ${M2.toFixed(2)}×</div>
+    <div class="results">
+      <div class="result-pill"><div class="rp-label">M (akomodasi maks)</div><div class="rp-val">${M1.toFixed(1)}×</div></div>
+      <div class="result-pill"><div class="rp-label">M (tak akomodasi)</div><div class="rp-val">${M2.toFixed(1)}×</div></div>
+      <div class="result-pill"><div class="rp-label">Fokus lup</div><div class="rp-val">${f} cm</div></div>
+    </div>`;
+}
+
+function calcCamera() {
+  const doM = +document.getElementById('cam-do').value;
+  const fMm = +document.getElementById('cam-f').value;
+  document.getElementById('cam-do-v').textContent = doM;
+  document.getElementById('cam-f-v').textContent = fMm;
+  const doCm = doM * 100, fCm = fMm / 10;
+  const di = 1 / (1 / fCm - 1 / doCm);
+  const M = -di / doCm;
+  document.getElementById('cam-res').innerHTML = `
+    <div class="results">
+      <div class="result-pill"><div class="rp-label">Jarak bayangan dᵢ</div><div class="rp-val">${(di * 10).toFixed(1)} mm</div></div>
+      <div class="result-pill"><div class="rp-label">Perbesaran M</div><div class="rp-val">${Math.abs(M).toFixed(4)}×</div></div>
+    </div>
+    <div class="formula" style="margin-top:8px">dᵢ = ${di.toFixed(2)} cm = ${(di*10).toFixed(1)} mm</div>`;
+}
+
+function calcMikro() {
+  const fob = +document.getElementById('mk-fob').value / 10; // mm to cm
+  const fok = +document.getElementById('mk-fok').value;
+  const L = +document.getElementById('mk-L').value;
+  document.getElementById('mk-fob-v').textContent = document.getElementById('mk-fob').value;
+  document.getElementById('mk-fok-v').textContent = fok;
+  document.getElementById('mk-L-v').textContent = L;
+  const Mob = L / fob;
+  const Mok = 25 / fok;
+  const M = Mob * Mok;
+  document.getElementById('mk-res').innerHTML = `
+    <div class="formula">Mₒb = L/fₒb = ${L}/${fob.toFixed(1)} = ${Mob.toFixed(1)}×</div>
+    <div class="formula">Mₒk = 25/fₒk = 25/${fok} = ${Mok.toFixed(1)}×</div>
+    <div class="results">
+      <div class="result-pill"><div class="rp-label">M objektif</div><div class="rp-val">${Mob.toFixed(0)}×</div></div>
+      <div class="result-pill"><div class="rp-label">M okuler</div><div class="rp-val">${Mok.toFixed(0)}×</div></div>
+      <div class="result-pill"><div class="rp-label">M total</div><div class="rp-val" style="color:#6040c0">${M.toFixed(0)}×</div></div>
+    </div>`;
+}
+
+function calcTeleskop() {
+  const fob = +document.getElementById('tel-fob').value;
+  const fok = +document.getElementById('tel-fok').value;
+  document.getElementById('tel-fob-v').textContent = fob;
+  document.getElementById('tel-fok-v').textContent = fok;
+  const M = fob / fok;
+  const d = fob + fok;
+  document.getElementById('tel-res').innerHTML = `
+    <div class="formula">M = fₒb/fₒk = ${fob}/${fok} = ${M.toFixed(1)}×</div>
+    <div class="formula">Panjang d = fₒb + fₒk = ${d} cm</div>
+    <div class="results">
+      <div class="result-pill"><div class="rp-label">Perbesaran M</div><div class="rp-val" style="color:#1a5fa8">${M.toFixed(1)}×</div></div>
+      <div class="result-pill"><div class="rp-label">Panjang teleskop</div><div class="rp-val">${d} cm</div></div>
+    </div>`;
+}
+
+/* ══════════════════ INIT ══════════════════ */
+window.addEventListener('load', () => {
+  drawReflection();
+  drawFlatMirror();
+  showEyeTab('normal', document.querySelector('#s-mata .sub-tab'));
+  showToolTab('lup', document.querySelector('#s-alat .sub-tab'));
+  document.getElementById('kac-type').addEventListener('change', calcKacamata);
+  calcKacamata();
+});
+window.addEventListener('resize', () => { redrawAll(); });
+</script>
+</body>
+</html>
