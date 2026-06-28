@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 6: Gerak Parabola — Fisika Interaktif</title>
+<style>
+:root {
+  --bg:#f4f5f9; --bg2:#ffffff; --bg3:#edf0f8;
+  --text:#1c1e2e; --text2:#6b6e88; --text3:#9ea1b8;
+  --border:rgba(0,0,0,0.08); --border2:rgba(0,0,0,0.14);
+  --primary:#1e2d56; --accent:#3a68d0; --accent2:#1e48a8;
+  --green:#1a7a4a; --amber:#a05c00; --red:#b02020; --orange:#c85c10;
+  --r:10px; --rs:6px;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#1c1e2a; --bg2:#242535; --bg3:#2a2c3e;
+  --text:#e8eaf2; --text2:#9ea3b5; --text3:#666a80;
+  --border:rgba(255,255,255,0.08); --border2:rgba(255,255,255,0.15);
+  --primary:#7a90cc; --accent:#7898d2; --accent2:#9ab8e8;
+  --green:#4ab870; --amber:#d49020; --red:#e05050; --orange:#e08040;
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+
+/* Header */
+header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 20px;height:52px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:50}
+.brand{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0}
+.logo{width:32px;height:32px;background:var(--primary);border-radius:7px;display:grid;place-items:center;color:#fff;font-size:15px;line-height:1}
+.brand-name{font-size:13px;font-weight:600;color:var(--text);line-height:1.3}
+.brand-sub{font-size:10px;color:var(--text2);line-height:1.3}
+.hd-sep{color:var(--text3);font-size:14px}
+.hd-unit{font-size:13px;font-weight:500;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hd-back{margin-left:auto;font-size:12px;font-weight:500;color:var(--accent);text-decoration:none;padding:5px 12px;border:1px solid var(--border2);border-radius:var(--rs);white-space:nowrap;flex-shrink:0}
+.hd-back:hover{background:var(--bg3)}
+
+/* Nav */
+nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 20px;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+.nt{padding:10px 14px;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;border-radius:6px 6px 0 0;border:1px solid transparent;border-bottom:none;white-space:nowrap;background:none;transition:.15s}
+.nt:hover{color:var(--text);background:var(--bg3)}
+.nt.active{color:var(--accent);background:var(--bg2);border-color:var(--border);margin-bottom:-1px}
+
+/* Layout */
+main{padding:18px 20px;max-width:960px;margin:0 auto}
+.sec{display:none}.sec.active{display:block}
+.sec-title{font-size:17px;font-weight:600;margin-bottom:3px}
+.sec-desc{font-size:13px;color:var(--text2);margin-bottom:16px}
+
+/* Cards */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.card-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:620px){.two{grid-template-columns:1fr}}
+
+/* Controls */
+.cr{display:flex;align-items:center;gap:8px;margin:7px 0}
+.cr label{font-size:12px;color:var(--text2);min-width:160px;flex-shrink:0}
+.cr input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
+.cv{font-size:13px;font-weight:600;min-width:56px;text-align:right;font-variant-numeric:tabular-nums}
+.cr select{padding:4px 8px;border:1px solid var(--border2);border-radius:var(--rs);background:var(--bg);color:var(--text);font-size:13px;cursor:pointer}
+
+/* Pills */
+.pills{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+.pill{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 12px;text-align:center;min-width:90px}
+.pill .pl{font-size:10px;color:var(--text3);margin-bottom:2px;text-transform:uppercase;letter-spacing:.04em}
+.pill .pv{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border-radius:var(--rs);font-size:13px;font-weight:600;cursor:pointer;border:none;transition:.15s}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:var(--accent2)}
+.btn-outline{background:var(--bg);border:1px solid var(--border2);color:var(--text)}.btn-outline:hover{background:var(--bg3)}
+.btns{display:flex;gap:8px;margin-top:12px}
+
+/* Canvas */
+canvas{display:block;border-radius:var(--rs);background:var(--bg3);max-width:100%}
+
+/* Formula */
+.fm{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:7px 12px;font-family:'Courier New',monospace;font-size:12px;color:var(--accent);margin:5px 0;line-height:1.6}
+
+/* Callout */
+.co{border-radius:var(--rs);padding:9px 13px;font-size:13px;margin:8px 0;line-height:1.6}
+.co-blue{background:#e8f0fb;color:#1a4fa0}.co-green{background:#e4f4ec;color:#1a6040}
+.co-amber{background:#fdf0d8;color:#7a4400}
+@media(prefers-color-scheme:dark){
+  .co-blue{background:#162340;color:#7aaaf0}.co-green{background:#0e2e1c;color:#4ab870}
+  .co-amber{background:#2e2000;color:#d49020}
+}
+
+/* Table */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;padding:6px 8px;border-bottom:1px solid var(--border);text-align:left;font-weight:600}
+td{padding:7px 8px;border-bottom:1px solid var(--border)}
+tr:last-child td{border-bottom:none}
+.hi{background:color-mix(in srgb,var(--accent) 9%,transparent)}
+td:nth-child(2),td:nth-child(3){font-family:monospace;color:var(--accent)}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="brand" href="/">
+    <div class="logo">⚛</div>
+    <div>
+      <div class="brand-name">Fisika Interaktif</div>
+      <div class="brand-sub">SMA 10 · Kurikulum Merdeka</div>
+    </div>
+  </a>
+  <span class="hd-sep">›</span>
+  <span class="hd-unit">Unit 6: Gerak Parabola</span>
+  <a class="hd-back" href="/">← Dashboard</a>
+</header>
+
+<nav>
+  <div class="nt active" onclick="showSec('simulator',this)">▶ Simulator</div>
+  <div class="nt" onclick="showSec('grafik',this)">Grafik</div>
+  <div class="nt" onclick="showSec('jangkauan',this)">Jangkauan vs Sudut</div>
+  <div class="nt" onclick="showSec('referensi',this)">Referensi</div>
+</nav>
+
+<main>
+
+<!-- ══════════ 1. SIMULATOR ══════════ -->
+<div class="sec active" id="s-simulator">
+  <div class="sec-title">Simulator Gerak Parabola</div>
+  <div class="sec-desc">Atur kecepatan awal dan sudut elevasi, lalu tekan Lempar. Amati lintasan, ketinggian maksimum, dan jangkauan horizontal.</div>
+
+  <div class="card">
+    <div class="card-title">Parameter</div>
+    <div class="two">
+      <div>
+        <div class="cr"><label>Kecepatan awal v₀ (m/s)</label><input type="range" id="sv0" min="5" max="80" value="25" oninput="updateSim()"><span class="cv" id="sv0v">25</span></div>
+        <div class="cr"><label>Sudut elevasi θ (°)</label><input type="range" id="stheta" min="1" max="89" value="45" oninput="updateSim()"><span class="cv" id="sthetav">45°</span></div>
+        <div class="cr"><label>Gravitasi g</label>
+          <select id="sg" onchange="updateSim()">
+            <option value="9.8">Bumi (9.8 m/s²)</option>
+            <option value="1.62">Bulan (1.62 m/s²)</option>
+            <option value="3.72">Mars (3.72 m/s²)</option>
+            <option value="24.8">Jupiter (24.8 m/s²)</option>
+          </select>
+        </div>
+        <div class="btns">
+          <button class="btn btn-primary" onclick="simPlay()">▶ Lempar</button>
+          <button class="btn btn-outline" onclick="simReset()">↺ Reset</button>
+        </div>
+      </div>
+      <div class="pills" id="sim-pills"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Kanvas Simulasi</div>
+    <canvas id="sim-c" height="360"></canvas>
+  </div>
+</div>
+
+<!-- ══════════ 2. GRAFIK ══════════ -->
+<div class="sec" id="s-grafik">
+  <div class="sec-title">Grafik Posisi &amp; Kecepatan</div>
+  <div class="sec-desc">Gerak parabola terdiri dari GLB horizontal (vₓ konstan) dan GLBB vertikal (percepatan −g). Grafik ini memperlihatkan kedua komponen secara terpisah.</div>
+
+  <div class="card">
+    <div class="card-title">Parameter Grafik</div>
+    <div class="two">
+      <div>
+        <div class="cr"><label>v₀ (m/s)</label><input type="range" id="gv0" min="5" max="80" value="25" oninput="drawGraphs()"><span class="cv" id="gv0v">25</span></div>
+        <div class="cr"><label>θ (°)</label><input type="range" id="gtheta" min="1" max="89" value="45" oninput="drawGraphs()"><span class="cv" id="gthetav">45°</span></div>
+        <div class="cr"><label>g (m/s²)</label><input type="range" id="gg" min="1" max="30" value="9.8" step="0.1" oninput="drawGraphs()"><span class="cv" id="ggv">9.8</span></div>
+      </div>
+      <div>
+        <div class="co co-blue"><strong>Horizontal (GLB):</strong> vₓ = v₀ cos θ (konstan) &nbsp;|&nbsp; x = vₓ · t</div>
+        <div class="co co-amber" style="margin-top:6px"><strong>Vertikal (GLBB):</strong> vy = v₀ sin θ − g·t &nbsp;|&nbsp; y = v₀ sin θ · t − ½g·t²</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="two">
+    <div class="card">
+      <div class="card-title">Posisi vs Waktu</div>
+      <canvas id="g-pos" height="200"></canvas>
+      <div style="margin-top:6px;display:flex;gap:14px;font-size:12px">
+        <span style="color:var(--accent)">■ x(t)</span>
+        <span style="color:var(--orange)">■ y(t)</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Kecepatan vs Waktu</div>
+      <canvas id="g-vel" height="200"></canvas>
+      <div style="margin-top:6px;display:flex;gap:14px;font-size:12px">
+        <span style="color:var(--accent)">■ vₓ(t)</span>
+        <span style="color:var(--red)">■ vy(t)</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ 3. JANGKAUAN ══════════ -->
+<div class="sec" id="s-jangkauan">
+  <div class="sec-title">Jangkauan vs Sudut</div>
+  <div class="sec-desc">Jangkauan R = v₀² sin 2θ / g mencapai maksimum pada θ = 45°. Sudut θ dan (90°−θ) menghasilkan jangkauan yang sama.</div>
+
+  <div class="card">
+    <div class="card-title">Parameter</div>
+    <div class="cr"><label>v₀ (m/s)</label><input type="range" id="jv0" min="5" max="80" value="25" oninput="drawJangkauan()"><span class="cv" id="jv0v">25</span></div>
+    <div class="cr"><label>g (m/s²)</label><input type="range" id="jg" min="1" max="30" value="9.8" step="0.1" oninput="drawJangkauan()"><span class="cv" id="jgv">9.8</span></div>
+    <div class="cr"><label>Sudut saat ini θ (°)</label><input type="range" id="jtheta" min="1" max="89" value="45" oninput="drawJangkauan()"><span class="cv" id="jthetav">45°</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Grafik R(θ)</div>
+    <canvas id="j-c" height="260"></canvas>
+    <div style="margin-top:6px;display:flex;gap:14px;font-size:12px">
+      <span style="color:var(--accent)">■ Jangkauan R(θ)</span>
+      <span style="color:var(--orange)">● Sudut aktif</span>
+      <span style="color:var(--green)">| θ = 45° (R maks)</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Tabel Jangkauan pada Sudut Penting</div>
+    <table id="j-table"></table>
+  </div>
+</div>
+
+<!-- ══════════ 4. REFERENSI ══════════ -->
+<div class="sec" id="s-referensi">
+  <div class="sec-title">Rumus &amp; Referensi</div>
+  <div class="sec-desc">Kumpulan persamaan gerak parabola yang sering digunakan dalam soal-soal Fisika SMA.</div>
+
+  <div class="card">
+    <div class="card-title">Persamaan Kinematik</div>
+    <div class="two">
+      <div>
+        <p style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px">Komponen Horizontal (GLB)</p>
+        <div class="fm">vₓ = v₀ cos θ</div>
+        <div class="fm">x(t) = v₀ cos θ · t</div>
+      </div>
+      <div>
+        <p style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px">Komponen Vertikal (GLBB)</p>
+        <div class="fm">vy(t) = v₀ sin θ − g·t</div>
+        <div class="fm">y(t) = v₀ sin θ · t − ½g·t²</div>
+        <div class="fm">vy² = (v₀ sin θ)² − 2g·y</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Nilai-Nilai Penting</div>
+    <div class="two">
+      <div>
+        <div class="fm">t naik  = v₀ sin θ / g</div>
+        <div class="fm">t total = 2v₀ sin θ / g</div>
+        <div class="fm">H maks  = v₀² sin²θ / (2g)</div>
+        <div class="fm">R       = v₀² sin 2θ / g</div>
+        <div class="fm">R maks (θ=45°) = v₀² / g</div>
+      </div>
+      <div>
+        <div class="co co-blue">
+          <strong>Sifat Simetri:</strong><br>
+          θ dan (90°−θ) menghasilkan R yang sama.<br>
+          Contoh: θ=30° dan θ=60° → R identik.
+        </div>
+        <div class="co co-green" style="margin-top:8px">
+          <strong>Di puncak lintasan:</strong><br>
+          vy = 0, &nbsp; vₓ = v₀ cos θ (minimum)<br>
+          Kecepatan minimum selama penerbangan.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Contoh Soal</div>
+    <div id="examples"></div>
+  </div>
+</div>
+
+</main>
+
+<script>
+/* ══════ HELPERS ══════ */
+function gcv(id){ return document.getElementById(id); }
+
+function getCanvas(id, h) {
+  const cv = gcv(id);
+  const W  = cv.offsetWidth || cv.parentElement?.offsetWidth || 520;
+  const dpr = window.devicePixelRatio || 1;
+  if (cv.width !== Math.round(W*dpr) || cv.height !== Math.round(h*dpr)) {
+    cv.width  = Math.round(W * dpr);
+    cv.height = Math.round(h * dpr);
+  }
+  cv.style.width  = W + 'px';
+  cv.style.height = h + 'px';
+  const ctx = cv.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return { W, H: h, ctx };
+}
+
+const dark  = () => matchMedia('(prefers-color-scheme:dark)').matches;
+const tc    = () => dark() ? '#c8cde8' : '#1c1e2e';
+const gc_   = () => dark() ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)';
+const ac    = () => dark() ? '#7898d2' : '#3a68d0';
+const oc    = () => dark() ? '#e08040' : '#c85c10';
+const rc    = () => dark() ? '#e05050' : '#b02020';
+
+function drawGrid(ctx, W, H, nx=10, ny=6) {
+  ctx.strokeStyle = gc_(); ctx.lineWidth = 0.5;
+  for (let i=0;i<=nx;i++){const x=i/nx*W;ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for (let i=0;i<=ny;i++){const y=i/ny*H;ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+}
+
+function niceTick(range, n) {
+  const raw = range / n;
+  const m   = Math.pow(10, Math.floor(Math.log10(raw || 1)));
+  return ([1,2,5,10].find(f => f*m >= raw) || 10) * m;
+}
+
+function rr(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.arcTo(x+w,y,x+w,y+h,r);
+  ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);
+  ctx.arcTo(x,y,x+w,y,r);
+  ctx.closePath();
+}
+
+/* ══════ NAV ══════ */
+function showSec(id, el) {
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nt').forEach(t=>t.classList.remove('active'));
+  gcv('s-'+id).classList.add('active');
+  el.classList.add('active');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    if(id==='simulator') drawSim();
+    if(id==='grafik')    drawGraphs();
+    if(id==='jangkauan') drawJangkauan();
+  }));
+}
+
+/* ══════ 1. SIMULATOR ══════ */
+let simPlaying=false, simT=0, simPath=[], simRAF=null;
+
+function updateSim() {
+  gcv('sv0v').textContent    = gcv('sv0').value;
+  gcv('sthetav').textContent = gcv('stheta').value + '°';
+  const v0=+gcv('sv0').value, theta=+gcv('stheta').value, g=+gcv('sg').value;
+  const rad=theta*Math.PI/180;
+  const R = v0*v0*Math.sin(2*rad)/g;
+  const H = v0*v0*Math.sin(rad)*Math.sin(rad)/(2*g);
+  const tL= 2*v0*Math.sin(rad)/g;
+  gcv('sim-pills').innerHTML=[
+    ['Jangkauan R',R.toFixed(1)+' m'],
+    ['Ketinggian H',H.toFixed(1)+' m'],
+    ['Waktu Total',tL.toFixed(2)+' s'],
+    ['v₀ cos θ',+(v0*Math.cos(rad)).toFixed(1)+' m/s'],
+  ].map(([l,v])=>`<div class="pill"><div class="pl">${l}</div><div class="pv">${v}</div></div>`).join('');
+  if(!simPlaying){simPath=[];drawSim();}
+}
+
+function simPlay() {
+  if(simRAF) cancelAnimationFrame(simRAF);
+  simT=0; simPath=[]; simPlaying=true;
+  const v0=+gcv('sv0').value, theta=+gcv('stheta').value, g=+gcv('sg').value;
+  const rad=theta*Math.PI/180;
+  function step(){
+    simT+=0.028;
+    const x=v0*Math.cos(rad)*simT;
+    const y=v0*Math.sin(rad)*simT-0.5*g*simT*simT;
+    simPath.push({x,y:Math.max(0,y)});
+    drawSim();
+    if(y>0) simRAF=requestAnimationFrame(step);
+    else simPlaying=false;
+  }
+  simRAF=requestAnimationFrame(step);
+}
+
+function simReset() {
+  if(simRAF) cancelAnimationFrame(simRAF);
+  simPlaying=false; simT=0; simPath=[];
+  drawSim();
+}
+
+function drawSim() {
+  const v0=+gcv('sv0').value, theta=+gcv('stheta').value, g=+gcv('sg').value;
+  const {W,H,ctx}=getCanvas('sim-c',360);
+  const dark_=dark();
+  ctx.clearRect(0,0,W,H);
+
+  const rad=theta*Math.PI/180;
+  const R=v0*v0*Math.sin(2*rad)/g;
+  const Hmax=v0*v0*Math.sin(rad)*Math.sin(rad)/(2*g);
+  const tL=2*v0*Math.sin(rad)/g;
+
+  const ml=50,mr=20,mt=26,mb=44;
+  const pw=W-ml-mr, ph=H-mt-mb;
+
+  const xScale=pw/(R*1.1||1), yScale=ph/(Hmax*1.2||1);
+  const scale=Math.min(xScale,yScale);
+
+  const toC=(x,y)=>({cx:ml+x*scale, cy:mt+ph-y*scale});
+  const groundY=mt+ph;
+
+  // Background
+  ctx.fillStyle=dark_?'#1a1c28':'#eef0f8';
+  ctx.fillRect(0,0,W,H);
+  drawGrid(ctx,W,H,10,6);
+
+  // Ground
+  ctx.fillStyle=dark_?'#252738':'#d5d9ee';
+  ctx.fillRect(0,groundY,W,mb);
+  ctx.strokeStyle=dark_?'#383b55':'#a0a5c4';
+  ctx.lineWidth=2;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(0,groundY);ctx.lineTo(W,groundY);ctx.stroke();
+
+  // Y-axis
+  ctx.strokeStyle=dark_?'#383b55':'#c0c4dc';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(ml,mt);ctx.lineTo(ml,groundY+4);ctx.stroke();
+
+  // Ghost trajectory (dashed)
+  ctx.strokeStyle=dark_?'rgba(120,152,210,0.3)':'rgba(58,104,208,0.2)';
+  ctx.lineWidth=1.5;ctx.setLineDash([5,5]);
+  ctx.beginPath();
+  for(let i=0;i<=120;i++){
+    const t=i/120*tL;
+    const x=v0*Math.cos(rad)*t, y=v0*Math.sin(rad)*t-0.5*g*t*t;
+    const c=toC(x,y);
+    i===0?ctx.moveTo(c.cx,c.cy):ctx.lineTo(c.cx,c.cy);
+  }
+  ctx.stroke();ctx.setLineDash([]);
+
+  // Actual path
+  if(simPath.length>1){
+    ctx.strokeStyle=ac();ctx.lineWidth=2.5;
+    ctx.beginPath();
+    simPath.forEach((p,i)=>{
+      const c=toC(p.x,p.y);
+      i===0?ctx.moveTo(c.cx,c.cy):ctx.lineTo(c.cx,c.cy);
+    });
+    ctx.stroke();
+  }
+
+  // Landing marker
+  if(simPath.length>1&&!simPlaying){
+    const lc=toC(R,0);
+    ctx.strokeStyle=rc();ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.moveTo(lc.cx-7,lc.cy-7);ctx.lineTo(lc.cx+7,lc.cy+7);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(lc.cx+7,lc.cy-7);ctx.lineTo(lc.cx-7,lc.cy+7);ctx.stroke();
+    ctx.fillStyle=rc();ctx.font='10px system-ui';ctx.textAlign='center';
+    ctx.fillText('R='+R.toFixed(1)+'m',lc.cx,lc.cy+18);
+  }
+
+  // Height annotation (when idle)
+  if(!simPlaying&&simPath.length===0&&Hmax>1){
+    const apex=toC(R/2,Hmax);
+    const apexG=toC(R/2,0);
+    ctx.strokeStyle=dark_?'rgba(100,106,160,0.5)':'rgba(100,110,180,0.4)';
+    ctx.lineWidth=1;ctx.setLineDash([3,4]);
+    ctx.beginPath();ctx.moveTo(apex.cx,apex.cy);ctx.lineTo(apex.cx,apexG.cy);ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle=dark_?'#9ea3b5':'#6b6e88';ctx.font='10px system-ui';ctx.textAlign='left';
+    ctx.fillText('H='+Hmax.toFixed(1)+'m',apex.cx+4,(apex.cy+apexG.cy)/2+4);
+  }
+
+  // Launch angle arc
+  const lc=toC(0,0);
+  const arcR=Math.min(44,pw*0.12);
+  ctx.strokeStyle=dark_?'#8060c0':'#6030a0';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.arc(lc.cx,lc.cy,arcR,0,-rad,true);ctx.stroke();
+  ctx.fillStyle=dark_?'#a080e0':'#7040b8';ctx.font='10px system-ui';ctx.textAlign='left';
+  ctx.fillText(theta+'°',lc.cx+arcR*0.65,lc.cy-arcR*0.35);
+
+  // Velocity vector (while playing)
+  const curr=simPath.length>0?simPath[simPath.length-1]:{x:0,y:0};
+  const cc=toC(curr.x,curr.y);
+  if(simPlaying&&simPath.length>0){
+    const vx=v0*Math.cos(rad);
+    const vy=v0*Math.sin(rad)-g*simT;
+    const vs=Math.min(3,pw/v0);
+    const ex=cc.cx+vx*vs, ey=cc.cy-vy*vs;
+    const ang=Math.atan2(-(ey-cc.cy),ex-cc.cx);
+    ctx.strokeStyle=oc();ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(cc.cx,cc.cy);ctx.lineTo(ex,ey);ctx.stroke();
+    ctx.fillStyle=oc();
+    ctx.beginPath();
+    ctx.moveTo(ex,ey);
+    ctx.lineTo(ex-8*Math.cos(ang-0.4),ey-8*Math.sin(ang-0.4));
+    ctx.lineTo(ex-8*Math.cos(ang+0.4),ey-8*Math.sin(ang+0.4));
+    ctx.closePath();ctx.fill();
+  }
+
+  // Ball
+  ctx.fillStyle=oc();
+  ctx.beginPath();ctx.arc(cc.cx,cc.cy,9,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle=dark_?'#ffb060':'#a04010';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.arc(cc.cx,cc.cy,9,0,Math.PI*2);ctx.stroke();
+
+  // Telemetry box
+  const vxc=v0*Math.cos(rad);
+  const vyc=v0*Math.sin(rad)-g*simT;
+  const spd=Math.sqrt(vxc*vxc+vyc*vyc);
+  ctx.fillStyle=dark_?'rgba(26,28,40,0.88)':'rgba(240,242,248,0.92)';
+  rr(ctx,ml+6,mt+6,162,92,7);ctx.fill();
+  ctx.strokeStyle=dark_?'rgba(60,65,100,0.7)':'rgba(180,185,215,0.8)';ctx.lineWidth=1;
+  rr(ctx,ml+6,mt+6,162,92,7);ctx.stroke();
+  [['t',simT.toFixed(2)+' s'],['x',curr.x.toFixed(1)+' m'],['y',curr.y.toFixed(1)+' m'],['|v|',spd.toFixed(1)+' m/s']].forEach(([label,val],i)=>{
+    ctx.fillStyle=dark_?'#9ea3b5':'#6b6e88';ctx.font='12px system-ui';ctx.textAlign='left';
+    ctx.fillText(label+' =',ml+14,mt+24+i*18);
+    ctx.fillStyle=tc();ctx.fillText(val,ml+44,mt+24+i*18);
+  });
+
+  // Axis tick values
+  ctx.fillStyle=dark_?'#606480':'#8088a8';ctx.font='10px system-ui';
+  const xStep=niceTick(R,4);
+  ctx.textAlign='center';
+  for(let xi=0;xi<=R*1.05;xi+=xStep){
+    const cx=ml+xi*scale;if(cx>ml+pw+4)break;
+    ctx.fillText(xi.toFixed(0),cx,groundY+16);
+  }
+  ctx.textAlign='right';
+  const yStep=niceTick(Hmax,4);
+  for(let yi=yStep;yi<=Hmax*1.05;yi+=yStep){
+    const cy=mt+ph-yi*scale;if(cy<mt-2)break;
+    ctx.fillText(yi.toFixed(0),ml-4,cy+4);
+  }
+
+  // Axis labels
+  ctx.fillStyle=dark_?'#606480':'#8088a8';ctx.font='10px system-ui';ctx.textAlign='center';
+  ctx.fillText('x (m)',ml+pw/2,H-4);
+  ctx.save();ctx.translate(13,mt+ph/2);ctx.rotate(-Math.PI/2);ctx.fillText('y (m)',0,0);ctx.restore();
+}
+
+/* ══════ 2. GRAFIK ══════ */
+function drawGraphs() {
+  const v0=+gcv('gv0').value, theta=+gcv('gtheta').value, g=+gcv('gg').value;
+  gcv('gv0v').textContent=v0;gcv('gthetav').textContent=theta+'°';gcv('ggv').textContent=g.toFixed(1);
+  const rad=theta*Math.PI/180;
+  const tL=2*v0*Math.sin(rad)/g;
+  const N=120, dt=tL/N;
+  const ts=[],xs=[],ys=[],vxs=[],vys=[];
+  for(let i=0;i<=N;i++){
+    const t=i*dt;ts.push(t);
+    xs.push(v0*Math.cos(rad)*t);
+    ys.push(Math.max(0,v0*Math.sin(rad)*t-0.5*g*t*t));
+    vxs.push(v0*Math.cos(rad));
+    vys.push(v0*Math.sin(rad)-g*t);
+  }
+  drawLineChart('g-pos',200,ts,[{data:xs,color:ac()},{data:ys,color:oc()}],'t (s)','posisi (m)');
+  drawLineChart('g-vel',200,ts,[{data:vxs,color:ac()},{data:vys,color:rc()}],'t (s)','kecepatan (m/s)');
+}
+
+function drawLineChart(id,h,xs,series,xlabel,ylabel){
+  const {W,H,ctx}=getCanvas(id,h);
+  const dark_=dark();
+  ctx.clearRect(0,0,W,H);drawGrid(ctx,W,H,8,4);
+  const ml=42,mr=12,mt=14,mb=30;
+  const pw=W-ml-mr, ph=H-mt-mb;
+  const allY=series.flatMap(s=>s.data);
+  const xMax=Math.max(...xs)||1;
+  const yMin=Math.min(...allY,0), yMax=Math.max(...allY,0);
+  const yRange=yMax-yMin||1;
+  const toC=(x,y)=>({cx:ml+x/xMax*pw, cy:mt+ph-(y-yMin)/yRange*ph});
+
+  // Zero line
+  if(yMin<0&&yMax>0){
+    const z=toC(0,0);
+    ctx.strokeStyle=dark_?'#383b55':'#c8cbdc';ctx.lineWidth=1;ctx.setLineDash([3,3]);
+    ctx.beginPath();ctx.moveTo(ml,z.cy);ctx.lineTo(ml+pw,z.cy);ctx.stroke();ctx.setLineDash([]);
+  }
+
+  series.forEach(({data,color})=>{
+    ctx.strokeStyle=color;ctx.lineWidth=2;
+    ctx.beginPath();
+    data.forEach((y,i)=>{const c=toC(xs[i],y);i===0?ctx.moveTo(c.cx,c.cy):ctx.lineTo(c.cx,c.cy);});
+    ctx.stroke();
+  });
+
+  ctx.strokeStyle=dark_?'#3a3e58':'#b8bcd0';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(ml,mt);ctx.lineTo(ml,mt+ph+5);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(ml,mt+ph);ctx.lineTo(ml+pw,mt+ph);ctx.stroke();
+
+  ctx.fillStyle=dark_?'#606480':'#8088a8';ctx.font='9px system-ui';
+  const xStep=niceTick(xMax,4);
+  ctx.textAlign='center';
+  for(let x=0;x<=xMax+xStep*0.1;x+=xStep){
+    const cx=ml+x/xMax*pw;if(cx>ml+pw+2)break;
+    ctx.fillText(x.toFixed(1),cx,mt+ph+13);
+  }
+  ctx.textAlign='right';
+  const yStep=niceTick(yRange,4);
+  for(let y=Math.ceil(yMin/yStep)*yStep;y<=yMax+yStep*0.1;y+=yStep){
+    const cy=mt+ph-(y-yMin)/yRange*ph;
+    if(cy<mt-2||cy>mt+ph+2)continue;
+    ctx.fillText(y.toFixed(0),ml-3,cy+3);
+  }
+  ctx.fillStyle=dark_?'#9ea3b5':'#6b6e88';ctx.font='9px system-ui';ctx.textAlign='center';
+  ctx.fillText(xlabel,ml+pw/2,H-2);
+}
+
+/* ══════ 3. JANGKAUAN ══════ */
+function drawJangkauan(){
+  const v0=+gcv('jv0').value, g=+gcv('jg').value, theta=+gcv('jtheta').value;
+  gcv('jv0v').textContent=v0;gcv('jgv').textContent=g.toFixed(1);gcv('jthetav').textContent=theta+'°';
+  const {W,H,ctx}=getCanvas('j-c',260);
+  const dark_=dark();
+  ctx.clearRect(0,0,W,H);drawGrid(ctx,W,H,9,5);
+  const ml=52,mr=20,mt=24,mb=38;
+  const pw=W-ml-mr, ph=H-mt-mb;
+  const Rmax=v0*v0/g;
+  const R=(th)=>v0*v0*Math.sin(2*th*Math.PI/180)/g;
+  const toC=(th,r)=>({cx:ml+th/90*pw, cy:mt+ph-r/(Rmax*1.08)*ph});
+
+  // Fill under curve
+  ctx.fillStyle=dark_?'rgba(120,152,210,0.1)':'rgba(58,104,208,0.07)';
+  ctx.beginPath();
+  for(let th=0;th<=90;th+=0.5){const c=toC(th,R(th));th===0?ctx.moveTo(c.cx,c.cy):ctx.lineTo(c.cx,c.cy);}
+  ctx.lineTo(toC(90,0).cx,toC(90,0).cy);ctx.lineTo(toC(0,0).cx,toC(0,0).cy);
+  ctx.closePath();ctx.fill();
+
+  // Curve
+  ctx.strokeStyle=ac();ctx.lineWidth=2.5;
+  ctx.beginPath();
+  for(let th=0;th<=90;th+=0.5){const c=toC(th,R(th));th===0?ctx.moveTo(c.cx,c.cy):ctx.lineTo(c.cx,c.cy);}
+  ctx.stroke();
+
+  // 45° line
+  const c45=toC(45,Rmax);
+  ctx.strokeStyle=dark_?'#4ab870':'#1a7a4a';ctx.lineWidth=1;ctx.setLineDash([3,3]);
+  ctx.beginPath();ctx.moveTo(c45.cx,mt);ctx.lineTo(c45.cx,mt+ph);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle=dark_?'#4ab870':'#1a7a4a';ctx.font='10px system-ui';ctx.textAlign='center';
+  ctx.fillText('45°',c45.cx,mt+13);
+
+  // Symmetry partner line
+  const cComp=toC(90-theta,R(90-theta));
+  if(Math.abs(theta-45)>2){
+    ctx.strokeStyle=dark_?'rgba(100,200,140,0.35)':'rgba(26,120,74,0.25)';ctx.lineWidth=1;ctx.setLineDash([2,4]);
+    ctx.beginPath();ctx.moveTo(cComp.cx,mt);ctx.lineTo(cComp.cx,cComp.cy);ctx.stroke();ctx.setLineDash([]);
+  }
+
+  // Current theta
+  const cCurr=toC(theta,R(theta));
+  ctx.strokeStyle=oc();ctx.lineWidth=1.5;ctx.setLineDash([4,3]);
+  ctx.beginPath();ctx.moveTo(cCurr.cx,mt);ctx.lineTo(cCurr.cx,cCurr.cy);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(ml,cCurr.cy);ctx.lineTo(cCurr.cx,cCurr.cy);ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle=oc();ctx.beginPath();ctx.arc(cCurr.cx,cCurr.cy,5,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle=oc();ctx.font='10px system-ui';ctx.textAlign='left';
+  ctx.fillText('θ='+theta+'°  R='+R(theta).toFixed(1)+'m',cCurr.cx+7,cCurr.cy+4);
+
+  // Axes
+  ctx.strokeStyle=dark_?'#3a3e58':'#b8bcd0';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(ml,mt);ctx.lineTo(ml,mt+ph+5);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(ml-4,mt+ph);ctx.lineTo(ml+pw,mt+ph);ctx.stroke();
+
+  ctx.fillStyle=dark_?'#606480':'#8088a8';ctx.font='10px system-ui';
+  ctx.textAlign='center';
+  [0,15,30,45,60,75,90].forEach(th=>{
+    const cx=ml+th/90*pw;ctx.fillText(th+'°',cx,mt+ph+16);
+  });
+  ctx.textAlign='right';
+  const yStep=niceTick(Rmax,4);
+  for(let r=0;r<=Rmax*1.05;r+=yStep){
+    const cy=mt+ph-r/(Rmax*1.08)*ph;if(cy<mt-2)break;
+    ctx.fillText(r.toFixed(0),ml-4,cy+3);
+  }
+  ctx.fillStyle=dark_?'#9ea3b5':'#6b6e88';ctx.font='10px system-ui';ctx.textAlign='center';
+  ctx.fillText('θ (derajat)',ml+pw/2,H-2);
+  ctx.save();ctx.translate(12,mt+ph/2);ctx.rotate(-Math.PI/2);ctx.fillText('R (m)',0,0);ctx.restore();
+
+  // Table
+  const rows=[0,15,30,45,60,75,90];
+  const thead='<tr><th>Sudut θ</th><th>Jangkauan R (m)</th><th>Ketinggian Maks H (m)</th></tr>';
+  gcv('j-table').innerHTML=thead+rows.map(th=>{
+    const rad_=th*Math.PI/180;
+    const r=v0*v0*Math.sin(2*rad_)/g;
+    const h_=v0*v0*Math.sin(rad_)*Math.sin(rad_)/(2*g);
+    const hi=Math.abs(th-theta)<1?' class="hi"':'';
+    return `<tr${hi}><td>${th}°</td><td>${r.toFixed(2)}</td><td>${h_.toFixed(2)}</td></tr>`;
+  }).join('');
+}
+
+/* ══════ 4. REFERENSI ══════ */
+function buildExamples(){
+  const exs=[
+    {title:'Atlet Lempar Lembing',
+     desc:'Atlet melempar lembing dari ketinggian 0 m dengan v₀ = 25 m/s, θ = 40°.',
+     steps:['vₓ = 25 cos40° = 25 × 0.766 = 19.15 m/s','vy₀ = 25 sin40° = 25 × 0.643 = 16.07 m/s',
+            't total = 2 × 16.07/9.8 = 3.28 s','R = vₓ × t = 19.15 × 3.28 = 62.8 m','H maks = 16.07²/(2×9.8) = 13.2 m']},
+    {title:'Simetri 30° dan 60°',
+     desc:'Tunjukkan bahwa θ=30° dan θ=60° menghasilkan R yang sama dengan v₀=20 m/s, g=9.8 m/s².',
+     steps:['R₃₀ = v₀² sin60°/g = 400 × 0.866/9.8 = 35.4 m',
+            'R₆₀ = v₀² sin120°/g = 400 × 0.866/9.8 = 35.4 m ✓',
+            'sin 2θ = sin(180°−2θ), sehingga θ dan (90°−θ) memiliki R sama.']},
+    {title:'Percobaan di Bulan',
+     desc:'Bandingkan jangkauan v₀=20 m/s, θ=45° di Bumi (g=9.8) vs Bulan (g=1.62).',
+     steps:['R_Bumi  = 20²/9.8  = 400/9.8  = 40.8 m',
+            'R_Bulan = 20²/1.62 = 400/1.62 = 246.9 m',
+            'Rasio = 9.8/1.62 = 6.05 — di Bulan 6× lebih jauh!']},
+  ];
+  gcv('examples').innerHTML=exs.map(e=>`
+    <div class="card" style="margin-bottom:10px">
+      <div class="card-title">${e.title}</div>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:10px">${e.desc}</p>
+      ${e.steps.map(s=>`<div class="fm">${s}</div>`).join('')}
+    </div>`).join('');
+}
+
+/* ══════ INIT ══════ */
+window.addEventListener('load',()=>{
+  updateSim();drawSim();buildExamples();
+  setTimeout(()=>{drawGraphs();drawJangkauan();},150);
+});
+window.addEventListener('resize',()=>{
+  const id=document.querySelector('.sec.active')?.id;
+  if(id==='s-simulator') drawSim();
+  if(id==='s-grafik')    drawGraphs();
+  if(id==='s-jangkauan') drawJangkauan();
+});
+</script>
+</body>
+</html>

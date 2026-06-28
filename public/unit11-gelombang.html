@@ -6,38 +6,33 @@
 <title>Unit 11: Gelombang Mekanik — SMA Kelas 10</title>
 <style>
 :root {
-  --bg:      #f7f6f3;
-  --bg2:     #ffffff;
-  --bg3:     #eeecea;
-  --text:    #1a1916;
-  --text2:   #6b6860;
-  --text3:   #9e9b95;
-  --border:  rgba(0,0,0,0.09);
-  --border2: rgba(0,0,0,0.16);
-  --accent:  #1755c4;
-  --accent2: #0e3d8a;
-  --green:   #1a7a4a;
-  --amber:   #a05c00;
-  --red:     #b02020;
-  --purple:  #6535c0;
-  --r:       10px;
-  --rs:      6px;
+  --bg:#f4f5f9; --bg2:#ffffff; --bg3:#edf0f8;
+  --text:#1c1e2e; --text2:#6b6e88; --text3:#9ea1b8;
+  --border:rgba(0,0,0,0.08); --border2:rgba(0,0,0,0.14);
+  --primary:#1e2d56; --accent:#3a68d0; --accent2:#1e48a8;
+  --green:#1a7a4a; --amber:#a05c00; --red:#b02020; --purple:#6535c0;
+  --r:10px; --rs:6px;
 }
-@media (prefers-color-scheme:dark){:root{
-  --bg:#181816; --bg2:#222220; --bg3:#2c2c29;
-  --text:#e8e5de; --text2:#9e9b93; --text3:#6a6760;
+@media(prefers-color-scheme:dark){:root{
+  --bg:#1c1e2a; --bg2:#242535; --bg3:#2a2c3e;
+  --text:#e8eaf2; --text2:#9ea3b5; --text3:#666a80;
   --border:rgba(255,255,255,0.08); --border2:rgba(255,255,255,0.15);
-  --accent:#5588e8; --accent2:#7aaaf0;
+  --primary:#7a90cc; --accent:#7898d2; --accent2:#9ab8e8;
   --green:#4ab870; --amber:#d49020; --red:#e05050; --purple:#9a70e8;
 }}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
 
 /* Header */
-header{background:var(--bg2);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50}
-.logo{width:34px;height:34px;background:var(--accent);border-radius:8px;display:grid;place-items:center;color:#fff;font-size:17px;flex-shrink:0}
-header h1{font-size:15px;font-weight:600}
-header p{font-size:12px;color:var(--text2)}
+header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 20px;height:52px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:50}
+.brand{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0}
+.logo{width:32px;height:32px;background:var(--primary);border-radius:7px;display:grid;place-items:center;color:#fff;font-size:15px;flex-shrink:0;line-height:1}
+.brand-name{font-size:13px;font-weight:600;color:var(--text);line-height:1.3}
+.brand-sub{font-size:10px;color:var(--text2);line-height:1.3}
+.hd-sep{color:var(--text3);font-size:14px}
+.hd-unit{font-size:13px;font-weight:500;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hd-back{margin-left:auto;font-size:12px;font-weight:500;color:var(--accent);text-decoration:none;padding:5px 12px;border:1px solid var(--border2);border-radius:var(--rs);white-space:nowrap;flex-shrink:0}
+.hd-back:hover{background:var(--bg3)}
 
 /* Nav */
 nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 20px;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
@@ -107,11 +102,16 @@ td:nth-child(2){font-family:monospace;color:var(--accent)}
 <body>
 
 <header>
-  <div class="logo">〰</div>
-  <div>
-    <h1>Unit 11: Gelombang Mekanik</h1>
-    <p>SMA Kelas 10 · Kurikulum Merdeka</p>
-  </div>
+  <a class="brand" href="/">
+    <div class="logo">⚛</div>
+    <div>
+      <div class="brand-name">Fisika Interaktif</div>
+      <div class="brand-sub">SMA 10 · Kurikulum Merdeka</div>
+    </div>
+  </a>
+  <span class="hd-sep">›</span>
+  <span class="hd-unit">Unit 11: Gelombang Mekanik</span>
+  <a class="hd-back" href="/">← Dashboard</a>
 </header>
 
 <nav>

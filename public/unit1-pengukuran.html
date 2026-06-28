@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 1: Pengukuran & Besaran — Fisika Interaktif</title>
+<style>
+:root {
+  --bg:#f4f5f9; --bg2:#ffffff; --bg3:#edf0f8;
+  --text:#1c1e2e; --text2:#6b6e88; --text3:#9ea1b8;
+  --border:rgba(0,0,0,0.08); --border2:rgba(0,0,0,0.14);
+  --primary:#1e2d56; --accent:#3a68d0; --accent2:#1e48a8;
+  --green:#1a7a4a; --amber:#a05c00; --red:#b02020; --orange:#c85c10;
+  --r:10px; --rs:6px;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#1c1e2a; --bg2:#242535; --bg3:#2a2c3e;
+  --text:#e8eaf2; --text2:#9ea3b5; --text3:#666a80;
+  --border:rgba(255,255,255,0.08); --border2:rgba(255,255,255,0.15);
+  --primary:#7a90cc; --accent:#7898d2; --accent2:#9ab8e8;
+  --green:#4ab870; --amber:#d49020; --red:#e05050; --orange:#e08040;
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+
+/* Header */
+header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 20px;height:52px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:50}
+.brand{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0}
+.logo{width:32px;height:32px;background:var(--primary);border-radius:7px;display:grid;place-items:center;color:#fff;font-size:15px;line-height:1}
+.brand-name{font-size:13px;font-weight:600;color:var(--text);line-height:1.3}
+.brand-sub{font-size:10px;color:var(--text2);line-height:1.3}
+.hd-sep{color:var(--text3);font-size:14px}
+.hd-unit{font-size:13px;font-weight:500;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hd-back{margin-left:auto;font-size:12px;font-weight:500;color:var(--accent);text-decoration:none;padding:5px 12px;border:1px solid var(--border2);border-radius:var(--rs);white-space:nowrap;flex-shrink:0}
+.hd-back:hover{background:var(--bg3)}
+
+/* Nav */
+nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 20px;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+.nt{padding:10px 14px;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;border-radius:6px 6px 0 0;border:1px solid transparent;border-bottom:none;white-space:nowrap;background:none;transition:.15s}
+.nt:hover{color:var(--text);background:var(--bg3)}
+.nt.active{color:var(--accent);background:var(--bg2);border-color:var(--border);margin-bottom:-1px}
+
+/* Layout */
+main{padding:18px 20px;max-width:960px;margin:0 auto}
+.sec{display:none}.sec.active{display:block}
+.sec-title{font-size:17px;font-weight:600;margin-bottom:3px}
+.sec-desc{font-size:13px;color:var(--text2);margin-bottom:16px}
+
+/* Cards */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.card-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:620px){.two{grid-template-columns:1fr}}
+
+/* Controls */
+.cr{display:flex;align-items:center;gap:8px;margin:7px 0}
+.cr label{font-size:12px;color:var(--text2);min-width:140px;flex-shrink:0}
+.cr input[type=range]{flex:1;accent-color:var(--accent)}
+.cv{font-size:13px;font-weight:600;min-width:60px;text-align:right;font-variant-numeric:tabular-nums}
+select,input[type=text],input[type=number]{padding:6px 10px;border:1px solid var(--border2);border-radius:var(--rs);background:var(--bg);color:var(--text);font-size:13px;font-family:inherit}
+select:focus,input:focus{outline:2px solid var(--accent);outline-offset:1px}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border-radius:var(--rs);font-size:13px;font-weight:600;cursor:pointer;border:none;transition:.15s;font-family:inherit}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:var(--accent2)}
+.btn-outline{background:var(--bg);border:1px solid var(--border2);color:var(--text)}.btn-outline:hover{background:var(--bg3)}
+.btns{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+
+/* Canvas */
+canvas{display:block;max-width:100%;border-radius:var(--rs)}
+
+/* Pills */
+.pills{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.pill{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 12px;text-align:center;min-width:90px}
+.pill .pl{font-size:10px;color:var(--text3);margin-bottom:2px;text-transform:uppercase;letter-spacing:.04em}
+.pill .pv{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums}
+.pill-accent .pv{color:var(--accent)}
+
+/* Table */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;padding:6px 8px;border-bottom:1px solid var(--border);text-align:left;font-weight:600}
+td{padding:7px 8px;border-bottom:1px solid var(--border)}
+tr:last-child td{border-bottom:none}
+td.num{font-family:'Courier New',monospace;color:var(--accent)}
+
+/* Formula / code */
+.fm{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:7px 12px;font-family:'Courier New',monospace;font-size:12px;color:var(--accent);margin:5px 0;line-height:1.6}
+
+/* Callout */
+.co{border-radius:var(--rs);padding:9px 13px;font-size:13px;margin:8px 0;line-height:1.6}
+.co-blue{background:#e8f0fb;color:#1a4fa0}.co-green{background:#e4f4ec;color:#1a6040}
+.co-amber{background:#fdf0d8;color:#7a4400}.co-red{background:#faeaea;color:#8a1a1a}
+@media(prefers-color-scheme:dark){
+  .co-blue{background:#162340;color:#7aaaf0}.co-green{background:#0e2e1c;color:#4ab870}
+  .co-amber{background:#2e2000;color:#d49020}.co-red{background:#2e0e0e;color:#e07070}
+}
+
+/* Badge */
+.badge{display:inline-block;padding:2px 8px;border-radius:99px;font-size:11px;font-weight:600}
+.badge-green{background:color-mix(in srgb,var(--green) 15%,transparent);color:var(--green)}
+.badge-red{background:color-mix(in srgb,var(--red) 15%,transparent);color:var(--red)}
+.badge-blue{background:color-mix(in srgb,var(--accent) 15%,transparent);color:var(--accent)}
+
+/* Konversi grid */
+.conv-row{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;margin-bottom:10px}
+.conv-label{font-size:11px;color:var(--text3);margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em}
+.conv-result{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--accent);margin-top:2px}
+.conv-sep{font-size:22px;color:var(--text3);text-align:center}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="brand" href="/">
+    <div class="logo">⚛</div>
+    <div>
+      <div class="brand-name">Fisika Interaktif</div>
+      <div class="brand-sub">SMA 10 · Kurikulum Merdeka</div>
+    </div>
+  </a>
+  <span class="hd-sep">›</span>
+  <span class="hd-unit">Unit 1: Pengukuran &amp; Besaran</span>
+  <a class="hd-back" href="/">← Dashboard</a>
+</header>
+
+<nav>
+  <div class="nt active" onclick="showSec('alat',this)">📏 Alat Ukur</div>
+  <div class="nt" onclick="showSec('konversi',this)">⇄ Konversi Satuan</div>
+  <div class="nt" onclick="showSec('angpent',this)">✦ Angka Penting</div>
+  <div class="nt" onclick="showSec('analisis',this)">⊕ Analisis Kesalahan</div>
+</nav>
+
+<main>
+
+<!-- ══════════ 1. ALAT UKUR ══════════ -->
+<div class="sec active" id="s-alat">
+  <div class="sec-title">Alat Ukur Virtual</div>
+  <div class="sec-desc">Pilih alat ukur dan ukur benda. Perhatikan bagaimana presisi dan ketidakpastian berbeda di setiap alat.</div>
+
+  <div class="card">
+    <div class="card-title">Pilih Alat &amp; Benda</div>
+    <div class="two">
+      <div>
+        <div class="cr"><label>Alat ukur</label>
+          <select id="a-tool" onchange="aReset()">
+            <option value="ruler">Penggaris (±0.5 mm)</option>
+            <option value="vernier">Jangka Sorong (±0.05 mm)</option>
+            <option value="mikro">Mikrometer (±0.005 mm)</option>
+          </select>
+        </div>
+        <div class="cr"><label>Panjang benda (mm)</label><input type="range" id="a-len" min="2" max="55" value="23.7" step="0.1" oninput="aReset()"><span class="cv" id="a-lenv">23.7</span></div>
+        <div class="btns">
+          <button class="btn btn-primary" onclick="aMeasure()">📐 Ukur</button>
+          <button class="btn btn-outline" onclick="aReset()">↺ Reset</button>
+        </div>
+      </div>
+      <div id="a-pills"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Tampilan Alat Ukur</div>
+    <canvas id="a-canvas" height="220"></canvas>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Riwayat Pengukuran</div>
+    <div id="a-history"><p style="color:var(--text3);font-size:13px">Belum ada pengukuran. Tekan Ukur beberapa kali untuk melihat variasi pengukuran.</p></div>
+  </div>
+</div>
+
+<!-- ══════════ 2. KONVERSI SATUAN ══════════ -->
+<div class="sec" id="s-konversi">
+  <div class="sec-title">Konversi Satuan</div>
+  <div class="sec-desc">Masukkan nilai, pilih kategori besaran dan satuan asal, lalu lihat semua konversinya sekaligus.</div>
+
+  <div class="card">
+    <div class="card-title">Input</div>
+    <div class="two">
+      <div>
+        <div class="cr"><label>Kategori</label>
+          <select id="k-cat" onchange="kUpdate()">
+            <option value="panjang">Panjang</option>
+            <option value="massa">Massa</option>
+            <option value="waktu">Waktu</option>
+            <option value="suhu">Suhu</option>
+            <option value="luas">Luas</option>
+            <option value="volume">Volume</option>
+          </select>
+        </div>
+        <div class="cr"><label>Satuan asal</label>
+          <select id="k-from" onchange="kUpdate()"></select>
+        </div>
+        <div class="cr"><label>Nilai</label>
+          <input type="number" id="k-val" value="1" style="max-width:120px" oninput="kUpdate()">
+        </div>
+      </div>
+      <div class="co co-blue" style="align-self:start">
+        Sistem Internasional (SI) menggunakan satuan dasar:<br>
+        <b>panjang</b>: meter (m) &nbsp;|&nbsp; <b>massa</b>: kilogram (kg)<br>
+        <b>waktu</b>: sekon (s) &nbsp;|&nbsp; <b>suhu</b>: kelvin (K)
+      </div>
+    </div>
+  </div>
+
+  <div class="card" id="k-results">
+    <div class="card-title">Hasil Konversi</div>
+    <div id="k-table"></div>
+  </div>
+</div>
+
+<!-- ══════════ 3. ANGKA PENTING ══════════ -->
+<div class="sec" id="s-angpent">
+  <div class="sec-title">Angka Penting</div>
+  <div class="sec-desc">Latihan menghitung dan menerapkan aturan angka penting dalam operasi matematika.</div>
+
+  <div class="card">
+    <div class="card-title">Hitung Angka Penting</div>
+    <div class="cr"><label>Masukkan bilangan</label><input type="text" id="ap-in" placeholder="Contoh: 0.00520" style="flex:1;max-width:220px" oninput="apCheck()"></div>
+    <div id="ap-result" style="margin-top:10px"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Latihan</div>
+    <div id="ap-quiz"></div>
+    <div class="btns" style="margin-top:12px">
+      <button class="btn btn-primary" onclick="apNext()">Soal Berikutnya →</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Aturan Angka Penting</div>
+    <div id="ap-rules"></div>
+  </div>
+</div>
+
+<!-- ══════════ 4. ANALISIS KESALAHAN ══════════ -->
+<div class="sec" id="s-analisis">
+  <div class="sec-title">Analisis Kesalahan Pengukuran</div>
+  <div class="sec-desc">Hitung kesalahan absolut, relatif, dan persentase dari suatu pengukuran. Visualisasikan distribusi pengukuran berulang.</div>
+
+  <div class="card">
+    <div class="card-title">Kalkulator Kesalahan</div>
+    <div class="two">
+      <div>
+        <div class="cr"><label>Nilai terukur (x)</label><input type="number" id="e-meas" value="9.5" step="0.01" style="max-width:120px" oninput="eUpdate()"></div>
+        <div class="cr"><label>Nilai benar (x₀)</label><input type="number" id="e-true" value="9.8" step="0.01" style="max-width:120px" oninput="eUpdate()"></div>
+        <div class="cr"><label>Ketidakpastian (δx)</label><input type="number" id="e-unc" value="0.1" step="0.001" min="0" style="max-width:120px" oninput="eUpdate()"></div>
+      </div>
+      <div id="e-pills"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Distribusi Pengukuran Berulang</div>
+    <div class="cr"><label>Jumlah pengukuran</label><input type="range" id="e-n" min="5" max="40" value="15" oninput="eDrawDist()"><span class="cv" id="e-nv">15</span></div>
+    <div class="cr"><label>Simpangan acak σ</label><input type="range" id="e-sigma" min="0.01" max="2" value="0.3" step="0.01" oninput="eDrawDist()"><span class="cv" id="e-sigmav">0.30</span></div>
+    <canvas id="e-canvas" height="200"></canvas>
+    <div id="e-stats" style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap"></div>
+  </div>
+</div>
+
+</main>
+
+<script>
+/* ══════ HELPERS ══════ */
+const dark = () => matchMedia('(prefers-color-scheme:dark)').matches;
+const tc   = () => dark()?'#c8cde8':'#1c1e2e';
+const tc2  = () => dark()?'#9ea3b5':'#6b6e88';
+const tc3  = () => dark()?'#666a80':'#9ea1b8';
+const ac   = () => dark()?'#7898d2':'#3a68d0';
+const gc_  = () => dark()?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.04)';
+const bg2  = () => dark()?'#242535':'#ffffff';
+const bg3  = () => dark()?'#2a2c3e':'#edf0f8';
+
+function getCanvas(id, h) {
+  const cv = document.getElementById(id);
+  const W  = cv.offsetWidth || cv.parentElement?.offsetWidth || 520;
+  const dpr = window.devicePixelRatio || 1;
+  if (cv.width !== Math.round(W*dpr) || cv.height !== Math.round(h*dpr)) {
+    cv.width  = Math.round(W * dpr);
+    cv.height = Math.round(h * dpr);
+  }
+  cv.style.width  = W + 'px';
+  cv.style.height = h + 'px';
+  const ctx = cv.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return { W, H: h, ctx };
+}
+
+function rr(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);
+  ctx.closePath();
+}
+
+function showSec(id, el) {
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nt').forEach(t=>t.classList.remove('active'));
+  document.getElementById('s-'+id).classList.add('active');
+  el.classList.add('active');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    if(id==='alat') aReset();
+    if(id==='konversi') kUpdate();
+    if(id==='angpent') apNext();
+    if(id==='analisis') { eUpdate(); eDrawDist(); }
+  }));
+}
+
+/* ══════ 1. ALAT UKUR ══════ */
+let aMeasurements=[], aState='idle';
+
+function aReset(){
+  aMeasurements=[];aState='idle';
+  const len=+document.getElementById('a-len').value;
+  document.getElementById('a-lenv').textContent=len.toFixed(1);
+  document.getElementById('a-pills').innerHTML='';
+  document.getElementById('a-history').innerHTML='<p style="color:var(--text3);font-size:13px">Belum ada pengukuran. Tekan Ukur beberapa kali.</p>';
+  aDraw(len,null);
+}
+
+function aMeasure(){
+  const len=+document.getElementById('a-len').value;
+  const tool=document.getElementById('a-tool').value;
+  const unc={ruler:0.5,vernier:0.05,mikro:0.005};
+  const prec={ruler:1,vernier:0.1,mikro:0.01};
+  const u=unc[tool], p=prec[tool];
+  const noise=(Math.random()-0.5)*2*u;
+  const raw=len+noise;
+  const val=Math.round(raw/p)*p;
+  aMeasurements.push(val);
+  aState='measured';
+  aDraw(len,{val,u,p,tool});
+  aUpdatePills(val,u,tool);
+  aUpdateHistory(tool,u,p);
+}
+
+function aDraw(len,meas){
+  const {W,H,ctx}=getCanvas('a-canvas',220);
+  const tool=document.getElementById('a-tool').value;
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle=dark()?'#1e2030':'#f0f2f8';
+  ctx.fillRect(0,0,W,H);
+  if(tool==='ruler')   drawRuler(ctx,W,H,len,meas);
+  if(tool==='vernier') drawVernier(ctx,W,H,len,meas);
+  if(tool==='mikro')   drawMikro(ctx,W,H,len,meas);
+}
+
+function drawRuler(ctx,W,H,len,meas){
+  const scale=Math.min((W-80)/60,(H*0.55)/16);
+  const ox=40, oy=H*0.22;
+  // Object
+  const objW=len*scale;
+  ctx.fillStyle=dark()?'#9890c0':'#6a63b0';
+  rr(ctx,ox,oy+32,objW,22,3);ctx.fill();
+  ctx.strokeStyle=dark()?'#b0a8d8':'#8880c8';ctx.lineWidth=1;
+  rr(ctx,ox,oy+32,objW,22,3);ctx.stroke();
+  // Ruler body
+  ctx.fillStyle=dark()?'#bfb870':'#e8e050';
+  rr(ctx,ox-8,oy,W-ox-20,28,3);ctx.fill();
+  ctx.strokeStyle='#a09820';ctx.lineWidth=1;
+  rr(ctx,ox-8,oy,W-ox-20,28,3);ctx.stroke();
+  // Ticks
+  ctx.fillStyle='#3a3000';ctx.font='8px system-ui';ctx.textAlign='center';
+  for(let mm=0;mm<=60;mm++){
+    const x=ox+mm*scale;if(x>W-20)break;
+    const major=mm%10===0, mid=mm%5===0;
+    const h_=major?16:mid?10:6;
+    ctx.strokeStyle='#3a3000';ctx.lineWidth=major?1.5:0.8;
+    ctx.beginPath();ctx.moveTo(x,oy);ctx.lineTo(x,oy+h_);ctx.stroke();
+    if(major)ctx.fillText(mm/10,x,oy+h_+9);
+  }
+  // Measure marker
+  if(meas){
+    const mx=ox+meas.val*scale;
+    ctx.strokeStyle=dark()?'#e05050':'#c01010';ctx.lineWidth=2;ctx.setLineDash([3,3]);
+    ctx.beginPath();ctx.moveTo(mx,oy-6);ctx.lineTo(mx,oy+32);ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle=dark()?'#e05050':'#c01010';ctx.font='11px system-ui';ctx.textAlign='left';
+    ctx.fillText(meas.val.toFixed(0)+' mm',mx+3,oy-8);
+  }
+  // Scale label
+  ctx.fillStyle=tc2();ctx.font='10px system-ui';ctx.textAlign='left';
+  ctx.fillText('skala: cm',ox,oy+44);
+}
+
+function drawVernier(ctx,W,H,len,meas){
+  const scale=Math.min((W-80)/60,(H*0.4)/16);
+  const ox=40, oy=H*0.12;
+  const mainLen=Math.min(70,len+20);
+  // Main scale
+  ctx.fillStyle=dark()?'#707880':'#c8cccc';
+  ctx.fillRect(ox-10,oy,mainLen*scale+30,24);
+  ctx.strokeStyle=dark()?'#909898':'#a0a4a4';ctx.lineWidth=1;
+  ctx.strokeRect(ox-10,oy,mainLen*scale+30,24);
+  ctx.fillStyle=dark()?'#3a3e45':'#606060';ctx.font='8px system-ui';ctx.textAlign='center';
+  for(let mm=0;mm<=mainLen+1;mm++){
+    const x=ox+mm*scale;if(x>W-14)break;
+    const major=mm%10===0,mid=mm%5===0;
+    ctx.strokeStyle=dark()?'#606870':'#404040';ctx.lineWidth=major?1.2:0.7;
+    ctx.beginPath();ctx.moveTo(x,oy);ctx.lineTo(x,oy+(major?18:mid?12:7));ctx.stroke();
+    if(major)ctx.fillText(mm/10,x,oy+18+8);
+  }
+  // Vernier jaw
+  const jawX=ox+(len-5)*scale;
+  ctx.fillStyle=dark()?'#3a80c0':'#1a60a0';
+  rr(ctx,jawX,oy-6,30,34,3);ctx.fill();
+  ctx.strokeStyle=dark()?'#5898d8':'#0a4880';ctx.lineWidth=1;
+  rr(ctx,jawX,oy-6,30,34,3);ctx.stroke();
+  // Vernier ticks
+  const vStep=scale*0.9;
+  for(let i=0;i<=10;i++){
+    const x=jawX+i*vStep;if(x>W-6)break;
+    ctx.strokeStyle='#e8f0ff';ctx.lineWidth=0.8;
+    ctx.beginPath();ctx.moveTo(x,oy-4);ctx.lineTo(x,oy-4+(i===0?18:10));ctx.stroke();
+  }
+  // Object
+  ctx.fillStyle=dark()?'#9890c0':'#6a63b0';
+  ctx.fillRect(ox,oy+30,len*scale,18);
+  if(meas){
+    const mx=ox+meas.val*scale;
+    ctx.strokeStyle=dark()?'#e05050':'#c01010';ctx.lineWidth=1.5;ctx.setLineDash([3,3]);
+    ctx.beginPath();ctx.moveTo(mx,oy+30);ctx.lineTo(mx,oy+52);ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle=dark()?'#e05050':'#c01010';ctx.font='10px system-ui';ctx.textAlign='left';
+    ctx.fillText(meas.val.toFixed(1)+' mm',mx+3,oy+64);
+    // Reading display box
+    ctx.fillStyle=dark()?'rgba(20,30,50,0.92)':'rgba(240,245,255,0.95)';
+    rr(ctx,W-130,oy+5,118,52,6);ctx.fill();
+    ctx.strokeStyle=dark()?'rgba(60,80,160,0.5)':'rgba(80,100,180,0.3)';ctx.lineWidth=1;
+    rr(ctx,W-130,oy+5,118,52,6);ctx.stroke();
+    ctx.fillStyle=tc();ctx.font='11px system-ui';ctx.textAlign='left';
+    ctx.fillText('Skala utama:',W-123,oy+22);
+    ctx.fillStyle=ac();
+    ctx.fillText(Math.floor(meas.val/0.1)*0.1+' mm',W-50,oy+22);
+    ctx.fillStyle=tc2();ctx.fillText('Nonius: '+((meas.val%0.1).toFixed(2)),W-123,oy+37);
+    ctx.fillStyle=tc();ctx.font='bold 12px system-ui';
+    ctx.fillText('Total: '+meas.val.toFixed(2)+' mm',W-123,oy+52);
+  }
+}
+
+function drawMikro(ctx,W,H,len,meas){
+  const cx=W*0.5, cy=H*0.48;
+  // Frame (U-shape)
+  ctx.fillStyle=dark()?'#607070':'#9ab0b0';
+  ctx.fillRect(cx-140,cy-28,28,56);  // left post
+  ctx.fillRect(cx-140,cy-28,120,12); // top bar
+  ctx.fillRect(cx-140,cy+16,120,12); // bottom bar
+  ctx.fillStyle=dark()?'#809898':'#b8c8c8';
+  ctx.strokeStyle=dark()?'#a0b4b4':'#7898a0';ctx.lineWidth=1;
+  ctx.strokeRect(cx-140,cy-28,28,56);
+  // Barrel
+  const barLen=90;
+  ctx.fillStyle=dark()?'#3a3e58':'#d0d4e8';
+  ctx.fillRect(cx-112,cy-10,barLen,20);
+  ctx.strokeStyle=dark()?'#505470':'#a8accc';ctx.lineWidth=1;
+  ctx.strokeRect(cx-112,cy-10,barLen,20);
+  // Thimble (shows 0.5mm increments)
+  const thimbleX=cx-112+(len%25)*barLen/25;
+  ctx.fillStyle=dark()?'#5868a8':'#3050a0';
+  ctx.fillRect(thimbleX-20,cy-14,34,28);
+  ctx.strokeStyle=dark()?'#7888c8':'#1a3878';ctx.lineWidth=1;
+  ctx.strokeRect(thimbleX-20,cy-14,34,28);
+  // Barrel ticks
+  ctx.strokeStyle=dark()?'#9098b0':'#606890';ctx.lineWidth=0.8;
+  ctx.fillStyle=tc2();ctx.font='7px system-ui';ctx.textAlign='center';
+  for(let m=0;m<=25;m++){
+    const x=cx-112+m*barLen/25;
+    ctx.beginPath();ctx.moveTo(x,cy-10);ctx.lineTo(x,cy-(m%5===0?18:14));ctx.stroke();
+    if(m%5===0)ctx.fillText(m,x,cy-20);
+  }
+  // Spindle
+  ctx.fillStyle=dark()?'#9090a0':'#8088a8';
+  ctx.fillRect(cx-140,cy-3,len*barLen/25,6);
+  // Thimble scale (0-50 markings)
+  const thimbleDeg=((len%0.5)/0.5)*360;
+  ctx.save();ctx.translate(thimbleX,cy);ctx.rotate(thimbleDeg*Math.PI/180);
+  for(let i=0;i<50;i++){
+    ctx.save();ctx.rotate(i/50*Math.PI*2);
+    ctx.strokeStyle=i%5===0?tc():'rgba(128,132,176,0.5)';ctx.lineWidth=i%5===0?1.2:0.7;
+    ctx.beginPath();ctx.moveTo(0,-10);ctx.lineTo(0,-14-(i%5===0?4:2));ctx.stroke();
+    ctx.restore();
+  }
+  ctx.restore();
+  if(meas){
+    ctx.fillStyle=dark()?'rgba(20,25,45,0.92)':'rgba(238,242,252,0.95)';
+    rr(ctx,W-144,cy-52,132,56,6);ctx.fill();
+    ctx.strokeStyle=dark()?'rgba(60,80,160,0.4)':'rgba(80,100,180,0.2)';ctx.lineWidth=1;
+    rr(ctx,W-144,cy-52,132,56,6);ctx.stroke();
+    const mm=Math.floor(meas.val), sub=(meas.val%1).toFixed(3);
+    ctx.fillStyle=tc2();ctx.font='10px system-ui';ctx.textAlign='left';
+    ctx.fillText('Skala Utama: '+mm+'.0 mm',W-136,cy-35);
+    ctx.fillText('Thimble:    +'+sub+' mm',W-136,cy-22);
+    ctx.fillStyle=tc();ctx.font='bold 12px system-ui';
+    ctx.fillText('Hasil: '+meas.val.toFixed(3)+' mm',W-136,cy-8);
+  }
+  // Object label
+  ctx.fillStyle=tc3();ctx.font='10px system-ui';ctx.textAlign='center';
+  ctx.fillText('Benda: '+len.toFixed(2)+'mm',cx,cy+H*0.38);
+}
+
+function aUpdatePills(val,u,tool){
+  const nm={ruler:'Penggaris',vernier:'Jangka Sorong',mikro:'Mikrometer'};
+  const dec={ruler:0,vernier:2,mikro:3};
+  const d=dec[tool];
+  document.getElementById('a-pills').innerHTML=[
+    ['Hasil',val.toFixed(d)+' mm'],
+    ['Ketidakpastian','±'+u+' mm'],
+    ['Alat Ukur',nm[tool]],
+    ['Jumlah Ukur',aMeasurements.length+'×'],
+  ].map(([l,v])=>`<div class="pill"><div class="pl">${l}</div><div class="pv">${v}</div></div>`).join('');
+}
+
+function aUpdateHistory(tool,u,p){
+  if(aMeasurements.length===0)return;
+  const dec={ruler:0,vernier:2,mikro:3}[tool];
+  const thead=`<tr><th>#</th><th>Nilai (mm)</th><th>Notasi ±</th></tr>`;
+  const rows=aMeasurements.map((v,i)=>`<tr><td>${i+1}</td><td class="num">${v.toFixed(dec)}</td><td class="num">${v.toFixed(dec)} ± ${u}</td></tr>`).join('');
+  const mean=aMeasurements.reduce((a,b)=>a+b,0)/aMeasurements.length;
+  document.getElementById('a-history').innerHTML=`<table>${thead}${rows}</table><p style="margin-top:8px;font-size:12px;color:var(--text2)">Rata-rata: <b>${mean.toFixed(dec)} mm</b></p>`;
+}
+
+/* ══════ 2. KONVERSI ══════ */
+const CATS = {
+  panjang: {
+    units:['mm','cm','dm','m','km','in','ft','yd','mi'],
+    toSI: {mm:1e-3,cm:1e-2,dm:1e-1,m:1,km:1e3,'in':0.0254,'ft':0.3048,'yd':0.9144,'mi':1609.344},
+  },
+  massa: {
+    units:['mg','g','kg','ton','lb','oz'],
+    toSI: {mg:1e-6,g:1e-3,kg:1,ton:1e3,'lb':0.453592,'oz':0.0283495},
+  },
+  waktu: {
+    units:['ms','s','min','jam','hari','minggu'],
+    toSI: {ms:1e-3,s:1,min:60,jam:3600,hari:86400,minggu:604800},
+  },
+  suhu: {
+    units:['°C','°F','K'],
+    toSI: null,
+  },
+  luas: {
+    units:['mm²','cm²','m²','km²','are','hektar'],
+    toSI: {'mm²':1e-6,'cm²':1e-4,'m²':1,'km²':1e6,'are':100,'hektar':1e4},
+  },
+  volume: {
+    units:['mL','cL','dL','L','m³','cm³'],
+    toSI: {mL:1e-3,cL:1e-2,dL:1e-1,L:1,'m³':1e3,'cm³':1e-3},
+  },
+};
+
+function kPopFrom(){
+  const cat=document.getElementById('k-cat').value;
+  const sel=document.getElementById('k-from');
+  const prev=sel.value;
+  sel.innerHTML=CATS[cat].units.map(u=>`<option value="${u}">${u}</option>`).join('');
+  if(CATS[cat].units.includes(prev))sel.value=prev;
+}
+
+function kConvertSuhu(val,from){
+  const toCelsius={'°C':v=>v,'°F':v=>(v-32)/1.8,'K':v=>v-273.15};
+  const fromCelsius={'°C':v=>v,'°F':v=>v*1.8+32,'K':v=>v+273.15};
+  const c=toCelsius[from](val);
+  return {'°C':fromCelsius['°C'](c),'°F':fromCelsius['°F'](c),'K':fromCelsius['K'](c)};
+}
+
+function kUpdate(){
+  kPopFrom();
+  const cat=document.getElementById('k-cat').value;
+  const from=document.getElementById('k-from').value;
+  const val=parseFloat(document.getElementById('k-val').value)||0;
+  const cat_=CATS[cat];
+  let results={};
+  if(cat==='suhu'){
+    results=kConvertSuhu(val,from);
+  } else {
+    const siVal=val*cat_.toSI[from];
+    cat_.units.forEach(u=>{ results[u]=siVal/cat_.toSI[u]; });
+  }
+  const rows=Object.entries(results).map(([u,v])=>{
+    const hi=u===from?' style="background:color-mix(in srgb,var(--accent) 9%,transparent)"':'';
+    return `<tr${hi}><td>${u}</td><td class="num">${fmtNum(v)}</td></tr>`;
+  }).join('');
+  document.getElementById('k-table').innerHTML=`<table><tr><th>Satuan</th><th>Nilai</th></tr>${rows}</table>`;
+}
+
+function fmtNum(v){
+  if(Math.abs(v)===0) return '0';
+  if(Math.abs(v)<1e-4||Math.abs(v)>=1e7) return v.toExponential(4);
+  const s=v.toPrecision(6);
+  return parseFloat(s).toString();
+}
+
+/* ══════ 3. ANGKA PENTING ══════ */
+function countSF(str){
+  str=str.trim();
+  if(!str||isNaN(parseFloat(str)))return null;
+  // Remove sign
+  if(str[0]==='-'||str[0]==='+')str=str.slice(1);
+  const hasDot=str.includes('.');
+  const parts=str.split('.');
+  const intPart=parts[0], decPart=parts[1]??'';
+  if(hasDot){
+    // Leading zeros in int part not sig
+    const combined=intPart.replace(/^0*/,'')+decPart;
+    if(!combined)return 1; // 0.000... -> ambiguous, treat as 1
+    return combined.replace(/^0*/,'').length||1;
+  } else {
+    // No decimal: trailing zeros ambiguous, count up to last non-zero
+    const stripped=intPart.replace(/^0*/,'');
+    if(!stripped)return 1;
+    return stripped.replace(/0+$/,'').length||1;
+  }
+}
+
+function apCheck(){
+  const inp=document.getElementById('ap-in').value.trim();
+  const div=document.getElementById('ap-result');
+  if(!inp){div.innerHTML='';return;}
+  const sf=countSF(inp);
+  if(sf===null){div.innerHTML='<div class="co co-red">Bukan angka yang valid.</div>';return;}
+  div.innerHTML=`<div class="co co-blue"><b>${inp}</b> memiliki <b>${sf} angka penting</b>.</div>`;
+}
+
+const AP_RULES=[
+  {rule:'Semua angka bukan nol (1–9) adalah angka penting.',ex:'123 → 3 AP &nbsp;|&nbsp; 5.67 → 3 AP'},
+  {rule:'Nol di antara angka bukan nol adalah angka penting.',ex:'1002 → 4 AP &nbsp;|&nbsp; 5.06 → 3 AP'},
+  {rule:'Nol di sebelah kanan angka di belakang koma adalah angka penting.',ex:'3.50 → 3 AP &nbsp;|&nbsp; 12.00 → 4 AP'},
+  {rule:'Nol di depan angka (kiri) BUKAN angka penting.',ex:'0.0045 → 2 AP &nbsp;|&nbsp; 0.120 → 3 AP'},
+  {rule:'Nol di belakang angka tanpa koma bersifat ambigu (gunakan notasi ilmiah).',ex:'1200 → 2-4 AP? Tulis 1.20×10³ untuk 3 AP'},
+  {rule:'Dalam penjumlahan/pengurangan: hasilnya disesuaikan dengan nilai desimal terkecil.',ex:'12.1 + 3.456 = 15.6 (bukan 15.556)'},
+  {rule:'Dalam perkalian/pembagian: hasilnya disesuaikan dengan jumlah AP terkecil.',ex:'2.5 × 3.14 = 7.9 (2 AP)'},
+];
+
+function buildAPRules(){
+  document.getElementById('ap-rules').innerHTML=AP_RULES.map((r,i)=>`
+    <div style="margin-bottom:10px">
+      <div style="font-weight:600;font-size:13px;margin-bottom:3px">${i+1}. ${r.rule}</div>
+      <div class="fm">${r.ex}</div>
+    </div>`).join('');
+}
+
+const AP_QUESTIONS=[
+  {q:'Berapa angka penting pada 0.00520?',a:3,hint:'Nol terdepan bukan AP. Nol di belakang 52 di kanan koma adalah AP.'},
+  {q:'Berapa angka penting pada 1050?',a:3,hint:'Tanpa koma desimal, nol di belakang bersifat ambigu. Biasanya dihitung sampai angka non-nol terakhir sebelum nol ambiguu.'},
+  {q:'Berapa angka penting pada 3.0000?',a:5,hint:'Semua nol di kanan koma setelah angka non-nol adalah AP.'},
+  {q:'Berapa angka penting pada 100.030?',a:6,hint:'Nol di antara angka non-nol adalah AP. Nol di kanan koma adalah AP.'},
+  {q:'Berapa angka penting pada 0.00800?',a:3,hint:'Dua nol terdepan bukan AP. Tiga angka terakhir (800) dengan koma → 3 AP.'},
+  {q:'3.14 × 2.5 = ? (perhatikan AP)',a:'7.9',hint:'AP terkecil adalah 2 (dari 2.5), maka hasilnya 2 AP.',type:'text'},
+  {q:'Berapa angka penting pada 2.050×10⁴?',a:4,hint:'Notasi ilmiah: hitung AP pada 2.050 → 4.'},
+  {q:'12.11 + 18.0 = ? (perhatikan AP)',a:'30.1',hint:'Penjumlahan: ambil 1 desimal (dari 18.0).',type:'text'},
+];
+let apIdx=Math.floor(Math.random()*AP_QUESTIONS.length);
+
+function apNext(){
+  apIdx=(apIdx+1)%AP_QUESTIONS.length;
+  const q=AP_QUESTIONS[apIdx];
+  document.getElementById('ap-quiz').innerHTML=`
+    <div style="font-size:14px;font-weight:600;margin-bottom:10px">${q.q}</div>
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+      <input type="${q.type||'number'}" id="ap-ans" placeholder="Jawaban..." style="max-width:160px" onkeydown="if(event.key==='Enter')apCheck2()">
+      <button class="btn btn-primary" onclick="apCheck2()">Periksa</button>
+    </div>
+    <div id="ap-fb"></div>
+    <div class="co co-blue" style="margin-top:8px;display:none" id="ap-hint"><b>Petunjuk:</b> ${q.hint}</div>
+    <button class="btn btn-outline" style="margin-top:6px;font-size:12px" onclick="document.getElementById('ap-hint').style.display=''">Tampilkan Petunjuk</button>`;
+}
+
+function apCheck2(){
+  const q=AP_QUESTIONS[apIdx];
+  const ans=document.getElementById('ap-ans').value.trim();
+  const correct=String(q.a)===ans||parseFloat(ans)===q.a;
+  document.getElementById('ap-fb').innerHTML=correct
+    ?`<div class="co co-green">✓ Benar! Jawabannya adalah ${q.a}.</div>`
+    :`<div class="co co-red">✗ Belum tepat. Coba lagi atau lihat petunjuk.</div>`;
+}
+
+/* ══════ 4. ANALISIS KESALAHAN ══════ */
+let eData=[];
+
+function eUpdate(){
+  const x=parseFloat(document.getElementById('e-meas').value)||0;
+  const x0=parseFloat(document.getElementById('e-true').value)||0;
+  const dx=parseFloat(document.getElementById('e-unc').value)||0;
+  const absErr=Math.abs(x-x0);
+  const relErr=x0!==0?absErr/Math.abs(x0):0;
+  const pctErr=relErr*100;
+  document.getElementById('e-pills').innerHTML=[
+    ['Kesalahan Absolut',absErr.toFixed(4)+' (sama satuan)'],
+    ['Kesalahan Relatif',relErr.toFixed(4)],
+    ['Kesalahan Persentase',pctErr.toFixed(2)+'%'],
+    ['Ketepatan',pctErr<1?'Sangat Baik':pctErr<5?'Baik':pctErr<10?'Sedang':'Buruk'],
+  ].map(([l,v])=>`<div class="pill"><div class="pl">${l}</div><div class="pv" style="font-size:12px">${v}</div></div>`).join('');
+  eDrawDist();
+}
+
+function eDrawDist(){
+  const x0=parseFloat(document.getElementById('e-true').value)||0;
+  const n=+document.getElementById('e-n').value;
+  const sigma=+document.getElementById('e-sigma').value;
+  document.getElementById('e-nv').textContent=n;
+  document.getElementById('e-sigmav').textContent=sigma.toFixed(2);
+  // Generate data once per n+sigma combo
+  const seed=n*1000+Math.round(sigma*100);
+  const rng=mulberry32(seed);
+  eData=Array.from({length:n},()=>x0+boxMuller(rng)*sigma);
+  drawDist();
+}
+
+function mulberry32(seed){
+  return ()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t^=t+Math.imul(t^t>>>7,61|t);return((t^t>>>14)>>>0)/4294967296;};
+}
+function boxMuller(rng){
+  const u1=rng(),u2=rng();
+  return Math.sqrt(-2*Math.log(u1||1e-9))*Math.cos(2*Math.PI*u2);
+}
+
+function drawDist(){
+  const {W,H,ctx}=getCanvas('e-canvas',200);
+  const dark_=dark();
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle=dark_?'#1e2030':'#f0f2f8';ctx.fillRect(0,0,W,H);
+  if(!eData.length)return;
+  const mean=eData.reduce((a,b)=>a+b,0)/eData.length;
+  const std=Math.sqrt(eData.map(v=>(v-mean)**2).reduce((a,b)=>a+b,0)/(eData.length-1)||0);
+  const x0=parseFloat(document.getElementById('e-true').value)||0;
+  const ml=50,mr=20,mt=20,mb=40;
+  const pw=W-ml-mr,ph=H-mt-mb;
+  const minV=Math.min(...eData,x0)-std*0.8, maxV=Math.max(...eData,x0)+std*0.8;
+  const rng_=maxV-minV||1;
+  const toX=v=>ml+(v-minV)/rng_*pw;
+  // Grid
+  ctx.strokeStyle=gc_();ctx.lineWidth=0.5;
+  for(let i=0;i<=5;i++){const x=ml+i/5*pw;ctx.beginPath();ctx.moveTo(x,mt);ctx.lineTo(x,mt+ph);ctx.stroke();}
+  // True value
+  const tx=toX(x0);
+  ctx.strokeStyle=dark_?'#4ab870':'#1a7a4a';ctx.lineWidth=2;ctx.setLineDash([4,4]);
+  ctx.beginPath();ctx.moveTo(tx,mt);ctx.lineTo(tx,mt+ph);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle=dark_?'#4ab870':'#1a7a4a';ctx.font='10px system-ui';ctx.textAlign='center';
+  ctx.fillText('x₀='+x0,tx,mt+11);
+  // Mean
+  const mx_=toX(mean);
+  ctx.strokeStyle=ac();ctx.lineWidth=2;ctx.setLineDash([3,3]);
+  ctx.beginPath();ctx.moveTo(mx_,mt);ctx.lineTo(mx_,mt+ph);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle=ac();ctx.fillText('x̄='+mean.toFixed(2),mx_,mt+ph+15);
+  // Data points
+  const yBase=mt+ph, dotY=yBase-14;
+  eData.forEach((v,i)=>{
+    const x=toX(v),y=dotY-(i%3)*8;
+    ctx.fillStyle=dark_?'rgba(120,152,210,0.7)':'rgba(58,104,208,0.7)';
+    ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fill();
+  });
+  // Axis
+  ctx.strokeStyle=dark_?'#3a3e58':'#c0c4dc';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(ml,mt+ph);ctx.lineTo(ml+pw,mt+ph);ctx.stroke();
+  ctx.fillStyle=tc3();ctx.font='9px system-ui';ctx.textAlign='left';
+  ctx.fillText(minV.toFixed(2),ml,mt+ph+12);ctx.textAlign='right';
+  ctx.fillText(maxV.toFixed(2),ml+pw,mt+ph+12);
+  // Stats
+  document.getElementById('e-stats').innerHTML=[
+    ['Rata-rata x̄',mean.toFixed(3)],
+    ['Std. Dev. s',std.toFixed(3)],
+    ['x̄ ± s',(mean-std).toFixed(3)+' – '+(mean+std).toFixed(3)],
+    ['Nilai benar x₀',x0],
+  ].map(([l,v])=>`<div class="pill"><div class="pl">${l}</div><div class="pv" style="font-size:12px">${v}</div></div>`).join('');
+}
+
+/* ══════ INIT ══════ */
+window.addEventListener('load',()=>{
+  kPopFrom();kUpdate();
+  aReset();
+  buildAPRules();apNext();
+  eUpdate();
+});
+window.addEventListener('resize',()=>{
+  const id=document.querySelector('.sec.active')?.id;
+  if(id==='s-alat')     { const len=+document.getElementById('a-len').value; aDraw(len,null); }
+  if(id==='s-analisis') drawDist();
+});
+</script>
+</body>
+</html>
