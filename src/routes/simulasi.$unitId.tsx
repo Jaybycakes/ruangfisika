@@ -43,10 +43,14 @@ export const Route = createFileRoute("/simulasi/$unitId")({
 function Workspace() {
   const { unit } = Route.useLoaderData();
   
-  // Redirect to HTML file for energi-terbarukan unit
+  // Redirect to HTML files for specific units
   useEffect(() => {
     if (unit.id === 'energi-terbarukan') {
       window.location.href = '/unit13-energi-terbarukan.html';
+    } else if (unit.id === 'gelombang') {
+      window.location.href = '/unit11-gelombang.html';
+    } else if (unit.id === 'optik') {
+      window.location.href = '/unit12-cahaya-optik.html';
     }
   }, [unit.id]);
 
