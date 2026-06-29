@@ -6,46 +6,40 @@
 <title>Unit 9: Hukum Kekekalan Energi Mekanik — SMA Kelas 10</title>
 <style>
 :root {
-  --bg:     #f6f5f2;
-  --bg2:    #ffffff;
-  --bg3:    #edecea;
-  --bg4:    #e4e2de;
-  --text:   #181715;
-  --text2:  #6a6760;
-  --text3:  #999690;
-  --border: rgba(0,0,0,0.08);
-  --bd2:    rgba(0,0,0,0.15);
-  --blue:   #1a56c4;
-  --blue-l: #d8e6fb;
-  --green:  #1a7a45;
-  --green-l:#d8f0e4;
-  --amber:  #9a5800;
-  --amber-l:#fdefd6;
-  --red:    #b01e1e;
-  --red-l:  #fce6e6;
-  --Ek:     #e05828;   /* kinetic  — orange */
-  --Ep:     #1a56c4;   /* potential — blue  */
-  --Ef:     #888480;   /* friction loss — grey */
-  --Em:     #1a7a45;   /* mechanical total — green */
-  --r: 10px; --rs: 6px;
+  --bg:#f4f5f9; --bg2:#ffffff; --bg3:#edf0f8; --bg4:#e3e5f0;
+  --text:#1c1e2e; --text2:#6b6e88; --text3:#9ea1b8;
+  --border:rgba(0,0,0,0.08); --bd2:rgba(0,0,0,0.14);
+  --primary:#1e2d56;
+  --blue:#3a68d0; --blue-l:#e8f0fb;
+  --green:#1a7a4a; --green-l:#e4f4ec;
+  --amber:#a05c00; --amber-l:#fdf0d8;
+  --red:#b02020; --red-l:#faeaea;
+  --Ek:#d06020; --Ep:#3a68d0; --Ef:#8880a0; --Em:#1a7a4a;
+  --r:10px; --rs:6px;
 }
 @media(prefers-color-scheme:dark){:root{
-  --bg:#191917; --bg2:#222220; --bg3:#2c2b28; --bg4:#363530;
-  --text:#e6e3db; --text2:#9a9790; --text3:#666360;
-  --border:rgba(255,255,255,0.07); --bd2:rgba(255,255,255,0.14);
-  --blue:#5588e6; --blue-l:#162240;
-  --green:#44b86a; --green-l:#0e2a1a;
-  --amber:#d49020; --amber-l:#2c1e00;
+  --bg:#1c1e2a; --bg2:#242535; --bg3:#2a2c3e; --bg4:#30324a;
+  --text:#e8eaf2; --text2:#9ea3b5; --text3:#666a80;
+  --border:rgba(255,255,255,0.08); --bd2:rgba(255,255,255,0.15);
+  --primary:#7a90cc;
+  --blue:#7898d2; --blue-l:#162240;
+  --green:#4ab870; --green-l:#0e2e1c;
+  --amber:#d49020; --amber-l:#2e2000;
   --red:#e05050; --red-l:#2e0e0e;
-  --Ek:#f07040; --Ep:#5588e6; --Ef:#706e6a; --Em:#44b86a;
+  --Ek:#e08040; --Ep:#7898d2; --Ef:#706a80; --Em:#4ab870;
 }}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
 
-header{background:var(--bg2);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50}
-.logo{width:34px;height:34px;background:var(--Em);border-radius:8px;display:grid;place-items:center;color:#fff;font-size:18px;flex-shrink:0}
-header h1{font-size:15px;font-weight:600}
-header p{font-size:12px;color:var(--text2)}
+header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 20px;height:52px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:50}
+.brand{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0}
+.logo{width:32px;height:32px;background:var(--primary);border-radius:7px;display:grid;place-items:center;color:#fff;font-size:15px;flex-shrink:0;line-height:1}
+.brand-name{font-size:13px;font-weight:600;color:var(--text);line-height:1.3}
+.brand-sub{font-size:10px;color:var(--text2);line-height:1.3}
+.hd-sep{color:var(--text3);font-size:14px}
+.hd-unit{font-size:13px;font-weight:500;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hd-back{margin-left:auto;font-size:12px;font-weight:500;color:var(--blue);text-decoration:none;padding:5px 12px;border:1px solid var(--bd2);border-radius:var(--rs);white-space:nowrap;flex-shrink:0}
+.hd-back:hover{background:var(--bg3)}
 
 nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 20px;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
 nav::-webkit-scrollbar{display:none}
@@ -101,11 +95,16 @@ tr:last-child td{border-bottom:none}
 <body>
 
 <header>
-  <div class="logo">⚡</div>
-  <div>
-    <h1>Unit 9: Hukum Kekekalan Energi Mekanik</h1>
-    <p>SMA Kelas 10 · Kurikulum Merdeka</p>
-  </div>
+  <a class="brand" href="/">
+    <div class="logo">⚛</div>
+    <div>
+      <div class="brand-name">Fisika Interaktif</div>
+      <div class="brand-sub">SMA 10 · Kurikulum Merdeka</div>
+    </div>
+  </a>
+  <span class="hd-sep">›</span>
+  <span class="hd-unit">Unit 9: Usaha &amp; Energi</span>
+  <a class="hd-back" href="/">← Dashboard</a>
 </header>
 
 <nav>

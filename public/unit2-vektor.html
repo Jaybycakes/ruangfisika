@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 2: Vektor — Fisika Interaktif</title>
+<style>
+:root {
+  --bg:#f4f5f9; --bg2:#ffffff; --bg3:#edf0f8;
+  --text:#1c1e2e; --text2:#6b6e88; --text3:#9ea1b8;
+  --border:rgba(0,0,0,0.08); --border2:rgba(0,0,0,0.14);
+  --primary:#1e2d56; --accent:#3a68d0; --accent2:#1e48a8;
+  --green:#1a7a4a; --amber:#a05c00; --red:#b02020; --orange:#d06020; --purple:#6535c0;
+  --r:10px; --rs:6px;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#1c1e2a; --bg2:#242535; --bg3:#2a2c3e;
+  --text:#e8eaf2; --text2:#9ea3b5; --text3:#666a80;
+  --border:rgba(255,255,255,0.08); --border2:rgba(255,255,255,0.15);
+  --primary:#7a90cc; --accent:#7898d2; --accent2:#9ab8e8;
+  --green:#4ab870; --amber:#d49020; --red:#e05050; --orange:#e08040; --purple:#9a70e8;
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 20px;height:52px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:50}
+.brand{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0}
+.logo{width:32px;height:32px;background:var(--primary);border-radius:7px;display:grid;place-items:center;color:#fff;font-size:15px;flex-shrink:0;line-height:1}
+.brand-name{font-size:13px;font-weight:600;color:var(--text);line-height:1.3}
+.brand-sub{font-size:10px;color:var(--text2);line-height:1.3}
+.hd-sep{color:var(--text3);font-size:14px}
+.hd-unit{font-size:13px;font-weight:500;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hd-back{margin-left:auto;font-size:12px;font-weight:500;color:var(--accent);text-decoration:none;padding:5px 12px;border:1px solid var(--border2);border-radius:var(--rs);white-space:nowrap;flex-shrink:0}
+.hd-back:hover{background:var(--bg3)}
+nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 20px;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+.nt{padding:10px 14px;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;border-radius:6px 6px 0 0;border:1px solid transparent;border-bottom:none;white-space:nowrap;background:none;transition:.15s}
+.nt:hover{color:var(--text);background:var(--bg3)}
+.nt.active{color:var(--accent);background:var(--bg2);border-color:var(--border);margin-bottom:-1px}
+main{padding:18px 20px;max-width:960px;margin:0 auto}
+.sec{display:none}.sec.active{display:block}
+.sec-title{font-size:17px;font-weight:600;margin-bottom:3px}
+.sec-desc{font-size:13px;color:var(--text2);margin-bottom:16px}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.card-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:620px){.two{grid-template-columns:1fr}}
+.cr{display:flex;align-items:center;gap:8px;margin:7px 0}
+.cr label{font-size:12px;color:var(--text2);min-width:130px;flex-shrink:0}
+.cr input[type=range]{flex:1;accent-color:var(--accent)}
+.cv{font-size:13px;font-weight:600;min-width:60px;text-align:right;font-variant-numeric:tabular-nums}
+canvas{display:block;border-radius:var(--rs);max-width:100%}
+.pills{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.pill{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 12px;text-align:center;min-width:90px}
+.pill .pl{font-size:10px;color:var(--text3);margin-bottom:2px;text-transform:uppercase;letter-spacing:.04em}
+.pill .pv{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums}
+.fm{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:7px 12px;font-family:'Courier New',monospace;font-size:12px;color:var(--accent);margin:5px 0;line-height:1.7}
+.co{border-radius:var(--rs);padding:9px 13px;font-size:13px;margin:8px 0;line-height:1.6}
+.co-blue{background:color-mix(in srgb,var(--accent) 10%,transparent);color:var(--accent)}
+.co-green{background:color-mix(in srgb,var(--green) 10%,transparent);color:var(--green)}
+.co-amber{background:color-mix(in srgb,var(--amber) 12%,transparent);color:var(--amber)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border-radius:var(--rs);font-size:13px;font-weight:600;cursor:pointer;border:none;transition:.15s;font-family:inherit}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:var(--accent2)}
+.btn-outline{background:var(--bg);border:1px solid var(--border2);color:var(--text)}.btn-outline:hover{background:var(--bg3)}
+.btns{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;padding:6px 8px;border-bottom:1px solid var(--border);text-align:left;font-weight:600}
+td{padding:7px 8px;border-bottom:1px solid var(--border)}
+tr:last-child td{border-bottom:none}
+td.num{font-family:'Courier New',monospace;color:var(--accent)}
+.hint{font-size:12px;color:var(--text3);margin-top:6px}
+input[type=number]{padding:6px 10px;border:1px solid var(--border2);border-radius:var(--rs);background:var(--bg);color:var(--text);font-size:13px;font-family:inherit;width:90px}
+</style>
+</head>
+<body>
+<header>
+  <a class="brand" href="/">
+    <div class="logo">⚛</div>
+    <div>
+      <div class="brand-name">Fisika Interaktif</div>
+      <div class="brand-sub">SMA 10 · Kurikulum Merdeka</div>
+    </div>
+  </a>
+  <span class="hd-sep">›</span>
+  <span class="hd-unit">Unit 2: Vektor</span>
+  <a class="hd-back" href="/">← Dashboard</a>
+</header>
+<nav>
+  <div class="nt active" onclick="showSec('penjumlahan',this)">➕ Penjumlahan</div>
+  <div class="nt" onclick="showSec('penguraian',this)">↗ Penguraian</div>
+  <div class="nt" onclick="showSec('perkalian',this)">× Perkalian</div>
+  <div class="nt" onclick="showSec('referensi',this)">📖 Referensi</div>
+</nav>
+<main>
+
+<!-- ══ 1. PENJUMLAHAN ══ -->
+<div class="sec active" id="s-penjumlahan">
+  <div class="sec-title">Penjumlahan Vektor</div>
+  <div class="sec-desc">Atur besar dan arah dua vektor. Lihat resultan dengan metode segitiga dan jajargenjang.</div>
+  <div class="card">
+    <div class="card-title">Kontrol Vektor</div>
+    <div class="two">
+      <div>
+        <p style="font-size:12px;font-weight:600;color:var(--accent);margin-bottom:6px">Vektor A</p>
+        <div class="cr"><label>Besar |A|</label><input type="range" id="pA-mag" min="1" max="10" value="5" step="0.1" oninput="pDraw()"><span class="cv" id="pA-magv">5.0</span></div>
+        <div class="cr"><label>Sudut θ<sub>A</sub></label><input type="range" id="pA-ang" min="0" max="359" value="40" oninput="pDraw()"><span class="cv" id="pA-angv">40°</span></div>
+      </div>
+      <div>
+        <p style="font-size:12px;font-weight:600;color:var(--orange);margin-bottom:6px">Vektor B</p>
+        <div class="cr"><label>Besar |B|</label><input type="range" id="pB-mag" min="1" max="10" value="4" step="0.1" oninput="pDraw()"><span class="cv" id="pB-magv">4.0</span></div>
+        <div class="cr"><label>Sudut θ<sub>B</sub></label><input type="range" id="pB-ang" min="0" max="359" value="130" oninput="pDraw()"><span class="cv" id="pB-angv">130°</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Diagram Vektor</div>
+    <canvas id="p-canvas" height="300"></canvas>
+  </div>
+  <div class="card">
+    <div class="card-title">Hasil</div>
+    <div id="p-pills" class="pills"></div>
+    <div class="fm" id="p-formula" style="margin-top:12px"></div>
+  </div>
+</div>
+
+<!-- ══ 2. PENGURAIAN ══ -->
+<div class="sec" id="s-penguraian">
+  <div class="sec-title">Penguraian Vektor</div>
+  <div class="sec-desc">Uraikan sebuah vektor menjadi komponen-komponen tegak lurus (x dan y).</div>
+  <div class="card">
+    <div class="card-title">Kontrol</div>
+    <div class="cr"><label>Besar vektor |V|</label><input type="range" id="dV-mag" min="1" max="10" value="7" step="0.1" oninput="dDraw()"><span class="cv" id="dV-magv">7.0</span></div>
+    <div class="cr"><label>Sudut θ (dari sumbu +x)</label><input type="range" id="dV-ang" min="0" max="359" value="35" oninput="dDraw()"><span class="cv" id="dV-angv">35°</span></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Diagram Komponen</div>
+    <canvas id="d-canvas" height="300"></canvas>
+  </div>
+  <div class="card">
+    <div class="card-title">Komponen</div>
+    <div id="d-pills" class="pills"></div>
+    <div class="fm" id="d-formula" style="margin-top:12px"></div>
+  </div>
+</div>
+
+<!-- ══ 3. PERKALIAN ══ -->
+<div class="sec" id="s-perkalian">
+  <div class="sec-title">Perkalian Vektor</div>
+  <div class="sec-desc">Hitung perkalian titik (dot product) dan perkalian silang (cross product) dari dua vektor.</div>
+  <div class="two">
+    <div class="card">
+      <div class="card-title">Vektor A</div>
+      <div class="cr"><label>Aₓ</label><input type="number" id="ax" value="3" step="0.1" oninput="calcProd()"></div>
+      <div class="cr"><label>Aᵧ</label><input type="number" id="ay" value="4" step="0.1" oninput="calcProd()"></div>
+      <div class="cr"><label>A_z</label><input type="number" id="az" value="0" step="0.1" oninput="calcProd()"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Vektor B</div>
+      <div class="cr"><label>Bₓ</label><input type="number" id="bx" value="2" step="0.1" oninput="calcProd()"></div>
+      <div class="cr"><label>Bᵧ</label><input type="number" id="by" value="-1" step="0.1" oninput="calcProd()"></div>
+      <div class="cr"><label>B_z</label><input type="number" id="bz" value="0" step="0.1" oninput="calcProd()"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Hasil Perkalian</div>
+    <div id="prod-result"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Visualisasi 2D</div>
+    <canvas id="prod-canvas" height="260"></canvas>
+  </div>
+</div>
+
+<!-- ══ 4. REFERENSI ══ -->
+<div class="sec" id="s-referensi">
+  <div class="sec-title">Referensi Vektor</div>
+  <div class="sec-desc">Rumus-rumus penting operasi vektor dalam fisika.</div>
+  <div class="card">
+    <div class="card-title">Notasi & Representasi</div>
+    <div class="co co-blue">Vektor ditulis dengan huruf tebal (<b>A</b>) atau dengan tanda panah di atas (Ā). Vektor memiliki besar (magnitude) dan arah.</div>
+    <div class="fm">A = Aₓ î + Aᵧ ĵ + A_z k̂</div>
+    <div class="fm">|A| = √(Aₓ² + Aᵧ² + A_z²)</div>
+    <div class="fm">θ = arctan(Aᵧ / Aₓ)   [perhatikan kuadran]</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Penjumlahan & Pengurangan</div>
+    <div class="fm">A + B = (Aₓ+Bₓ)î + (Aᵧ+Bᵧ)ĵ + (A_z+B_z)k̂</div>
+    <div class="fm">|R| = √(Aₓ+Bₓ)² + (Aᵧ+Bᵧ)²   [2D]</div>
+    <div class="fm">|R|² = |A|² + |B|² + 2|A||B|cos θ   [aturan kosinus]</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Perkalian Titik (Dot Product)</div>
+    <div class="fm">A · B = AₓBₓ + AᵧBᵧ + A_zB_z</div>
+    <div class="fm">A · B = |A||B| cos θ</div>
+    <div class="co co-green">Hasil berupa skalar. Jika A · B = 0 maka A ⊥ B.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Perkalian Silang (Cross Product)</div>
+    <div class="fm">A × B = (AᵧB_z − A_zBᵧ)î − (AₓB_z − A_zBₓ)ĵ + (AₓBᵧ − AᵧBₓ)k̂</div>
+    <div class="fm">|A × B| = |A||B| sin θ</div>
+    <div class="co co-amber">Hasil berupa vektor (arah: aturan tangan kanan). Jika A × B = 0 maka A ∥ B.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Vektor Satuan</div>
+    <table>
+      <tr><th>Simbol</th><th>Arah</th><th>Nilai</th></tr>
+      <tr><td>î</td><td>Sumbu +x</td><td class="num">(1, 0, 0)</td></tr>
+      <tr><td>ĵ</td><td>Sumbu +y</td><td class="num">(0, 1, 0)</td></tr>
+      <tr><td>k̂</td><td>Sumbu +z</td><td class="num">(0, 0, 1)</td></tr>
+      <tr><td>Â</td><td>Searah A</td><td class="num">A / |A|</td></tr>
+    </table>
+  </div>
+</div>
+</main>
+
+<script>
+const dark=()=>matchMedia('(prefers-color-scheme:dark)').matches;
+const tc=()=>dark()?'#c8cde8':'#1c1e2e';
+const tc2=()=>dark()?'#9ea3b5':'#6b6e88';
+const tc3=()=>dark()?'#666a80':'#9ea1b8';
+const ac=()=>dark()?'#7898d2':'#3a68d0';
+const gc=()=>dark()?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.04)';
+const bg2=()=>dark()?'#242535':'#ffffff';
+const bg3=()=>dark()?'#2a2c3e':'#edf0f8';
+
+function getCanvas(id,h){
+  const cv=document.getElementById(id);
+  const W=cv.parentElement.offsetWidth||500;
+  const dpr=window.devicePixelRatio||1;
+  cv.width=Math.round(W*dpr); cv.height=Math.round(h*dpr);
+  cv.style.width=W+'px'; cv.style.height=h+'px';
+  const ctx=cv.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  return{W,H:h,ctx};
+}
+
+function drawArrow(ctx,x1,y1,x2,y2,color,lw=2,label='',dashed=false){
+  const dx=x2-x1,dy=y2-y1,len=Math.hypot(dx,dy);
+  if(len<1)return;
+  const ux=dx/len,uy=dy/len;
+  const hs=Math.min(12,len*0.35);
+  ctx.strokeStyle=color; ctx.lineWidth=lw;
+  if(dashed){ctx.setLineDash([5,4]);}else{ctx.setLineDash([]);}
+  ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle=color;
+  ctx.beginPath();
+  ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-ux*hs+uy*hs*0.4,y2-uy*hs-ux*hs*0.4);
+  ctx.lineTo(x2-ux*hs-uy*hs*0.4,y2-uy*hs+ux*hs*0.4);
+  ctx.closePath(); ctx.fill();
+  if(label){
+    ctx.fillStyle=color; ctx.font='bold 12px system-ui'; ctx.textAlign='center';
+    const mx=(x1+x2)/2, my=(y1+y2)/2;
+    const off=14;
+    ctx.fillText(label,mx-uy*off,my+ux*off);
+  }
+}
+
+function drawGrid(ctx,W,H,cx,cy,scale){
+  ctx.strokeStyle=gc(); ctx.lineWidth=0.8;
+  for(let x=cx%scale;x<W;x+=scale){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=cy%scale;y<H;y+=scale){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  // Axes
+  ctx.strokeStyle=dark()?'rgba(180,185,210,0.25)':'rgba(60,65,100,0.15)'; ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(cx,0);ctx.lineTo(cx,H);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(0,cy);ctx.lineTo(W,cy);ctx.stroke();
+  // Axis labels
+  ctx.fillStyle=tc3(); ctx.font='10px system-ui'; ctx.textAlign='left';
+  ctx.fillText('+x',cx+4,12); ctx.textAlign='right';
+  ctx.fillText('+y',cx-4,14);
+}
+
+/* ══ PENJUMLAHAN ══ */
+function pDraw(){
+  const amag=+document.getElementById('pA-mag').value;
+  const aang=+document.getElementById('pA-ang').value;
+  const bmag=+document.getElementById('pB-mag').value;
+  const bang=+document.getElementById('pB-ang').value;
+  document.getElementById('pA-magv').textContent=amag.toFixed(1);
+  document.getElementById('pA-angv').textContent=aang+'°';
+  document.getElementById('pB-magv').textContent=bmag.toFixed(1);
+  document.getElementById('pB-angv').textContent=bang+'°';
+
+  const{W,H,ctx}=getCanvas('p-canvas',300);
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle=dark()?'#1e2030':'#f0f2f8'; ctx.fillRect(0,0,W,H);
+
+  const scale=Math.min(W,H)*0.08;
+  const cx=W/2, cy=H/2;
+  drawGrid(ctx,W,H,cx,cy,scale);
+
+  const arx=Math.cos(aang*Math.PI/180)*amag*scale;
+  const ary=-Math.sin(aang*Math.PI/180)*amag*scale;
+  const brx=Math.cos(bang*Math.PI/180)*bmag*scale;
+  const bry=-Math.sin(bang*Math.PI/180)*bmag*scale;
+  const rx=arx+brx, ry=ary+bry;
+
+  // Parallelogram ghost
+  ctx.strokeStyle=dark()?'rgba(120,152,210,0.18)':'rgba(58,104,208,0.12)';
+  ctx.lineWidth=1; ctx.setLineDash([3,4]);
+  ctx.beginPath(); ctx.moveTo(cx+arx,cy+ary); ctx.lineTo(cx+rx,cy+ry); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx+brx,cy+bry); ctx.lineTo(cx+rx,cy+ry); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Triangle method: A then B
+  drawArrow(ctx,cx,cy,cx+arx,cy+ary,dark()?'#7898d2':'#3a68d0',2.5,'A');
+  drawArrow(ctx,cx+arx,cy+ary,cx+arx+brx,cy+ary+bry,dark()?'#e08040':'#d06020',2.5,'B');
+  // Resultant
+  drawArrow(ctx,cx,cy,cx+rx,cy+ry,dark()?'#4ab870':'#1a7a4a',2.5,'R');
+
+  // Angle arc for A
+  ctx.strokeStyle=dark()?'#7898d2':'#3a68d0'; ctx.lineWidth=1; ctx.setLineDash([]);
+  ctx.beginPath(); ctx.arc(cx,cy,22,0,-aang*Math.PI/180,aang<0); ctx.stroke();
+
+  // Stats
+  const rmag=Math.hypot(rx,ry)/scale;
+  const rang=Math.atan2(-ry,rx)*180/Math.PI;
+  const rang360=((rang%360)+360)%360;
+  document.getElementById('p-pills').innerHTML=[
+    ['|R|',rmag.toFixed(2),''],
+    ['θ_R',rang360.toFixed(1)+'°',''],
+    ['Rₓ',(rx/scale).toFixed(2),''],
+    ['Rᵧ',(-ry/scale).toFixed(2),''],
+  ].map(([l,v])=>`<div class="pill"><div class="pl">${l}</div><div class="pv">${v}</div></div>`).join('');
+  document.getElementById('p-formula').innerHTML=
+    `R = A + B<br>`+
+    `Rₓ = ${(arx/scale).toFixed(2)} + ${(brx/scale).toFixed(2)} = ${(rx/scale).toFixed(2)}<br>`+
+    `Rᵧ = ${(-ary/scale).toFixed(2)} + ${(-bry/scale).toFixed(2)} = ${(-ry/scale).toFixed(2)}<br>`+
+    `|R| = √(Rₓ² + Rᵧ²) = ${rmag.toFixed(3)}`;
+}
+
+/* ══ PENGURAIAN ══ */
+function dDraw(){
+  const mag=+document.getElementById('dV-mag').value;
+  const ang=+document.getElementById('dV-ang').value;
+  document.getElementById('dV-magv').textContent=mag.toFixed(1);
+  document.getElementById('dV-angv').textContent=ang+'°';
+
+  const{W,H,ctx}=getCanvas('d-canvas',300);
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle=dark()?'#1e2030':'#f0f2f8'; ctx.fillRect(0,0,W,H);
+
+  const scale=Math.min(W,H)*0.08;
+  const cx=W/2, cy=H/2;
+  drawGrid(ctx,W,H,cx,cy,scale);
+
+  const vx=Math.cos(ang*Math.PI/180)*mag*scale;
+  const vy=-Math.sin(ang*Math.PI/180)*mag*scale;
+
+  // Components dashed
+  drawArrow(ctx,cx,cy,cx+vx,cy,dark()?'#e08040':'#d06020',2,'Vₓ',true);
+  drawArrow(ctx,cx+vx,cy,cx+vx,cy+vy,dark()?'#4ab870':'#1a7a4a',2,'Vᵧ',true);
+  // Right angle box
+  const bs=8;
+  ctx.strokeStyle=tc2(); ctx.lineWidth=0.8; ctx.setLineDash([]);
+  if(Math.abs(vx)>bs&&Math.abs(vy)>bs){
+    const sx=vx>0?1:-1, sy=vy>0?1:-1;
+    ctx.strokeRect(cx+vx-sx*bs,cy,-sx*bs,sy*bs);
+  }
+  // Main vector
+  drawArrow(ctx,cx,cy,cx+vx,cy+vy,dark()?'#7898d2':'#3a68d0',2.5,'V');
+
+  // Angle arc
+  ctx.strokeStyle=ac(); ctx.lineWidth=1;
+  ctx.beginPath(); ctx.arc(cx,cy,26,0,-ang*Math.PI/180,ang>180); ctx.stroke();
+  ctx.fillStyle=ac(); ctx.font='11px system-ui'; ctx.textAlign='left';
+  const arcMid=(ang/2)*Math.PI/180;
+  ctx.fillText('θ',cx+32*Math.cos(arcMid),cy-32*Math.sin(arcMid));
+
+  const vxval=mag*Math.cos(ang*Math.PI/180);
+  const vyval=mag*Math.sin(ang*Math.PI/180);
+  document.getElementById('d-pills').innerHTML=[
+    ['Vₓ',vxval.toFixed(3)+''],
+    ['Vᵧ',vyval.toFixed(3)+''],
+    ['|V|',mag.toFixed(3)+''],
+    ['θ',ang+'°'],
+  ].map(([l,v])=>`<div class="pill"><div class="pl">${l}</div><div class="pv">${v}</div></div>`).join('');
+  document.getElementById('d-formula').innerHTML=
+    `Vₓ = |V| cos θ = ${mag.toFixed(2)} × cos(${ang}°) = ${vxval.toFixed(4)}<br>`+
+    `Vᵧ = |V| sin θ = ${mag.toFixed(2)} × sin(${ang}°) = ${vyval.toFixed(4)}<br>`+
+    `|V| = √(Vₓ² + Vᵧ²) = √(${(vxval*vxval).toFixed(2)} + ${(vyval*vyval).toFixed(2)}) = ${mag.toFixed(4)}`;
+}
+
+/* ══ PERKALIAN ══ */
+function calcProd(){
+  const ax=+document.getElementById('ax').value||0;
+  const ay=+document.getElementById('ay').value||0;
+  const az=+document.getElementById('az').value||0;
+  const bx=+document.getElementById('bx').value||0;
+  const by=+document.getElementById('by').value||0;
+  const bz=+document.getElementById('bz').value||0;
+
+  const dot=ax*bx+ay*by+az*bz;
+  const magA=Math.hypot(ax,ay,az), magB=Math.hypot(bx,by,bz);
+  const theta=(magA&&magB)?Math.acos(Math.max(-1,Math.min(1,dot/(magA*magB))))*180/Math.PI:0;
+  const cx=ay*bz-az*by, cy_=az*bx-ax*bz, cz=ax*by-ay*bx;
+  const magCross=Math.hypot(cx,cy_,cz);
+
+  document.getElementById('prod-result').innerHTML=`
+    <div style="display:flex;flex-wrap:wrap;gap:14px">
+      <div>
+        <div class="card-title" style="margin-bottom:8px">Perkalian Titik (A · B)</div>
+        <div class="fm">A · B = ${ax}×${bx} + ${ay}×${by} + ${az}×${bz} = <b>${dot.toFixed(3)}</b></div>
+        <div class="fm">θ antara A dan B = ${theta.toFixed(2)}°</div>
+        <div class="co co-${Math.abs(dot)<0.001?'green':'blue'}" style="margin-top:6px">
+          ${Math.abs(dot)<0.001?'A ⊥ B (vektor tegak lurus)':dot>0?'Sudut lancip (< 90°)':'Sudut tumpul (> 90°)'}
+        </div>
+      </div>
+      <div>
+        <div class="card-title" style="margin-bottom:8px">Perkalian Silang (A × B)</div>
+        <div class="fm">A × B = (${cx.toFixed(2)})î + (${cy_.toFixed(2)})ĵ + (${cz.toFixed(2)})k̂</div>
+        <div class="fm">|A × B| = ${magCross.toFixed(3)}</div>
+        <div class="co co-${magCross<0.001?'green':'amber'}" style="margin-top:6px">
+          ${magCross<0.001?'A ∥ B (vektor sejajar)':'Luas jajargenjang yang dibentuk A dan B = '+magCross.toFixed(3)}
+        </div>
+      </div>
+    </div>`;
+
+  // 2D visualization
+  const{W,H,ctx}=getCanvas('prod-canvas',260);
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle=dark()?'#1e2030':'#f0f2f8'; ctx.fillRect(0,0,W,H);
+  const sc=Math.min(W,H)*0.09;
+  const ocx=W/2, ocy=H/2;
+  drawGrid(ctx,W,H,ocx,ocy,sc);
+  if(magA>0) drawArrow(ctx,ocx,ocy,ocx+ax*sc,ocy-ay*sc,dark()?'#7898d2':'#3a68d0',2.5,'A');
+  if(magB>0) drawArrow(ctx,ocx,ocy,ocx+bx*sc,ocy-by*sc,dark()?'#e08040':'#d06020',2.5,'B');
+  // Angle arc
+  if(magA>0&&magB>0&&theta>0.5){
+    const a1=Math.atan2(-ay,ax), a2=Math.atan2(-by,bx);
+    ctx.strokeStyle=tc2(); ctx.lineWidth=1;
+    ctx.beginPath(); ctx.arc(ocx,ocy,20,a1,a2,a2<a1); ctx.stroke();
+    const amid=(a1+a2)/2;
+    ctx.fillStyle=tc2(); ctx.font='10px system-ui'; ctx.textAlign='center';
+    ctx.fillText(theta.toFixed(0)+'°',ocx+32*Math.cos(amid),ocy+32*Math.sin(amid));
+  }
+}
+
+function showSec(id,el){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nt').forEach(t=>t.classList.remove('active'));
+  document.getElementById('s-'+id).classList.add('active');
+  el.classList.add('active');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    if(id==='penjumlahan') pDraw();
+    if(id==='penguraian') dDraw();
+    if(id==='perkalian') calcProd();
+  }));
+}
+
+window.addEventListener('load',()=>{ pDraw(); });
+window.addEventListener('resize',()=>{
+  const id=document.querySelector('.sec.active')?.id;
+  if(id==='s-penjumlahan') pDraw();
+  if(id==='s-penguraian') dDraw();
+  if(id==='s-perkalian') calcProd();
+});
+</script>
+</body>
+</html>

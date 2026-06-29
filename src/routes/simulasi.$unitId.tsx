@@ -42,6 +42,8 @@ export const Route = createFileRoute("/simulasi/$unitId")({
 
 const HTML_SIMS: Record<string, string> = {
   'pengukuran':       '/unit1-pengukuran.html',
+  'vektor':           '/unit2-vektor.html',
+  'gerak-lurus':      '/unit3-gerak-lurus.html',
   'gerak-parabola':   '/unit6-gerak-parabola.html',
   'usaha-energi':     '/unit9-usaha-energi.html',
   'gelombang':        '/unit11-gelombang.html',

@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 3: Gerak Lurus — Fisika Interaktif</title>
+<style>
+:root {
+  --bg:#f4f5f9; --bg2:#ffffff; --bg3:#edf0f8;
+  --text:#1c1e2e; --text2:#6b6e88; --text3:#9ea1b8;
+  --border:rgba(0,0,0,0.08); --border2:rgba(0,0,0,0.14);
+  --primary:#1e2d56; --accent:#3a68d0; --accent2:#1e48a8;
+  --green:#1a7a4a; --amber:#a05c00; --red:#b02020; --orange:#d06020; --purple:#6535c0;
+  --r:10px; --rs:6px;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#1c1e2a; --bg2:#242535; --bg3:#2a2c3e;
+  --text:#e8eaf2; --text2:#9ea3b5; --text3:#666a80;
+  --border:rgba(255,255,255,0.08); --border2:rgba(255,255,255,0.15);
+  --primary:#7a90cc; --accent:#7898d2; --accent2:#9ab8e8;
+  --green:#4ab870; --amber:#d49020; --red:#e05050; --orange:#e08040; --purple:#9a70e8;
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 20px;height:52px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:50}
+.brand{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0}
+.logo{width:32px;height:32px;background:var(--primary);border-radius:7px;display:grid;place-items:center;color:#fff;font-size:15px;flex-shrink:0;line-height:1}
+.brand-name{font-size:13px;font-weight:600;color:var(--text);line-height:1.3}
+.brand-sub{font-size:10px;color:var(--text2);line-height:1.3}
+.hd-sep{color:var(--text3);font-size:14px}
+.hd-unit{font-size:13px;font-weight:500;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hd-back{margin-left:auto;font-size:12px;font-weight:500;color:var(--accent);text-decoration:none;padding:5px 12px;border:1px solid var(--border2);border-radius:var(--rs);white-space:nowrap;flex-shrink:0}
+.hd-back:hover{background:var(--bg3)}
+nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 20px;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+.nt{padding:10px 14px;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;border-radius:6px 6px 0 0;border:1px solid transparent;border-bottom:none;white-space:nowrap;background:none;transition:.15s}
+.nt:hover{color:var(--text);background:var(--bg3)}
+.nt.active{color:var(--accent);background:var(--bg2);border-color:var(--border);margin-bottom:-1px}
+main{padding:18px 20px;max-width:960px;margin:0 auto}
+.sec{display:none}.sec.active{display:block}
+.sec-title{font-size:17px;font-weight:600;margin-bottom:3px}
+.sec-desc{font-size:13px;color:var(--text2);margin-bottom:16px}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.card-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:620px){.two{grid-template-columns:1fr}}
+.cr{display:flex;align-items:center;gap:8px;margin:7px 0}
+.cr label{font-size:12px;color:var(--text2);min-width:150px;flex-shrink:0}
+.cr input[type=range]{flex:1;accent-color:var(--accent)}
+.cv{font-size:13px;font-weight:600;min-width:72px;text-align:right;font-variant-numeric:tabular-nums}
+canvas{display:block;border-radius:var(--rs);max-width:100%}
+.pills{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.pill{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 12px;text-align:center;min-width:90px}
+.pill .pl{font-size:10px;color:var(--text3);margin-bottom:2px;text-transform:uppercase;letter-spacing:.04em}
+.pill .pv{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums}
+.fm{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:7px 12px;font-family:'Courier New',monospace;font-size:12px;color:var(--accent);margin:5px 0;line-height:1.7}
+.co{border-radius:var(--rs);padding:9px 13px;font-size:13px;margin:8px 0;line-height:1.6}
+.co-blue{background:color-mix(in srgb,var(--accent) 10%,transparent);color:var(--accent)}
+.co-green{background:color-mix(in srgb,var(--green) 10%,transparent);color:var(--green)}
+.co-amber{background:color-mix(in srgb,var(--amber) 12%,transparent);color:var(--amber)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border-radius:var(--rs);font-size:13px;font-weight:600;cursor:pointer;border:none;transition:.15s;font-family:inherit}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:var(--accent2)}
+.btn-outline{background:var(--bg);border:1px solid var(--border2);color:var(--text)}.btn-outline:hover{background:var(--bg3)}
+.btns{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;padding:6px 8px;border-bottom:1px solid var(--border);text-align:left;font-weight:600}
+td{padding:7px 8px;border-bottom:1px solid var(--border)}
+tr:last-child td{border-bottom:none}
+td.num{font-family:'Courier New',monospace;color:var(--accent)}
+/* Track animation */
+.track-wrap{position:relative;height:80px;background:var(--bg3);border-radius:var(--rs);overflow:hidden;margin-bottom:10px;border:1px solid var(--border)}
+.track-road{position:absolute;bottom:24px;left:0;right:0;height:3px;background:var(--border2)}
+.track-obj{position:absolute;bottom:27px;width:36px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px;transition:none}
+.track-label{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--text3);font-variant-numeric:tabular-nums}
+.tick-mark{position:absolute;bottom:20px;width:1px;background:var(--text3);opacity:0.4}
+</style>
+</head>
+<body>
+<header>
+  <a class="brand" href="/">
+    <div class="logo">⚛</div>
+    <div>
+      <div class="brand-name">Fisika Interaktif</div>
+      <div class="brand-sub">SMA 10 · Kurikulum Merdeka</div>
+    </div>
+  </a>
+  <span class="hd-sep">›</span>
+  <span class="hd-unit">Unit 3: Gerak Lurus</span>
+  <a class="hd-back" href="/">← Dashboard</a>
+</header>
+<nav>
+  <div class="nt active" onclick="showSec('glb',this)">→ GLB</div>
+  <div class="nt" onclick="showSec('glbb',this)">⟹ GLBB</div>
+  <div class="nt" onclick="showSec('grafik',this)">📈 Grafik v-t</div>
+  <div class="nt" onclick="showSec('referensi',this)">📖 Referensi</div>
+</nav>
+<main>
+
+<!-- ══ 1. GLB ══ -->
+<div class="sec active" id="s-glb">
+  <div class="sec-title">Gerak Lurus Beraturan (GLB)</div>
+  <div class="sec-desc">Benda bergerak dengan kecepatan tetap. Jarak bertambah secara linier terhadap waktu.</div>
+  <div class="card">
+    <div class="card-title">Parameter</div>
+    <div class="cr"><label>Kecepatan v (m/s)</label><input type="range" id="glb-v" min="-20" max="20" value="8" step="0.5" oninput="glbUpdate()"><span class="cv" id="glb-vv">8.0 m/s</span></div>
+    <div class="cr"><label>Posisi awal x₀ (m)</label><input type="range" id="glb-x0" min="-40" max="40" value="0" step="1" oninput="glbUpdate()"><span class="cv" id="glb-x0v">0 m</span></div>
+    <div class="cr"><label>Durasi (s)</label><input type="range" id="glb-t" min="1" max="20" value="10" step="0.5" oninput="glbUpdate()"><span class="cv" id="glb-tv">10.0 s</span></div>
+    <div class="btns">
+      <button class="btn btn-primary" onclick="glbPlay()">▶ Animasi</button>
+      <button class="btn btn-outline" onclick="glbReset()">↺ Reset</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Animasi Benda</div>
+    <div class="track-wrap" id="glb-track">
+      <div class="track-road"></div>
+      <div class="track-obj" id="glb-obj" style="left:50%;background:color-mix(in srgb,var(--accent) 15%,transparent);border:2px solid var(--accent)">🚗</div>
+      <div class="track-label" id="glb-pos">x = 0.0 m</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Grafik x–t (Posisi vs Waktu)</div>
+    <canvas id="glb-canvas" height="200"></canvas>
+  </div>
+  <div class="card">
+    <div class="card-title">Nilai Saat Ini</div>
+    <div id="glb-pills" class="pills"></div>
+  </div>
+</div>
+
+<!-- ══ 2. GLBB ══ -->
+<div class="sec" id="s-glbb">
+  <div class="sec-title">Gerak Lurus Berubah Beraturan (GLBB)</div>
+  <div class="sec-desc">Benda bergerak dengan percepatan tetap. Kecepatan bertambah/berkurang secara linier.</div>
+  <div class="card">
+    <div class="card-title">Parameter</div>
+    <div class="cr"><label>Kecepatan awal v₀ (m/s)</label><input type="range" id="bb-v0" min="-15" max="15" value="0" step="0.5" oninput="bbUpdate()"><span class="cv" id="bb-v0v">0.0 m/s</span></div>
+    <div class="cr"><label>Percepatan a (m/s²)</label><input type="range" id="bb-a" min="-10" max="10" value="3" step="0.5" oninput="bbUpdate()"><span class="cv" id="bb-av">3.0 m/s²</span></div>
+    <div class="cr"><label>Posisi awal x₀ (m)</label><input type="range" id="bb-x0" min="-40" max="40" value="0" step="1" oninput="bbUpdate()"><span class="cv" id="bb-x0v">0 m</span></div>
+    <div class="cr"><label>Durasi (s)</label><input type="range" id="bb-t" min="1" max="15" value="6" step="0.5" oninput="bbUpdate()"><span class="cv" id="bb-tv">6.0 s</span></div>
+    <div class="btns">
+      <button class="btn btn-primary" onclick="bbPlay()">▶ Animasi</button>
+      <button class="btn btn-outline" onclick="bbReset()">↺ Reset</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Animasi Benda</div>
+    <div class="track-wrap" id="bb-track">
+      <div class="track-road"></div>
+      <div class="track-obj" id="bb-obj" style="background:color-mix(in srgb,var(--orange) 15%,transparent);border:2px solid var(--orange)">🚀</div>
+      <div class="track-label" id="bb-pos">x = 0.0 m | v = 0.0 m/s</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Grafik (posisi, kecepatan, percepatan)</div>
+    <canvas id="bb-canvas" height="300"></canvas>
+  </div>
+  <div class="card">
+    <div class="card-title">Tabel Nilai</div>
+    <div id="bb-table"></div>
+  </div>
+</div>
+
+<!-- ══ 3. GRAFIK v-t ══ -->
+<div class="sec" id="s-grafik">
+  <div class="sec-title">Analisis Grafik v–t</div>
+  <div class="sec-desc">Luas daerah di bawah kurva v–t menyatakan perpindahan. Kemiringan grafik v–t menyatakan percepatan.</div>
+  <div class="card">
+    <div class="card-title">Pengaturan Grafik</div>
+    <div class="cr"><label>v pada t=0 (m/s)</label><input type="range" id="vt-v0" min="-15" max="15" value="5" step="0.5" oninput="vtDraw()"><span class="cv" id="vt-v0v">5.0</span></div>
+    <div class="cr"><label>v pada t=T (m/s)</label><input type="range" id="vt-v1" min="-15" max="15" value="15" step="0.5" oninput="vtDraw()"><span class="cv" id="vt-v1v">15.0</span></div>
+    <div class="cr"><label>Durasi T (s)</label><input type="range" id="vt-T" min="1" max="20" value="10" step="0.5" oninput="vtDraw()"><span class="cv" id="vt-Tv">10.0</span></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Grafik v–t</div>
+    <canvas id="vt-canvas" height="260"></canvas>
+  </div>
+  <div class="card">
+    <div class="card-title">Analisis</div>
+    <div id="vt-analysis"></div>
+  </div>
+</div>
+
+<!-- ══ 4. REFERENSI ══ -->
+<div class="sec" id="s-referensi">
+  <div class="sec-title">Referensi Gerak Lurus</div>
+  <div class="sec-desc">Rumus-rumus kinematika gerak lurus satu dimensi.</div>
+  <div class="two">
+    <div class="card">
+      <div class="card-title">GLB – Gerak Beraturan</div>
+      <div class="co co-blue">Kecepatan konstan, percepatan = 0</div>
+      <div class="fm">v = konstan</div>
+      <div class="fm">x = x₀ + v · t</div>
+      <div class="fm">Δx = v · t</div>
+    </div>
+    <div class="card">
+      <div class="card-title">GLBB – Percepatan Konstan</div>
+      <div class="co co-amber">Percepatan konstan a ≠ 0</div>
+      <div class="fm">v = v₀ + a · t</div>
+      <div class="fm">x = x₀ + v₀t + ½at²</div>
+      <div class="fm">v² = v₀² + 2a(x − x₀)</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Interpretasi Grafik</div>
+    <table>
+      <tr><th>Grafik</th><th>Kemiringan (gradien)</th><th>Luas daerah</th></tr>
+      <tr><td>x–t</td><td class="num">kecepatan v</td><td class="num">—</td></tr>
+      <tr><td>v–t</td><td class="num">percepatan a</td><td class="num">perpindahan Δx</td></tr>
+      <tr><td>a–t</td><td class="num">—</td><td class="num">Δv</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <div class="card-title">GLBB Khusus</div>
+    <div style="margin-bottom:8px"><b>Gerak jatuh bebas</b> (a = g = 9.8 m/s², ke bawah)</div>
+    <div class="fm">v = g · t</div>
+    <div class="fm">h = ½g · t²</div>
+    <div class="fm">v² = 2gh</div>
+    <div style="margin:10px 0 6px"><b>Gerak ke atas</b> (v₀ ke atas, a = −g)</div>
+    <div class="fm">t_puncak = v₀ / g</div>
+    <div class="fm">h_maks = v₀² / (2g)</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Contoh Soal</div>
+    <div id="ref-examples"></div>
+  </div>
+</div>
+</main>
+
+<script>
+const dark=()=>matchMedia('(prefers-color-scheme:dark)').matches;
+const tc=()=>dark()?'#c8cde8':'#1c1e2e';
+const tc2=()=>dark()?'#9ea3b5':'#6b6e88';
+const tc3=()=>dark()?'#666a80':'#9ea1b8';
+const ac=()=>dark()?'#7898d2':'#3a68d0';
+const oc=()=>dark()?'#e08040':'#d06020';
+const gc=()=>dark()?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.04)';
+const bg2=()=>dark()?'#242535':'#ffffff';
+const bg3=()=>dark()?'#2a2c3e':'#edf0f8';
+
+function getCanvas(id,h){
+  const cv=document.getElementById(id);
+  const W=cv.parentElement.offsetWidth||500;
+  const dpr=window.devicePixelRatio||1;
+  cv.width=Math.round(W*dpr); cv.height=Math.round(h*dpr);
+  cv.style.width=W+'px'; cv.style.height=h+'px';
+  const ctx=cv.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  return{W,H:h,ctx};
+}
+
+function drawAxes(ctx,W,H,ml,mr,mt,mb,xmin,xmax,ymin,ymax,xlabel,ylabel){
+  const pw=W-ml-mr, ph=H-mt-mb;
+  const toX=v=>ml+(v-xmin)/(xmax-xmin)*pw;
+  const toY=v=>mt+(ymax-v)/(ymax-ymin)*ph;
+  // Grid
+  ctx.strokeStyle=gc(); ctx.lineWidth=0.6;
+  const xstep=niceStep((xmax-xmin)/5), ystep=niceStep((ymax-ymin)/5);
+  for(let x=Math.ceil(xmin/xstep)*xstep;x<=xmax+0.001;x+=xstep){
+    const px=toX(x); ctx.beginPath();ctx.moveTo(px,mt);ctx.lineTo(px,mt+ph);ctx.stroke();
+  }
+  for(let y=Math.ceil(ymin/ystep)*ystep;y<=ymax+0.001;y+=ystep){
+    const py=toY(y); ctx.beginPath();ctx.moveTo(ml,py);ctx.lineTo(ml+pw,py);ctx.stroke();
+  }
+  // Axes
+  ctx.strokeStyle=dark()?'rgba(180,185,210,0.3)':'rgba(60,65,100,0.2)'; ctx.lineWidth=1;
+  const zeroX=toX(0), zeroY=toY(0);
+  if(zeroX>=ml&&zeroX<=ml+pw){ctx.beginPath();ctx.moveTo(zeroX,mt);ctx.lineTo(zeroX,mt+ph);ctx.stroke();}
+  if(zeroY>=mt&&zeroY<=mt+ph){ctx.beginPath();ctx.moveTo(ml,zeroY);ctx.lineTo(ml+pw,zeroY);ctx.stroke();}
+  // Tick labels
+  ctx.fillStyle=tc3(); ctx.font='9px system-ui'; ctx.textAlign='center';
+  for(let x=Math.ceil(xmin/xstep)*xstep;x<=xmax+0.001;x+=xstep){
+    ctx.fillText(x%1===0?x:x.toFixed(1),toX(x),mt+ph+12);
+  }
+  ctx.textAlign='right';
+  for(let y=Math.ceil(ymin/ystep)*ystep;y<=ymax+0.001;y+=ystep){
+    ctx.fillText(y%1===0?y:y.toFixed(1),ml-4,toY(y)+4);
+  }
+  // Axis labels
+  ctx.fillStyle=tc2(); ctx.font='11px system-ui'; ctx.textAlign='center';
+  ctx.fillText(xlabel,ml+pw/2,H-2);
+  ctx.save(); ctx.translate(10,mt+ph/2); ctx.rotate(-Math.PI/2); ctx.fillText(ylabel,0,0); ctx.restore();
+  return{toX,toY};
+}
+
+function niceStep(raw){
+  const p=Math.pow(10,Math.floor(Math.log10(raw)));
+  const n=raw/p;
+  return(n<1.5?1:n<3.5?2:n<7.5?5:10)*p;
+}
+
+/* ══ GLB ══ */
+let glbAnim=null, glbT=0;
+
+function glbUpdate(){
+  const v=+document.getElementById('glb-v').value;
+  const x0=+document.getElementById('glb-x0').value;
+  const tmax=+document.getElementById('glb-t').value;
+  document.getElementById('glb-vv').textContent=v.toFixed(1)+' m/s';
+  document.getElementById('glb-x0v').textContent=x0+' m';
+  document.getElementById('glb-tv').textContent=tmax.toFixed(1)+' s';
+  glbDrawChart(v,x0,tmax,0);
+  glbSetPos(v,x0,0);
+}
+
+function glbDrawChart(v,x0,tmax,tCur){
+  const{W,H,ctx}=getCanvas('glb-canvas',200);
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle=dark()?'#1e2030':'#f0f2f8'; ctx.fillRect(0,0,W,H);
+  const ml=44,mr=16,mt=16,mb=30;
+  const xfin=x0+v*tmax;
+  const xmin_=Math.min(x0,xfin), xmax_=Math.max(x0,xfin);
+  const xpad=(xmax_-xmin_)*0.1||5;
+  const{toX,toY}=drawAxes(ctx,W,H,ml,mr,mt,mb,0,tmax,xmin_-xpad,xmax_+xpad,'t (s)','x (m)');
+  // Line
+  ctx.strokeStyle=ac(); ctx.lineWidth=2; ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(toX(0),toY(x0)); ctx.lineTo(toX(tmax),toY(x0+v*tmax)); ctx.stroke();
+  // Current time marker
+  if(tCur>0){
+    const cx=toX(tCur), cy=toY(x0+v*tCur);
+    ctx.fillStyle=ac(); ctx.beginPath(); ctx.arc(cx,cy,5,0,Math.PI*2); ctx.fill();
+    ctx.strokeStyle=dark()?'rgba(120,152,210,0.4)':'rgba(58,104,208,0.3)'; ctx.lineWidth=1; ctx.setLineDash([3,3]);
+    ctx.beginPath(); ctx.moveTo(cx,mt); ctx.lineTo(cx,cy); ctx.stroke();
+    ctx.setLineDash([]);
+  }
+  document.getElementById('glb-pills').innerHTML=[
+    ['Kecepatan v',v.toFixed(1)+' m/s'],
+    ['Posisi awal x₀',x0+' m'],
+    ['Posisi akhir',(x0+v*tmax).toFixed(1)+' m'],
+    ['Perpindahan Δx',(v*tmax).toFixed(1)+' m'],
+  ].map(([l,v_])=>`<div class="pill"><div class="pl">${l}</div><div class="pv">${v_}</div></div>`).join('');
+}
+
+function glbSetPos(v,x0,t){
+  const x=x0+v*t;
+  const tmax=+document.getElementById('glb-t').value;
+  const xfin=x0+v*tmax;
+  const xrange=Math.max(Math.abs(xfin-x0),10);
+  const track=document.getElementById('glb-track');
+  const W=track.offsetWidth-44;
+  const pct=Math.min(Math.max((x-Math.min(x0,xfin)-xrange*0.1)/(xrange*1.2),0),1);
+  document.getElementById('glb-obj').style.left=(22+pct*W)+'px';
+  document.getElementById('glb-pos').textContent='x = '+x.toFixed(1)+' m';
+}
+
+function glbPlay(){
+  if(glbAnim) cancelAnimationFrame(glbAnim);
+  const v=+document.getElementById('glb-v').value;
+  const x0=+document.getElementById('glb-x0').value;
+  const tmax=+document.getElementById('glb-t').value;
+  glbT=0;
+  const speed=1, fps=60;
+  function step(){
+    glbT+=speed/fps;
+    if(glbT>tmax){glbT=tmax;}
+    glbDrawChart(v,x0,tmax,glbT);
+    glbSetPos(v,x0,glbT);
+    if(glbT<tmax) glbAnim=requestAnimationFrame(step);
+  }
+  glbAnim=requestAnimationFrame(step);
+}
+
+function glbReset(){
+  if(glbAnim) cancelAnimationFrame(glbAnim);
+  glbT=0; glbUpdate();
+}
+
+/* ══ GLBB ══ */
+let bbAnim=null, bbT=0;
+
+function bbUpdate(){
+  const v0=+document.getElementById('bb-v0').value;
+  const a=+document.getElementById('bb-a').value;
+  const x0=+document.getElementById('bb-x0').value;
+  const tmax=+document.getElementById('bb-t').value;
+  document.getElementById('bb-v0v').textContent=v0.toFixed(1)+' m/s';
+  document.getElementById('bb-av').textContent=a.toFixed(1)+' m/s²';
+  document.getElementById('bb-x0v').textContent=x0+' m';
+  document.getElementById('bb-tv').textContent=tmax.toFixed(1)+' s';
+  bbDrawChart(v0,a,x0,tmax,0);
+  bbSetPos(v0,a,x0,0);
+}
+
+function bbDrawChart(v0,a,x0,tmax,tCur){
+  const{W,H,ctx}=getCanvas('bb-canvas',300);
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle=dark()?'#1e2030':'#f0f2f8'; ctx.fillRect(0,0,W,H);
+  const N=100;
+  const xs=Array.from({length:N+1},(_,i)=>{ const t=i/N*tmax; return x0+v0*t+0.5*a*t*t; });
+  const vs=Array.from({length:N+1},(_,i)=>{ const t=i/N*tmax; return v0+a*t; });
+  const xmin_=Math.min(...xs), xmax_=Math.max(...xs);
+  const vmin_=Math.min(...vs), vmax_=Math.max(...vs);
+  const xpad=(xmax_-xmin_)*0.1||5, vpad=(vmax_-vmin_)*0.15||2;
+
+  const panelH=(H-16)/3;
+  const ml=50,mr=16,mt=10,mb=20;
+
+  // x-t panel
+  ctx.save(); ctx.rect(0,0,W,panelH+mt); ctx.clip();
+  const{toX:tx1,toY:ty1}=drawAxes(ctx,W,panelH+mt+mb,ml,mr,mt,mb,0,tmax,xmin_-xpad,xmax_+xpad,'','x (m)');
+  ctx.strokeStyle=ac(); ctx.lineWidth=2; ctx.setLineDash([]);
+  ctx.beginPath();
+  for(let i=0;i<=N;i++){const t=i/N*tmax; ctx.lineTo(tx1(t),ty1(x0+v0*t+0.5*a*t*t));}
+  ctx.stroke();
+  if(tCur>0){
+    const cx=tx1(tCur), cy=ty1(x0+v0*tCur+0.5*a*tCur*tCur);
+    ctx.fillStyle=ac(); ctx.beginPath(); ctx.arc(cx,cy,5,0,Math.PI*2); ctx.fill();
+  }
+  ctx.restore();
+
+  // v-t panel
+  const oy=panelH+4;
+  ctx.save(); ctx.translate(0,oy); ctx.rect(0,0,W,panelH+mt); ctx.clip();
+  const{toX:tx2,toY:ty2}=drawAxes(ctx,W,panelH+mt+mb,ml,mr,mt,mb,0,tmax,vmin_-vpad,vmax_+vpad,'','v (m/s)');
+  ctx.strokeStyle=oc(); ctx.lineWidth=2;
+  ctx.beginPath(); ctx.moveTo(tx2(0),ty2(v0)); ctx.lineTo(tx2(tmax),ty2(v0+a*tmax)); ctx.stroke();
+  if(tCur>0){
+    const cx=tx2(tCur), cy=ty2(v0+a*tCur);
+    ctx.fillStyle=oc(); ctx.beginPath(); ctx.arc(cx,cy,5,0,Math.PI*2); ctx.fill();
+  }
+  ctx.restore();
+
+  // a-t panel
+  const oy2=panelH*2+8;
+  ctx.save(); ctx.translate(0,oy2); ctx.rect(0,0,W,panelH+mt); ctx.clip();
+  const apad=Math.max(Math.abs(a)*0.3,1);
+  const{toX:tx3,toY:ty3}=drawAxes(ctx,W,panelH+mt+mb,ml,mr,mt,mb,0,tmax,a-apad,a+apad,'t (s)','a (m/s²)');
+  ctx.strokeStyle=dark()?'#4ab870':'#1a7a4a'; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.moveTo(tx3(0),ty3(a)); ctx.lineTo(tx3(tmax),ty3(a)); ctx.stroke();
+  ctx.restore();
+
+  // Table
+  const steps=[0,tmax/4,tmax/2,tmax*3/4,tmax];
+  const rows=steps.map(t=>{
+    const x=x0+v0*t+0.5*a*t*t, v_=v0+a*t;
+    return`<tr><td class="num">${t.toFixed(1)}</td><td class="num">${x.toFixed(2)}</td><td class="num">${v_.toFixed(2)}</td><td class="num">${a.toFixed(2)}</td></tr>`;
+  }).join('');
+  document.getElementById('bb-table').innerHTML=`<table><tr><th>t (s)</th><th>x (m)</th><th>v (m/s)</th><th>a (m/s²)</th></tr>${rows}</table>`;
+}
+
+function bbSetPos(v0,a,x0,t){
+  const x=x0+v0*t+0.5*a*t*t;
+  const v_=v0+a*t;
+  const tmax=+document.getElementById('bb-t').value;
+  const xs=Array.from({length:51},(_,i)=>{const tt=i/50*tmax;return x0+v0*tt+0.5*a*tt*tt;});
+  const xmin_=Math.min(...xs), xmax_=Math.max(...xs);
+  const xrange=Math.max(xmax_-xmin_,10);
+  const track=document.getElementById('bb-track');
+  const W=track.offsetWidth-44;
+  const pct=Math.min(Math.max((x-xmin_)/xrange,0),1);
+  document.getElementById('bb-obj').style.left=(22+pct*W)+'px';
+  document.getElementById('bb-pos').textContent=`x = ${x.toFixed(1)} m | v = ${v_.toFixed(1)} m/s`;
+}
+
+function bbPlay(){
+  if(bbAnim) cancelAnimationFrame(bbAnim);
+  const v0=+document.getElementById('bb-v0').value;
+  const a=+document.getElementById('bb-a').value;
+  const x0=+document.getElementById('bb-x0').value;
+  const tmax=+document.getElementById('bb-t').value;
+  bbT=0;
+  function step(){
+    bbT+=1/60;
+    if(bbT>tmax) bbT=tmax;
+    bbDrawChart(v0,a,x0,tmax,bbT);
+    bbSetPos(v0,a,x0,bbT);
+    if(bbT<tmax) bbAnim=requestAnimationFrame(step);
+  }
+  bbAnim=requestAnimationFrame(step);
+}
+
+function bbReset(){
+  if(bbAnim) cancelAnimationFrame(bbAnim);
+  bbT=0; bbUpdate();
+}
+
+/* ══ GRAFIK v-t ══ */
+function vtDraw(){
+  const v0=+document.getElementById('vt-v0').value;
+  const v1=+document.getElementById('vt-v1').value;
+  const T=+document.getElementById('vt-T').value;
+  document.getElementById('vt-v0v').textContent=v0.toFixed(1);
+  document.getElementById('vt-v1v').textContent=v1.toFixed(1);
+  document.getElementById('vt-Tv').textContent=T.toFixed(1);
+
+  const{W,H,ctx}=getCanvas('vt-canvas',260);
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle=dark()?'#1e2030':'#f0f2f8'; ctx.fillRect(0,0,W,H);
+  const ml=46,mr=16,mt=16,mb=30;
+  const vmin_=Math.min(v0,v1,0), vmax_=Math.max(v0,v1,0);
+  const vpad=Math.max((vmax_-vmin_)*0.15,1);
+  const{toX,toY}=drawAxes(ctx,W,H,ml,mr,mt,mb,0,T,vmin_-vpad,vmax_+vpad,'t (s)','v (m/s)');
+
+  // Shaded area (displacement)
+  const x0_=toX(0), x1_=toX(T), y0_=toY(v0), y1_=toY(v1), yz=toY(0);
+  ctx.fillStyle=dark()?'rgba(120,152,210,0.15)':'rgba(58,104,208,0.1)';
+  ctx.beginPath();
+  ctx.moveTo(x0_,yz); ctx.lineTo(x0_,y0_); ctx.lineTo(x1_,y1_); ctx.lineTo(x1_,yz);
+  ctx.closePath(); ctx.fill();
+
+  // Line
+  ctx.strokeStyle=ac(); ctx.lineWidth=2.5; ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(x0_,y0_); ctx.lineTo(x1_,y1_); ctx.stroke();
+
+  // Endpoints
+  ctx.fillStyle=ac();
+  ctx.beginPath(); ctx.arc(x0_,y0_,5,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(x1_,y1_,5,0,Math.PI*2); ctx.fill();
+
+  // Slope label
+  const slope=(v1-v0)/T;
+  ctx.fillStyle=tc2(); ctx.font='11px system-ui'; ctx.textAlign='left';
+  ctx.fillText('kemiringan = a = '+(slope.toFixed(2))+' m/s²',(x0_+x1_)/2+8,Math.min(y0_,y1_)+14);
+
+  // Displacement
+  const disp=(v0+v1)/2*T;
+  ctx.fillStyle=dark()?'rgba(120,152,210,0.7)':'rgba(58,104,208,0.7)'; ctx.font='11px system-ui'; ctx.textAlign='center';
+  ctx.fillText('Δx = '+disp.toFixed(2)+' m',(x0_+x1_)/2,Math.max(y0_,y1_,yz)-(disp!==0?18:4));
+
+  document.getElementById('vt-analysis').innerHTML=`
+    <div class="pills" style="margin:0 0 10px">
+      ${[['Percepatan a',(slope).toFixed(3)+' m/s²'],['Perpindahan Δx',disp.toFixed(3)+' m'],['v rata-rata',((v0+v1)/2).toFixed(3)+' m/s'],['Jenis gerak',Math.abs(slope)<0.01?'GLB (a≈0)':slope>0?'GLBB dipercepat':'GLBB diperlambat']].map(([l,v_])=>`<div class="pill"><div class="pl">${l}</div><div class="pv" style="font-size:12px">${v_}</div></div>`).join('')}
+    </div>
+    <div class="fm">a = Δv/Δt = (${v1}−${v0}) / ${T} = ${slope.toFixed(3)} m/s²</div>
+    <div class="fm">Δx = luas trapesium = ½(${v0}+${v1}) × ${T} = ${disp.toFixed(3)} m</div>
+    <div class="co co-${Math.abs(slope)<0.01?'green':'blue'}">
+      ${Math.abs(slope)<0.01
+        ?'Grafik horizontal → GLB. Perpindahan = v × t.'
+        :'Luas daerah berwarna di bawah kurva v–t = perpindahan benda.'}
+    </div>`;
+}
+
+/* ══ REFERENSI examples ══ */
+function buildExamples(){
+  document.getElementById('ref-examples').innerHTML=`
+    <div style="margin-bottom:10px"><b>Contoh 1 – GLB:</b> Mobil bergerak v = 20 m/s selama 5 s. Berapa jaraknya?</div>
+    <div class="fm">x = v · t = 20 × 5 = 100 m</div>
+    <div style="margin:12px 0 6px"><b>Contoh 2 – GLBB:</b> Benda v₀ = 4 m/s, a = 2 m/s², t = 3 s.</div>
+    <div class="fm">v = 4 + 2×3 = 10 m/s</div>
+    <div class="fm">x = 4×3 + ½×2×9 = 12 + 9 = 21 m</div>
+    <div style="margin:12px 0 6px"><b>Contoh 3 – Jatuh Bebas:</b> Benda jatuh dari h = 20 m.</div>
+    <div class="fm">t = √(2h/g) = √(40/9.8) ≈ 2.02 s</div>
+    <div class="fm">v_akhir = g·t = 9.8 × 2.02 ≈ 19.8 m/s</div>`;
+}
+
+function showSec(id,el){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nt').forEach(t=>t.classList.remove('active'));
+  document.getElementById('s-'+id).classList.add('active');
+  el.classList.add('active');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    if(id==='glb') glbUpdate();
+    if(id==='glbb') bbUpdate();
+    if(id==='grafik') vtDraw();
+  }));
+}
+
+window.addEventListener('load',()=>{ glbUpdate(); buildExamples(); });
+window.addEventListener('resize',()=>{
+  const id=document.querySelector('.sec.active')?.id;
+  if(id==='s-glb') glbUpdate();
+  if(id==='s-glbb') bbUpdate();
+  if(id==='s-grafik') vtDraw();
+});
+</script>
+</body>
+</html>
