@@ -24,7 +24,7 @@ export const Route = createFileRoute("/simulasi/$unitId")({
     if (!unit) throw notFound();
     return { unit };
   },
-  component: Workspace,
+  component: WorkspaceRouter,
   notFoundComponent: () => (
     <div className="grid min-h-screen place-items-center bg-background p-6 text-center">
       <div>
@@ -40,23 +40,28 @@ export const Route = createFileRoute("/simulasi/$unitId")({
   ),
 });
 
+const HTML_SIMS: Record<string, string> = {
+  'pengukuran':       '/unit1-pengukuran.html',
+  'gerak-parabola':   '/unit6-gerak-parabola.html',
+  'usaha-energi':     '/unit9-usaha-energi.html',
+  'gelombang':        '/unit11-gelombang.html',
+  'optik':            '/unit12-cahaya-optik.html',
+  'energi-terbarukan':'/unit13-energi-terbarukan.html',
+};
+
+// Hook-free wrapper: redirects instantly with no flash before hooks run
+function WorkspaceRouter() {
+  const { unit } = Route.useLoaderData();
+  const target = HTML_SIMS[unit.id];
+  if (target) {
+    window.location.replace(target);
+    return null;
+  }
+  return <Workspace />;
+}
+
 function Workspace() {
   const { unit } = Route.useLoaderData();
-
-  // Redirect to standalone HTML simulations
-  useEffect(() => {
-    if (unit.id === 'pengukuran') {
-      window.location.href = '/unit1-pengukuran.html';
-    } else if (unit.id === 'gerak-parabola') {
-      window.location.href = '/unit6-gerak-parabola.html';
-    } else if (unit.id === 'energi-terbarukan') {
-      window.location.href = '/unit13-energi-terbarukan.html';
-    } else if (unit.id === 'gelombang') {
-      window.location.href = '/unit11-gelombang.html';
-    } else if (unit.id === 'optik') {
-      window.location.href = '/unit12-cahaya-optik.html';
-    }
-  }, [unit.id]);
 
   const [playing, setPlaying] = useState(false);
   const [friction, setFriction] = useState(true);
