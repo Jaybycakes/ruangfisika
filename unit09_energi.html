@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 9: Hukum Kekekalan Energi Mekanik — SMA Kelas 10</title>
+<style>
+:root {
+  --bg:     #f6f5f2;
+  --bg2:    #ffffff;
+  --bg3:    #edecea;
+  --bg4:    #e4e2de;
+  --text:   #181715;
+  --text2:  #6a6760;
+  --text3:  #999690;
+  --border: rgba(0,0,0,0.08);
+  --bd2:    rgba(0,0,0,0.15);
+  --blue:   #1a56c4;
+  --blue-l: #d8e6fb;
+  --green:  #1a7a45;
+  --green-l:#d8f0e4;
+  --amber:  #9a5800;
+  --amber-l:#fdefd6;
+  --red:    #b01e1e;
+  --red-l:  #fce6e6;
+  --Ek:     #e05828;   /* kinetic  — orange */
+  --Ep:     #1a56c4;   /* potential — blue  */
+  --Ef:     #888480;   /* friction loss — grey */
+  --Em:     #1a7a45;   /* mechanical total — green */
+  --r: 10px; --rs: 6px;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#191917; --bg2:#222220; --bg3:#2c2b28; --bg4:#363530;
+  --text:#e6e3db; --text2:#9a9790; --text3:#666360;
+  --border:rgba(255,255,255,0.07); --bd2:rgba(255,255,255,0.14);
+  --blue:#5588e6; --blue-l:#162240;
+  --green:#44b86a; --green-l:#0e2a1a;
+  --amber:#d49020; --amber-l:#2c1e00;
+  --red:#e05050; --red-l:#2e0e0e;
+  --Ek:#f07040; --Ep:#5588e6; --Ef:#706e6a; --Em:#44b86a;
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+
+header{background:var(--bg2);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50}
+.logo{width:34px;height:34px;background:var(--Em);border-radius:8px;display:grid;place-items:center;color:#fff;font-size:18px;flex-shrink:0}
+header h1{font-size:15px;font-weight:600}
+header p{font-size:12px;color:var(--text2)}
+
+nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 20px;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+.nt{padding:10px 14px;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;border-radius:6px 6px 0 0;border:1px solid transparent;border-bottom:none;white-space:nowrap;background:none;transition:.15s}
+.nt:hover{color:var(--text);background:var(--bg3)}
+.nt.active{color:var(--blue);background:var(--bg2);border-color:var(--border);margin-bottom:-1px}
+
+main{padding:18px 20px;max-width:960px;margin:0 auto}
+.sec{display:none}.sec.active{display:block}
+.sec-title{font-size:17px;font-weight:600;margin-bottom:3px}
+.sec-desc{font-size:13px;color:var(--text2);margin-bottom:16px}
+
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.card-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:600px){.two{grid-template-columns:1fr}}
+
+.fm{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:7px 12px;font-family:'Courier New',monospace;font-size:12px;color:var(--blue);margin:5px 0}
+.cr{display:flex;align-items:center;gap:8px;margin:7px 0}
+.cr label{font-size:12px;color:var(--text2);min-width:160px;flex-shrink:0}
+.cr input[type=range]{flex:1;accent-color:var(--blue);cursor:pointer}
+.cv{font-size:13px;font-weight:600;min-width:60px;text-align:right;font-variant-numeric:tabular-nums}
+.cr input[type=checkbox]{accent-color:var(--Ek);width:16px;height:16px;cursor:pointer}
+
+.pills{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.pill{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 12px;text-align:center;min-width:100px}
+.pill .pl{font-size:10px;color:var(--text3);margin-bottom:2px;text-transform:uppercase;letter-spacing:.04em}
+.pill .pv{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums}
+
+canvas{display:block;border-radius:var(--rs);max-width:100%}
+.cv-bg{background:var(--bg3)}
+
+.co{border-radius:var(--rs);padding:9px 13px;font-size:13px;line-height:1.6;margin:8px 0}
+.co-blue{background:var(--blue-l);color:var(--blue)}
+.co-green{background:var(--green-l);color:var(--green)}
+.co-amber{background:var(--amber-l);color:var(--amber)}
+.co-red{background:var(--red-l);color:var(--red)}
+
+/* Energy bar */
+.ebar-wrap{display:flex;gap:6px;align-items:flex-end;height:120px;margin:14px 0 4px;padding:0 4px}
+.ebar-col{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1}
+.ebar-track{flex:1;width:100%;background:var(--bg3);border-radius:4px;border:1px solid var(--border);position:relative;overflow:hidden;min-height:80px}
+.ebar-fill{position:absolute;bottom:0;left:0;right:0;border-radius:3px 3px 0 0;transition:height .1s}
+.ebar-val{font-size:11px;font-weight:700;font-variant-numeric:tabular-nums;min-width:36px;text-align:center}
+.ebar-lbl{font-size:10px;color:var(--text3);text-align:center;font-weight:500}
+
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;padding:6px 8px;border-bottom:1px solid var(--border);text-align:left;font-weight:600}
+td{padding:7px 8px;border-bottom:1px solid var(--border)}
+tr:last-child td{border-bottom:none}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">⚡</div>
+  <div>
+    <h1>Unit 9: Hukum Kekekalan Energi Mekanik</h1>
+    <p>SMA Kelas 10 · Kurikulum Merdeka</p>
+  </div>
+</header>
+
+<nav>
+  <div class="nt active"  onclick="go('usaha',this)">Usaha &amp; Energi</div>
+  <div class="nt"         onclick="go('rollercoaster',this)">Roller Coaster</div>
+  <div class="nt"         onclick="go('bandul',this)">Bandul</div>
+  <div class="nt"         onclick="go('pegas',this)">Pegas</div>
+  <div class="nt"         onclick="go('gesekan',this)">Gesekan &amp; Energi</div>
+  <div class="nt"         onclick="go('konversi',this)">Konversi Energi</div>
+</nav>
+
+<main>
+
+<!-- ══════════════════════════════════════
+     1. USAHA & ENERGI
+══════════════════════════════════════ -->
+<div class="sec active" id="s-usaha">
+  <div class="sec-title">Usaha &amp; Energi</div>
+  <div class="sec-desc">Usaha adalah perubahan energi. Hukum kekekalan energi: Eₘ = Eₖ + Eₚ = konstan (tanpa gesekan).</div>
+
+  <div class="card">
+    <div class="card-title">Kalkulator Usaha</div>
+    <div class="two">
+      <div>
+        <div class="fm">W = F · Δx · cos θ</div>
+        <div class="cr"><label>Gaya F (N)</label><input type="range" id="uF" min="1" max="200" value="50" oninput="calcUsaha()"><span class="cv" id="uFv">50 N</span></div>
+        <div class="cr"><label>Perpindahan Δx (m)</label><input type="range" id="udx" min="0" max="20" value="5" step="0.5" oninput="calcUsaha()"><span class="cv" id="udxv">5 m</span></div>
+        <div class="cr"><label>Sudut θ (°)</label><input type="range" id="uth" min="0" max="90" value="0" oninput="calcUsaha()"><span class="cv" id="uthv">0°</span></div>
+      </div>
+      <div id="usaha-res"></div>
+    </div>
+    <canvas id="usaha-c" height="110" class="cv-bg" style="margin-top:12px"></canvas>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Energi Kinetik &amp; Potensial</div>
+    <div class="two">
+      <div>
+        <div class="fm">Eₖ = ½mv²</div>
+        <div class="fm">Eₚ = mgh</div>
+        <div class="fm">Eₚₑₗ = ½kx²</div>
+        <div class="cr" style="margin-top:10px"><label>Massa m (kg)</label><input type="range" id="em" min="1" max="50" value="10" oninput="calcE()"><span class="cv" id="emv">10 kg</span></div>
+        <div class="cr"><label>Kecepatan v (m/s)</label><input type="range" id="ev" min="0" max="30" value="10" oninput="calcE()"><span class="cv" id="evv">10 m/s</span></div>
+        <div class="cr"><label>Ketinggian h (m)</label><input type="range" id="eh" min="0" max="50" value="5" oninput="calcE()"><span class="cv" id="ehv">5 m</span></div>
+      </div>
+      <div>
+        <div id="e-bars">
+          <div class="ebar-wrap" id="ebar-wrap"></div>
+          <div id="e-pills" class="pills"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Ringkasan Persamaan</div>
+    <table>
+      <tr><th>Besaran</th><th>Rumus</th><th>Satuan</th></tr>
+      <tr><td>Usaha W</td><td style="font-family:monospace;color:var(--blue)">W = FΔx cosθ</td><td>Joule (J)</td></tr>
+      <tr><td>Energi kinetik Eₖ</td><td style="font-family:monospace;color:var(--blue)">Eₖ = ½mv²</td><td>Joule (J)</td></tr>
+      <tr><td>Energi potensial gravitasi Eₚ</td><td style="font-family:monospace;color:var(--blue)">Eₚ = mgh</td><td>Joule (J)</td></tr>
+      <tr><td>Energi potensial pegas</td><td style="font-family:monospace;color:var(--blue)">Eₚₑₗ = ½kx²</td><td>Joule (J)</td></tr>
+      <tr><td>Energi mekanik total</td><td style="font-family:monospace;color:var(--blue)">Eₘ = Eₖ + Eₚ</td><td>Joule (J)</td></tr>
+      <tr><td>Daya P</td><td style="font-family:monospace;color:var(--blue)">P = W/t = Fv</td><td>Watt (W)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     2. ROLLER COASTER
+══════════════════════════════════════ -->
+<div class="sec" id="s-rollercoaster">
+  <div class="sec-title">Simulator Roller Coaster</div>
+  <div class="sec-desc">Energi mekanik terkekekalan: ketika turun Eₚ → Eₖ, ketika naik Eₖ → Eₚ.</div>
+
+  <div class="card">
+    <div class="card-title">Parameter</div>
+    <div class="two">
+      <div>
+        <div class="cr"><label>Massa m (kg)</label><input type="range" id="rcm" min="10" max="500" value="100" step="10" oninput="updateRC()"><span class="cv" id="rcmv">100 kg</span></div>
+        <div class="cr"><label>Ketinggian awal h₀ (m)</label><input type="range" id="rch0" min="10" max="80" value="40" oninput="updateRC()"><span class="cv" id="rch0v">40 m</span></div>
+        <div class="cr"><label>Kecepatan awal v₀ (m/s)</label><input type="range" id="rcv0" min="0" max="20" value="0" oninput="updateRC()"><span class="cv" id="rcv0v">0 m/s</span></div>
+        <div class="cr">
+          <label>Gesekan aktif</label>
+          <input type="checkbox" id="rc-fric" onchange="updateRC()">
+          <span style="font-size:12px;color:var(--text2)">μ = 0.05</span>
+        </div>
+      </div>
+      <div class="pills" id="rc-pills"></div>
+    </div>
+  </div>
+
+  <div class="card" style="padding:12px">
+    <div class="card-title">Lintasan &amp; Energi Real-time</div>
+    <canvas id="rc-c" height="260" class="cv-bg"></canvas>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;font-size:12px">
+      <span><span style="color:var(--Ek)">■</span> Eₖ kinetik</span>
+      <span><span style="color:var(--Ep)">■</span> Eₚ potensial</span>
+      <span><span style="color:var(--Ef)">■</span> Energi hilang (gesekan)</span>
+      <span style="margin-left:4px;color:var(--text2)">● posisi kereta</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     3. BANDUL
+══════════════════════════════════════ -->
+<div class="sec" id="s-bandul">
+  <div class="sec-title">Bandul — Transformasi Energi</div>
+  <div class="sec-desc">Energi berpindah antara kinetik (di titik terendah) dan potensial (di titik tertinggi) secara terus-menerus.</div>
+
+  <div class="card">
+    <div class="card-title">Parameter Bandul</div>
+    <div class="two">
+      <div>
+        <div class="cr"><label>Panjang tali L (m)</label><input type="range" id="bL" min="0.3" max="3" value="1" step="0.1" oninput="resetBandul()"><span class="cv" id="bLv">1.0 m</span></div>
+        <div class="cr"><label>Massa m (kg)</label><input type="range" id="bm" min="0.1" max="5" value="1" step="0.1" oninput="resetBandul()"><span class="cv" id="bmv">1.0 kg</span></div>
+        <div class="cr"><label>Sudut awal θ₀ (°)</label><input type="range" id="bth" min="5" max="60" value="30" oninput="resetBandul()"><span class="cv" id="bthv">30°</span></div>
+        <div class="cr">
+          <label>Redaman (gesekan udara)</label>
+          <input type="checkbox" id="b-damp" onchange="resetBandul()">
+        </div>
+      </div>
+      <div class="pills" id="b-pills"></div>
+    </div>
+  </div>
+
+  <div class="card" style="padding:12px">
+    <div class="card-title">Animasi &amp; Grafik Energi</div>
+    <div class="two">
+      <canvas id="b-anim" height="220" class="cv-bg"></canvas>
+      <canvas id="b-graph" height="220" class="cv-bg"></canvas>
+    </div>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;font-size:12px">
+      <span><span style="color:var(--Ek)">■</span> Eₖ</span>
+      <span><span style="color:var(--Ep)">■</span> Eₚ</span>
+      <span><span style="color:var(--Em)">■</span> Eₘ total</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     4. PEGAS
+══════════════════════════════════════ -->
+<div class="sec" id="s-pegas">
+  <div class="sec-title">Sistem Pegas — Analisis Energi</div>
+  <div class="sec-desc">Energi kinetik dan energi potensial pegas saling bertransformasi. Total energi mekanik = ½kA².</div>
+
+  <div class="card">
+    <div class="card-title">Parameter Pegas</div>
+    <div class="two">
+      <div>
+        <div class="fm">Eₚₑₗ = ½kx²   |   Eₖ = ½mv²   |   Eₘ = ½kA²</div>
+        <div class="cr" style="margin-top:8px"><label>Konstanta k (N/m)</label><input type="range" id="pk" min="5" max="200" value="40" oninput="resetPegas()"><span class="cv" id="pkv">40 N/m</span></div>
+        <div class="cr"><label>Massa m (kg)</label><input type="range" id="pm" min="0.1" max="5" value="1" step="0.1" oninput="resetPegas()"><span class="cv" id="pmv">1.0 kg</span></div>
+        <div class="cr"><label>Amplitudo A (cm)</label><input type="range" id="pA" min="2" max="25" value="10" oninput="resetPegas()"><span class="cv" id="pAv">10 cm</span></div>
+      </div>
+      <div class="pills" id="p-pills"></div>
+    </div>
+  </div>
+
+  <div class="card" style="padding:12px">
+    <div class="card-title">Animasi &amp; Bar Energi</div>
+    <div class="two">
+      <canvas id="p-anim" height="220" class="cv-bg"></canvas>
+      <div style="display:flex;flex-direction:column;justify-content:center;gap:10px;padding:8px">
+        <div class="card-title" style="margin:0">Energi saat ini</div>
+        <div class="ebar-wrap" id="p-ebar" style="height:160px"></div>
+        <div id="p-vals" style="font-size:12px;color:var(--text2);line-height:2"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Grafik x(t), v(t), E(t)</div>
+    <canvas id="p-graph" height="180" class="cv-bg"></canvas>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     5. GESEKAN
+══════════════════════════════════════ -->
+<div class="sec" id="s-gesekan">
+  <div class="sec-title">Gesekan &amp; Kehilangan Energi</div>
+  <div class="sec-desc">Gaya gesekan adalah gaya non-konservatif. Energi mekanik berkurang: W_gesek = ΔEₘ = Eₘ₂ − Eₘ₁.</div>
+
+  <div class="card">
+    <div class="card-title">Benda Meluncur di Bidang Miring</div>
+    <div class="fm">Wf = −fₖ · d = −μₖmg cosθ · d &nbsp;|&nbsp; Eₘ₂ = Eₘ₁ + Wf</div>
+    <div class="two" style="margin-top:10px">
+      <div>
+        <div class="cr"><label>Massa m (kg)</label><input type="range" id="fm" min="1" max="30" value="5" oninput="updateFric()"><span class="cv" id="fmv">5 kg</span></div>
+        <div class="cr"><label>Sudut bidang θ (°)</label><input type="range" id="fth" min="10" max="70" value="30" oninput="updateFric()"><span class="cv" id="fthv">30°</span></div>
+        <div class="cr"><label>Koef. gesekan μₖ</label><input type="range" id="fmu" min="0" max="0.8" value="0.2" step="0.05" oninput="updateFric()"><span class="cv" id="fmuv">0.20</span></div>
+        <div class="cr"><label>Panjang lintasan d (m)</label><input type="range" id="fd" min="1" max="20" value="8" oninput="updateFric()"><span class="cv" id="fdv">8 m</span></div>
+      </div>
+      <div class="pills" id="f-pills"></div>
+    </div>
+    <canvas id="f-c" height="220" class="cv-bg" style="margin-top:12px"></canvas>
+    <div id="f-info" style="margin-top:10px"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Perbandingan: Tanpa vs Dengan Gesekan</div>
+    <canvas id="f-compare" height="140" class="cv-bg"></canvas>
+    <div id="f-compare-info" style="margin-top:8px"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     6. KONVERSI ENERGI
+══════════════════════════════════════ -->
+<div class="sec" id="s-konversi">
+  <div class="sec-title">Skenario Konversi Energi Nyata</div>
+  <div class="sec-desc">Energi tidak pernah hilang, hanya berubah bentuk. Efisiensi = E_keluaran / E_masukan × 100%.</div>
+
+  <div class="card">
+    <div class="card-title">Pilih Skenario</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px" id="scenario-tabs">
+      <button class="sc-btn active" onclick="setSc(0,this)">🏊 Terjun Bebas</button>
+      <button class="sc-btn" onclick="setSc(1,this)">🎢 Ayunan</button>
+      <button class="sc-btn" onclick="setSc(2,this)">🚗 Pengereman Mobil</button>
+      <button class="sc-btn" onclick="setSc(3,this)">💧 Bendungan PLTA</button>
+    </div>
+    <style>
+      .sc-btn{padding:7px 14px;border-radius:999px;font-size:13px;cursor:pointer;border:1px solid var(--bd2);background:var(--bg3);color:var(--text);transition:.15s}
+      .sc-btn.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+    </style>
+    <canvas id="sc-c" height="220" class="cv-bg"></canvas>
+    <div id="sc-info" style="margin-top:12px"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Efisiensi Energi</div>
+    <div class="fm">η = (E_keluaran / E_masukan) × 100%</div>
+    <div class="cr" style="margin-top:10px"><label>Energi masukan (J)</label><input type="range" id="ein" min="100" max="5000" value="1000" step="100" oninput="calcEff()"><span class="cv" id="einv">1000 J</span></div>
+    <div class="cr"><label>Efisiensi η (%)</label><input type="range" id="eeta" min="10" max="99" value="80" oninput="calcEff()"><span class="cv" id="eetav">80%</span></div>
+    <div id="eff-res" style="margin-top:10px"></div>
+    <canvas id="eff-c" height="60" class="cv-bg" style="margin-top:10px"></canvas>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Konversi Energi di Kehidupan Sehari-hari</div>
+    <table>
+      <tr><th>Perangkat</th><th>Masukan</th><th>Keluaran</th><th>Efisiensi</th></tr>
+      <tr><td>Motor listrik modern</td><td>Listrik</td><td>Mekanik</td><td>85–95%</td></tr>
+      <tr><td>Turbin air (PLTA)</td><td>Potensial air</td><td>Listrik</td><td>90–95%</td></tr>
+      <tr><td>Panel surya (PV)</td><td>Cahaya matahari</td><td>Listrik</td><td>18–25%</td></tr>
+      <tr><td>Mesin bensin</td><td>Kimia (BBM)</td><td>Mekanik</td><td>25–35%</td></tr>
+      <tr><td>Lampu LED</td><td>Listrik</td><td>Cahaya</td><td>80–90%</td></tr>
+      <tr><td>Otot manusia</td><td>Kimia (ATP)</td><td>Mekanik</td><td>25–30%</td></tr>
+    </table>
+  </div>
+</div>
+
+</main>
+
+<script>
+/* ═══════════════════════════════════════════
+   NAV
+═══════════════════════════════════════════ */
+function go(id, el) {
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nt').forEach(t => t.classList.remove('active'));
+  document.getElementById('s-' + id).classList.add('active');
+  el.classList.add('active');
+  cancelAll();
+  requestAnimationFrame(() => requestAnimationFrame(() => initActive()));
+}
+function cancelAll() {
+  [rcRAF, bRAF, pRAF].forEach(r => r && cancelAnimationFrame(r));
+  rcRAF = bRAF = pRAF = null;
+}
+function initActive() {
+  const id = document.querySelector('.sec.active')?.id;
+  if (id === 's-usaha')       { calcUsaha(); calcE(); }
+  if (id === 's-rollercoaster') updateRC();
+  if (id === 's-bandul')      resetBandul();
+  if (id === 's-pegas')       resetPegas();
+  if (id === 's-gesekan')     updateFric();
+  if (id === 's-konversi')    { setSc(currentSc, document.querySelectorAll('.sc-btn')[currentSc]); calcEff(); }
+}
+
+/* ═══════════════════════════════════════════
+   CANVAS HELPERS
+═══════════════════════════════════════════ */
+function gc(id, h) {
+  const cv = document.getElementById(id);
+  const W  = cv.offsetWidth || cv.parentElement?.offsetWidth || 480;
+  const dpr = window.devicePixelRatio || 1;
+  if (cv.width !== Math.round(W*dpr) || cv.height !== Math.round(h*dpr)) {
+    cv.width  = Math.round(W * dpr);
+    cv.height = Math.round(h * dpr);
+  }
+  cv.style.width  = W + 'px';
+  cv.style.height = h + 'px';
+  const ctx = cv.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return { W, H: h, ctx };
+}
+const dark   = () => matchMedia('(prefers-color-scheme:dark)').matches;
+const TC     = () => dark() ? '#c5c2ba' : '#28271f';
+const GC     = () => dark() ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)';
+const CSS    = v  => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const Ek_col = () => CSS('--Ek');
+const Ep_col = () => CSS('--Ep');
+const Em_col = () => CSS('--Em');
+const Ef_col = () => CSS('--Ef');
+const g      = 9.8;
+
+function fmtJ(v) {
+  return Math.abs(v) >= 1000 ? (v/1000).toFixed(2)+' kJ' : v.toFixed(1)+' J';
+}
+
+function pills(id, items) {
+  document.getElementById(id).innerHTML = items.map(([lbl,val,col])=>
+    `<div class="pill"><div class="pl" style="${col?'color:'+col:''}">${lbl}</div>`+
+    `<div class="pv" style="${col?'color:'+col:''}">${val}</div></div>`
+  ).join('');
+}
+
+function drawEbars(containerId, bars, maxVal) {
+  // bars = [{label, value, color}]
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  const max = maxVal || Math.max(...bars.map(b => Math.abs(b.value)), 1);
+  el.innerHTML = bars.map(b => {
+    const pct = Math.min(100, Math.abs(b.value) / max * 100);
+    return `<div class="ebar-col">
+      <div class="ebar-val" style="color:${b.color}">${fmtJ(b.value)}</div>
+      <div class="ebar-track">
+        <div class="ebar-fill" style="height:${pct}%;background:${b.color}"></div>
+      </div>
+      <div class="ebar-lbl">${b.label}</div>
+    </div>`;
+  }).join('');
+}
+
+/* ═══════════════════════════════════════════
+   1. USAHA & ENERGI
+═══════════════════════════════════════════ */
+function calcUsaha() {
+  const F   = +document.getElementById('uF').value;
+  const dx  = +document.getElementById('udx').value;
+  const th  = +document.getElementById('uth').value;
+  document.getElementById('uFv').textContent  = F + ' N';
+  document.getElementById('udxv').textContent = dx + ' m';
+  document.getElementById('uthv').textContent = th + '°';
+  const W = F * dx * Math.cos(th * Math.PI / 180);
+  document.getElementById('usaha-res').innerHTML =
+    `<div class="fm">W = ${F} × ${dx} × cos${th}°</div>
+     <div class="fm" style="color:var(--Em);font-size:14px;font-weight:700">W = ${W.toFixed(1)} J</div>
+     <div class="co ${W>0?'co-green':W<0?'co-red':'co-amber'}" style="margin-top:6px">
+       ${W>0?'Usaha positif: gaya searah perpindahan, energi bertambah':
+         W<0?'Usaha negatif: gaya berlawanan arah, energi berkurang':
+             'Usaha nol: gaya tegak lurus perpindahan'}
+     </div>`;
+
+  const { W:cW, H, ctx } = gc('usaha-c', 110);
+  ctx.clearRect(0, 0, cW, H);
+  const dark_ = dark();
+  const cy = H / 2 + 10;
+  const arrowY = H * 0.35;
+  const thR = th * Math.PI / 180;
+
+  // Ground
+  ctx.fillStyle = dark_ ? '#333' : '#ccc';
+  ctx.fillRect(20, cy + 20, cW - 40, 4);
+
+  // Object box
+  const bx = 40, bw = 44, bh = 34;
+  const progress = Math.min(0.7, dx / 22);
+  const objX = bx + progress * (cW - 140);
+  ctx.fillStyle = dark_ ? '#4a4a46' : '#d0cdc8';
+  ctx.beginPath(); ctx.roundRect(objX, cy - bh, bw, bh, 4); ctx.fill();
+  ctx.fillStyle = dark_ ? '#888' : '#666'; ctx.font = '11px system-ui'; ctx.textAlign = 'center';
+  ctx.fillText('m', objX + bw/2, cy - bh/2 + 4);
+
+  // Force arrow
+  const fScale = Math.min(100, F * 0.7);
+  const fax = objX + bw, fay = cy - bh/2;
+  const fex = fax + fScale * Math.cos(thR), fey = fay - fScale * Math.sin(thR);
+  ctx.strokeStyle = Ek_col(); ctx.lineWidth = 2.5; ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(fax, fay); ctx.lineTo(fex, fey); ctx.stroke();
+  ctx.fillStyle = Ek_col();
+  const a = Math.atan2(fey-fay, fex-fax);
+  ctx.beginPath(); ctx.moveTo(fex,fey); ctx.lineTo(fex-10*Math.cos(a-0.35),fey-10*Math.sin(a-0.35)); ctx.lineTo(fex-10*Math.cos(a+0.35),fey-10*Math.sin(a+0.35)); ctx.closePath(); ctx.fill();
+  ctx.font = '11px system-ui'; ctx.textAlign = 'left';
+  ctx.fillText(`F=${F}N, θ=${th}°`, fex+4, fey);
+
+  // W label
+  ctx.fillStyle = Em_col(); ctx.font = 'bold 13px system-ui'; ctx.textAlign = 'center';
+  ctx.fillText(`W = ${W.toFixed(1)} J`, cW/2, H - 6);
+}
+
+function calcE() {
+  const m  = +document.getElementById('em').value;
+  const v  = +document.getElementById('ev').value;
+  const h  = +document.getElementById('eh').value;
+  document.getElementById('emv').textContent = m + ' kg';
+  document.getElementById('evv').textContent = v + ' m/s';
+  document.getElementById('ehv').textContent = h + ' m';
+  const Ek = 0.5 * m * v * v;
+  const Ep = m * g * h;
+  const Em = Ek + Ep;
+  drawEbars('ebar-wrap', [
+    { label:'Eₖ (kinetik)', value: Ek, color: Ek_col() },
+    { label:'Eₚ (potensial)', value: Ep, color: Ep_col() },
+    { label:'Eₘ (total)', value: Em, color: Em_col() },
+  ], Em);
+  pills('e-pills', [
+    ['Eₖ = ½mv²', fmtJ(Ek), Ek_col()],
+    ['Eₚ = mgh',  fmtJ(Ep), Ep_col()],
+    ['Eₘ total',  fmtJ(Em), Em_col()],
+  ]);
+}
+
+/* ═══════════════════════════════════════════
+   2. ROLLER COASTER
+═══════════════════════════════════════════ */
+let rcRAF = null, rcT = 0;
+
+// Track: x 0..1 → height (normalised 0..1)
+const TRACK = [
+  [0.00, 1.00], [0.08, 0.90], [0.18, 0.45], [0.28, 0.60],
+  [0.40, 0.20], [0.50, 0.52], [0.62, 0.10], [0.75, 0.38],
+  [0.88, 0.05], [1.00, 0.08],
+];
+
+function trackH(t) { // t 0..1 → normalised height via linear interpolation
+  for (let i = 0; i < TRACK.length - 1; i++) {
+    const [x0,y0] = TRACK[i], [x1,y1] = TRACK[i+1];
+    if (t >= x0 && t <= x1) {
+      const frac = (t - x0) / (x1 - x0);
+      return y0 + frac * (y1 - y0);
+    }
+  }
+  return TRACK[TRACK.length-1][1];
+}
+
+function updateRC() {
+  const m    = +document.getElementById('rcm').value;
+  const h0   = +document.getElementById('rch0').value;
+  const v0   = +document.getElementById('rcv0').value;
+  const fric = document.getElementById('rc-fric').checked;
+  document.getElementById('rcmv').textContent  = m + ' kg';
+  document.getElementById('rch0v').textContent = h0 + ' m';
+  document.getElementById('rcv0v').textContent = v0 + ' m/s';
+  rcT = 0;
+  if (rcRAF) cancelAnimationFrame(rcRAF);
+
+  const Em0  = 0.5 * m * v0 * v0 + m * g * h0;
+  const hNorm0 = trackH(0);
+
+  function draw() {
+    rcT = (rcT + 0.004) % 1;
+    const { W, H, ctx } = gc('rc-c', 260);
+    ctx.clearRect(0, 0, W, H);
+    const dark_ = dark();
+
+    const pad = 30, trackH_px = H * 0.62;
+    const toX = t  => pad + t * (W - pad*2);
+    const toY = hn => H * 0.78 - hn * trackH_px;
+
+    // Sky gradient
+    const sky = ctx.createLinearGradient(0,0,0,H*0.78);
+    sky.addColorStop(0, dark_?'#1a1e2c':'#d4e8f8');
+    sky.addColorStop(1, dark_?'#22262e':'#eef4fb');
+    ctx.fillStyle = sky; ctx.fillRect(0, 0, W, H*0.78);
+
+    // Ground
+    ctx.fillStyle = dark_?'#2a2e20':'#b8d4a8';
+    ctx.fillRect(0, H*0.78, W, H*0.22);
+
+    // Draw track surface fill
+    ctx.beginPath();
+    ctx.moveTo(toX(0), H*0.78);
+    TRACK.forEach(([x,y]) => ctx.lineTo(toX(x), toY(y)));
+    ctx.lineTo(toX(1), H*0.78);
+    ctx.closePath();
+    ctx.fillStyle = dark_?'#3a3c30':'#c8d4a0';
+    ctx.fill();
+
+    // Track line
+    ctx.strokeStyle = dark_?'#666':'#888'; ctx.lineWidth = 2; ctx.setLineDash([]);
+    ctx.beginPath();
+    TRACK.forEach(([x,y],i) => i===0 ? ctx.moveTo(toX(x),toY(y)) : ctx.lineTo(toX(x),toY(y)));
+    ctx.stroke();
+
+    // Current position
+    const hn = trackH(rcT);
+    const h  = hn / hNorm0 * h0;         // actual height in metres
+    const Epnow = m * g * h;
+
+    let Eknow;
+    if (!fric) {
+      Eknow = Math.max(0, Em0 - Epnow);
+    } else {
+      const dist = rcT;                   // fraction of track travelled (proxy)
+      const Elost = Em0 * 0.18 * dist;   // simplified friction loss
+      Eknow = Math.max(0, Em0 - Epnow - Elost);
+    }
+    const Elostnow = Em0 - Epnow - Eknow;
+    const vnow = Math.sqrt(Math.max(0, 2 * Eknow / m));
+
+    // Cart
+    const cx = toX(rcT), cy2 = toY(hn) - 8;
+    ctx.fillStyle = dark_?'#e8a030':'#d4780a';
+    ctx.beginPath(); ctx.roundRect(cx-14, cy2-14, 28, 14, 3); ctx.fill();
+    // Wheels
+    [[cx-9, cy2+1],[cx+9, cy2+1]].forEach(([wx,wy]) => {
+      ctx.fillStyle = dark_?'#333':'#555';
+      ctx.beginPath(); ctx.arc(wx, wy, 4, 0, Math.PI*2); ctx.fill();
+    });
+
+    // Height line
+    ctx.strokeStyle = Ep_col(); ctx.lineWidth = 1; ctx.setLineDash([4,3]);
+    ctx.beginPath(); ctx.moveTo(cx, cy2-14); ctx.lineTo(cx, H*0.78); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = Ep_col(); ctx.font = '11px system-ui'; ctx.textAlign = 'center';
+    ctx.fillText('h='+h.toFixed(1)+'m', cx, cy2-18);
+
+    // Energy bar strip at bottom
+    const barY = H*0.82, barH2 = H*0.12, barW = W - pad*2;
+    const ekW  = barW * Eknow  / Em0;
+    const epW  = barW * Epnow  / Em0;
+    const efW  = barW * Math.max(0, Elostnow) / Em0;
+
+    ctx.fillStyle = Ek_col(); ctx.fillRect(pad, barY, Math.min(ekW, barW), barH2);
+    ctx.fillStyle = Ep_col(); ctx.fillRect(pad + ekW, barY, Math.min(epW, barW - ekW), barH2);
+    if (fric && efW > 0) {
+      ctx.fillStyle = Ef_col(); ctx.fillRect(pad + ekW + epW, barY, Math.min(efW, barW - ekW - epW), barH2);
+    }
+    ctx.strokeStyle = dark_?'#444':'#bbb'; ctx.lineWidth = 1;
+    ctx.strokeRect(pad, barY, barW, barH2);
+
+    ctx.fillStyle = TC(); ctx.font = '10px system-ui'; ctx.textAlign = 'left';
+    ctx.fillText('Eₖ', pad+4, barY + barH2/2 + 4);
+    ctx.textAlign = 'right';
+    ctx.fillText(`v=${vnow.toFixed(1)}m/s`, W-pad-2, barY-3);
+
+    rcRAF = requestAnimationFrame(draw);
+  }
+  draw();
+
+  pills('rc-pills', [
+    ['Eₘ awal', fmtJ(Em0), Em_col()],
+    ['v₀', v0+' m/s', null],
+    ['h₀', h0+' m', null],
+    ['Gesekan', document.getElementById('rc-fric').checked?'Aktif':'Tidak ada', null],
+  ]);
+}
+
+/* ═══════════════════════════════════════════
+   3. BANDUL
+═══════════════════════════════════════════ */
+let bRAF = null, bT = 0;
+const bHistory = [];
+
+function resetBandul() {
+  bT = 0; bHistory.length = 0;
+  if (bRAF) cancelAnimationFrame(bRAF);
+
+  const L    = +document.getElementById('bL').value;
+  const m    = +document.getElementById('bm').value;
+  const th0  = +document.getElementById('bth').value;
+  const damp = document.getElementById('b-damp').checked;
+  document.getElementById('bLv').textContent  = L.toFixed(1) + ' m';
+  document.getElementById('bmv').textContent  = m.toFixed(1) + ' kg';
+  document.getElementById('bthv').textContent = th0 + '°';
+
+  const th0r = th0 * Math.PI / 180;
+  const h0   = L * (1 - Math.cos(th0r));
+  const Em0  = m * g * h0;
+  const w0   = Math.sqrt(g / L);
+  const T    = 2 * Math.PI / w0;
+  const damping = damp ? 0.3 : 0;
+
+  pills('b-pills', [
+    ['Eₘ total', fmtJ(Em0), Em_col()],
+    ['Periode T', T.toFixed(2)+' s', null],
+    ['h₀ (max)', h0.toFixed(3)+' m', null],
+    ['ω₀', w0.toFixed(2)+' rad/s', null],
+  ]);
+
+  function draw() {
+    bT += 0.025;
+    const decay = Math.exp(-damping * bT / T);
+    const theta = th0r * decay * Math.cos(w0 * bT);
+    const omega = -th0r * decay * (w0 * Math.sin(w0*bT) + damping/T * Math.cos(w0*bT));
+    const h     = L * (1 - Math.cos(theta));
+    const Ep    = m * g * h;
+    const v     = L * Math.abs(omega);
+    const Ek    = 0.5 * m * v * v;
+    const Em    = Ep + Ek;
+
+    bHistory.push({ Ek, Ep, Em });
+    if (bHistory.length > 260) bHistory.shift();
+
+    // ── Animation canvas ──
+    const { W: aW, H: aH, ctx: ac } = gc('b-anim', 220);
+    ac.clearRect(0, 0, aW, aH);
+    const dark_ = dark();
+    const pivX = aW/2, pivY = 28;
+    const scaleL = Math.min((aH - 50) / (L + 0.1), 70);
+    const bx = pivX + scaleL * L * Math.sin(theta);
+    const by = pivY + scaleL * L * Math.cos(theta);
+
+    // Pivot
+    ac.fillStyle = dark_?'#555':'#aaa';
+    ac.beginPath(); ac.arc(pivX, pivY, 6, 0, Math.PI*2); ac.fill();
+    // String
+    ac.strokeStyle = dark_?'#888':'#555'; ac.lineWidth = 1.5; ac.setLineDash([]);
+    ac.beginPath(); ac.moveTo(pivX, pivY); ac.lineTo(bx, by); ac.stroke();
+    // Bob — coloured by Ek/Em ratio
+    const ekRatio = Em0 > 0 ? Ek / Em0 : 0;
+    const r = 14;
+    const grad = ac.createRadialGradient(bx-r*0.3, by-r*0.3, 1, bx, by, r);
+    grad.addColorStop(0, dark_?'#f0a060':'#e86020');
+    grad.addColorStop(1, dark_?'#b04010':'#802010');
+    ac.fillStyle = grad;
+    ac.beginPath(); ac.arc(bx, by, r, 0, Math.PI*2); ac.fill();
+    // Velocity arrow
+    const vScale = Math.min(40, v * 8);
+    if (vScale > 2) {
+      const vDir = omega > 0 ? 1 : -1;
+      ac.strokeStyle = Ek_col(); ac.lineWidth = 2;
+      ac.beginPath(); ac.moveTo(bx, by); ac.lineTo(bx + vDir * vScale, by); ac.stroke();
+      ac.fillStyle = Ek_col();
+      const ad = vDir > 0 ? 0 : Math.PI;
+      ac.beginPath(); ac.moveTo(bx+vDir*vScale, by); ac.lineTo(bx+vDir*vScale-8*Math.cos(ad-0.4), by-8*Math.sin(ad-0.4)); ac.lineTo(bx+vDir*vScale-8*Math.cos(ad+0.4), by-8*Math.sin(ad+0.4)); ac.closePath(); ac.fill();
+    }
+    // Height indicator
+    const baseY = pivY + scaleL * L;
+    ac.strokeStyle = Ep_col(); ac.lineWidth = 1; ac.setLineDash([3,3]);
+    ac.beginPath(); ac.moveTo(bx, by); ac.lineTo(bx, baseY); ac.stroke();
+    ac.setLineDash([]);
+    ac.fillStyle = Ep_col(); ac.font = '10px system-ui'; ac.textAlign = 'left';
+    ac.fillText('h='+h.toFixed(3)+'m', bx+6, (by+baseY)/2+4);
+    // Energy labels
+    ac.font = '11px system-ui'; ac.textAlign = 'left';
+    ac.fillStyle = Ek_col(); ac.fillText('Eₖ='+fmtJ(Ek), 6, aH-24);
+    ac.fillStyle = Ep_col(); ac.fillText('Eₚ='+fmtJ(Ep), 6, aH-12);
+    ac.fillStyle = Em_col(); ac.textAlign = 'right'; ac.fillText('Eₘ='+fmtJ(Em), aW-4, aH-12);
+
+    // ── Graph canvas ──
+    const { W: gW, H: gH, ctx: gc2 } = gc('b-graph', 220);
+    gc2.clearRect(0, 0, gW, gH);
+    const maxE = Em0 || 1;
+    const n = bHistory.length;
+    gc2.strokeStyle = GC(); gc2.lineWidth = 0.5;
+    for (let i=0;i<=4;i++){const y=i/4*gH; gc2.beginPath();gc2.moveTo(0,y);gc2.lineTo(gW,y);gc2.stroke();}
+
+    const drawLine = (key, col) => {
+      gc2.strokeStyle = col; gc2.lineWidth = 2; gc2.setLineDash([]);
+      gc2.beginPath();
+      bHistory.forEach((d,i) => {
+        const x = i / 259 * gW;
+        const y = gH - (d[key] / maxE) * (gH - 4) - 2;
+        i===0 ? gc2.moveTo(x,y) : gc2.lineTo(x,y);
+      });
+      gc2.stroke();
+    };
+    drawLine('Ep', Ep_col());
+    drawLine('Ek', Ek_col());
+    drawLine('Em', Em_col());
+
+    gc2.font = '10px system-ui'; gc2.fillStyle = TC(); gc2.textAlign = 'left';
+    gc2.fillText('Energi vs Waktu', 4, 13);
+    gc2.textAlign = 'right';
+    gc2.fillText(damp?'(teredam)':'(ideal)', gW-4, 13);
+
+    bRAF = requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+/* ═══════════════════════════════════════════
+   4. PEGAS
+═══════════════════════════════════════════ */
+let pRAF = null, pT = 0;
+const pHistory = [];
+
+function resetPegas() {
+  pT = 0; pHistory.length = 0;
+  if (pRAF) cancelAnimationFrame(pRAF);
+
+  const k  = +document.getElementById('pk').value;
+  const m  = +document.getElementById('pm').value;
+  const A  = +document.getElementById('pA').value / 100;   // cm → m
+  document.getElementById('pkv').textContent = k + ' N/m';
+  document.getElementById('pmv').textContent = m.toFixed(1) + ' kg';
+  document.getElementById('pAv').textContent = document.getElementById('pA').value + ' cm';
+
+  const w0 = Math.sqrt(k / m);
+  const T  = 2 * Math.PI / w0;
+  const Em = 0.5 * k * A * A;
+
+  pills('p-pills', [
+    ['Eₘ = ½kA²', fmtJ(Em), Em_col()],
+    ['ω = √(k/m)', w0.toFixed(2)+' rad/s', null],
+    ['Periode T', T.toFixed(3)+' s', null],
+    ['v_maks', (w0*A).toFixed(2)+' m/s', Ek_col()],
+  ]);
+
+  const histLen = 300;
+
+  function draw() {
+    pT += 0.018;
+    const x  = A * Math.cos(w0 * pT);             // displacement (m)
+    const v  = -A * w0 * Math.sin(w0 * pT);       // velocity (m/s)
+    const Ep = 0.5 * k * x * x;
+    const Ek = 0.5 * m * v * v;
+
+    pHistory.push({ x, v, Ek, Ep });
+    if (pHistory.length > histLen) pHistory.shift();
+
+    // ── Spring animation ──
+    const { W: aW, H: aH, ctx: ac } = gc('p-anim', 220);
+    ac.clearRect(0, 0, aW, aH);
+    const dark_ = dark();
+    const wallX = 20, ceilY = aH * 0.18, massH = 36;
+    const restY = aH * 0.62;
+    const dispPx = x / A * (aH * 0.28);
+    const massY  = restY + dispPx;
+    const massW  = 44;
+    const massCX = aW / 2;
+
+    // Wall
+    ac.fillStyle = dark_?'#3a3836':'#b0ada8';
+    ac.fillRect(0, ceilY - 6, aW, 6);
+    for (let xi=0; xi<aW; xi+=12) { ac.strokeStyle = dark_?'#2a2826':'#9a9890'; ac.lineWidth=1; ac.beginPath(); ac.moveTo(xi,ceilY-6); ac.lineTo(xi-8,ceilY-16); ac.stroke(); }
+
+    // Spring coil
+    const springTop = ceilY, springBot = massY - massH/2;
+    const nCoils = 10, coilW = 20;
+    ac.strokeStyle = dark_?'#888':'#777'; ac.lineWidth = 1.8; ac.setLineDash([]);
+    ac.beginPath(); ac.moveTo(massCX, springTop);
+    for (let i=0; i<=nCoils; i++) {
+      const py = springTop + i / nCoils * (springBot - springTop);
+      const px = massCX + (i%2===0?coilW:-coilW) * (i/nCoils < 0.05 || i/nCoils > 0.95 ? 0 : 1);
+      i===0 ? ac.moveTo(massCX, py) : ac.lineTo(px, py);
+    }
+    ac.lineTo(massCX, springBot); ac.stroke();
+
+    // Mass block
+    ac.fillStyle = dark_?'#d4600a':'#c04808';
+    ac.beginPath(); ac.roundRect(massCX - massW/2, massY - massH, massW, massH, 4); ac.fill();
+    ac.fillStyle='#fff'; ac.font='11px system-ui'; ac.textAlign='center';
+    ac.fillText('m='+m+'kg', massCX, massY - massH/2 + 4);
+
+    // Equilibrium line
+    ac.strokeStyle = dark_?'#444':'#ddd'; ac.lineWidth=1; ac.setLineDash([4,3]);
+    ac.beginPath(); ac.moveTo(massCX-40,restY-massH); ac.lineTo(massCX+40,restY-massH); ac.stroke();
+    ac.setLineDash([]);
+    ac.fillStyle=dark_?'#555':'#aaa'; ac.font='10px system-ui'; ac.textAlign='left';
+    ac.fillText('keseimbangan', massCX+24, restY-massH+4);
+
+    // x displacement arrow
+    if (Math.abs(x) > 0.001) {
+      const arrX = massCX + massW/2 + 8;
+      ac.strokeStyle = Ep_col(); ac.lineWidth = 1.5; ac.setLineDash([]);
+      ac.beginPath(); ac.moveTo(arrX, restY-massH); ac.lineTo(arrX, massY-massH); ac.stroke();
+      ac.fillStyle = Ep_col(); ac.font='10px system-ui'; ac.textAlign='left';
+      ac.fillText('x='+( x*100).toFixed(1)+'cm', arrX+3, (restY+massY)/2-massH+4);
+    }
+
+    // Info text
+    ac.font='11px system-ui'; ac.textAlign='left';
+    ac.fillStyle=Ek_col(); ac.fillText('Eₖ='+fmtJ(Ek), 4, aH-24);
+    ac.fillStyle=Ep_col(); ac.fillText('Eₚ='+fmtJ(Ep), 4, aH-12);
+    ac.fillStyle=Em_col(); ac.textAlign='right'; ac.fillText('Eₘ='+fmtJ(Em), aW-4, aH-12);
+
+    // ── Energy bar chart ──
+    drawEbars('p-ebar', [
+      { label:'Eₖ', value: Ek, color: Ek_col() },
+      { label:'Eₚ', value: Ep, color: Ep_col() },
+      { label:'Eₘ', value: Em, color: Em_col() },
+    ], Em);
+    document.getElementById('p-vals').innerHTML =
+      `x = ${(x*100).toFixed(1)} cm<br>v = ${v.toFixed(3)} m/s<br>Eₖ = ${fmtJ(Ek)}<br>Eₚ = ${fmtJ(Ep)}`;
+
+    // ── History graph ──
+    const { W: gW, H: gH, ctx: gctx } = gc('p-graph', 180);
+    gctx.clearRect(0, 0, gW, gH);
+    const thirdH = gH / 3;
+
+    // Grid
+    gctx.strokeStyle = GC(); gctx.lineWidth = 0.5;
+    [0,1,2,3].forEach(i => { gctx.beginPath(); gctx.moveTo(0,i*thirdH); gctx.lineTo(gW,i*thirdH); gctx.stroke(); });
+
+    // x(t)
+    gctx.strokeStyle = Ep_col(); gctx.lineWidth = 1.8; gctx.setLineDash([]);
+    gctx.beginPath();
+    pHistory.forEach((d,i) => {
+      const px = i/(histLen-1)*gW, py = thirdH*0.5 - (d.x/A)*thirdH*0.44;
+      i===0 ? gctx.moveTo(px,py) : gctx.lineTo(px,py);
+    }); gctx.stroke();
+
+    // v(t)
+    const vMax = w0 * A;
+    gctx.strokeStyle = Ek_col(); gctx.lineWidth = 1.8;
+    gctx.beginPath();
+    pHistory.forEach((d,i) => {
+      const px = i/(histLen-1)*gW, py = thirdH*1.5 - (d.v/vMax)*thirdH*0.44;
+      i===0 ? gctx.moveTo(px,py) : gctx.lineTo(px,py);
+    }); gctx.stroke();
+
+    // E(t) — Ek, Ep, Em
+    [[Em_col(),'Em'],[Ek_col(),'Ek'],[Ep_col(),'Ep']].forEach(([col, key]) => {
+      gctx.strokeStyle = col; gctx.lineWidth = key==='Em'?2:1.5;
+      gctx.beginPath();
+      pHistory.forEach((d,i) => {
+        const px = i/(histLen-1)*gW, py = gH-4 - (d[key]/Em)*thirdH*0.85;
+        i===0 ? gctx.moveTo(px,py) : gctx.lineTo(px,py);
+      }); gctx.stroke();
+    });
+
+    // Labels
+    gctx.font='10px system-ui'; gctx.textAlign='left';
+    gctx.fillStyle=Ep_col(); gctx.fillText('x(t)', 3, 11);
+    gctx.fillStyle=Ek_col(); gctx.fillText('v(t)', 3, thirdH+11);
+    gctx.fillStyle=Em_col(); gctx.fillText('E(t)', 3, thirdH*2+11);
+
+    pRAF = requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+/* ═══════════════════════════════════════════
+   5. GESEKAN
+═══════════════════════════════════════════ */
+function updateFric() {
+  const m   = +document.getElementById('fm').value;
+  const th  = +document.getElementById('fth').value;
+  const mu  = +document.getElementById('fmu').value;
+  const d   = +document.getElementById('fd').value;
+  document.getElementById('fmv').textContent  = m + ' kg';
+  document.getElementById('fthv').textContent = th + '°';
+  document.getElementById('fmuv').textContent = mu.toFixed(2);
+  document.getElementById('fdv').textContent  = d + ' m';
+
+  const thR  = th * Math.PI / 180;
+  const N    = m * g * Math.cos(thR);
+  const fk   = mu * N;
+  const Wf   = -fk * d;                        // work by friction (negative)
+  const h    = d * Math.sin(thR);
+  const Ep0  = m * g * h;                      // starts at top
+  const Em0  = Ep0;                            // starts from rest at top
+  const Em1  = Em0 + Wf;                       // energy at bottom
+  const Ek1  = Math.max(0, Em1);              // all remaining = kinetic at bottom
+  const v1   = Math.sqrt(2 * Ek1 / m);
+
+  pills('f-pills', [
+    ['Eₚ awal', fmtJ(Ep0), Ep_col()],
+    ['W gesekan', fmtJ(Wf), Ef_col()],
+    ['Eₖ akhir', fmtJ(Ek1), Ek_col()],
+    ['v akhir', v1.toFixed(2)+' m/s', Ek_col()],
+  ]);
+
+  document.getElementById('f-info').innerHTML =
+    `<div class="fm">N = mg cosθ = ${m}×9.8×cos${th}° = ${N.toFixed(1)} N</div>
+     <div class="fm">fₖ = μₖN = ${mu}×${N.toFixed(1)} = ${fk.toFixed(1)} N</div>
+     <div class="fm">W_gesek = −fₖ×d = −${fk.toFixed(1)}×${d} = ${Wf.toFixed(1)} J</div>
+     <div class="fm">Eₖ akhir = Eₘ₀ + W_gesek = ${Em0.toFixed(1)} + (${Wf.toFixed(1)}) = ${Ek1.toFixed(1)} J</div>
+     <div class="co ${mu===0?'co-green':'co-amber'}" style="margin-top:6px">
+       ${mu===0?'Tanpa gesekan: semua energi potensial → kinetik (100%)':
+         `${((1-Ek1/Ep0)*100).toFixed(0)}% energi hilang akibat gesekan → panas`}
+     </div>
+     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
+       <div class="pill"><div class="pl">Eₚ awal</div><div class="pv" style="color:var(--Ep)">${fmtJ(Ep0)}</div></div>
+       <div class="pill"><div class="pl">W gesekan</div><div class="pv" style="color:var(--Ef)">${fmtJ(Wf)}</div></div>
+       <div class="pill"><div class="pl">Eₖ akhir</div><div class="pv" style="color:var(--Ek)">${fmtJ(Ek1)}</div></div>
+       <div class="pill"><div class="pl">v akhir</div><div class="pv" style="color:var(--Ek)">${v1.toFixed(2)} m/s</div></div>
+     </div>`;
+
+  // Incline diagram
+  const { W, H, ctx } = gc('f-c', 280);
+  ctx.clearRect(0, 0, W, H);
+  const dark_ = dark();
+
+  // Reserve bottom 52px for energy labels — ramp lives above that
+  const labelZoneY = H - 52;
+
+  // Ramp geometry (top ~12%, bottom ~labelZoneY - small margin)
+  const rx = W*0.08,  ry = labelZoneY - 10;
+  const tx = W*0.82,  ty = H*0.10;
+  ctx.fillStyle = dark_?'#3a3634':'#c4bfb8';
+  ctx.beginPath(); ctx.moveTo(rx,ry); ctx.lineTo(tx,ty); ctx.lineTo(tx,ry); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = dark_?'#666':'#888'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(rx,ry); ctx.lineTo(tx,ty); ctx.stroke();
+
+  // Angle arc
+  ctx.strokeStyle = TC(); ctx.lineWidth=1;
+  ctx.beginPath(); ctx.arc(tx,ry,30,-Math.PI/2,-(Math.PI/2+thR),true); ctx.stroke();
+  ctx.fillStyle=TC(); ctx.font='12px system-ui'; ctx.textAlign='center';
+  ctx.fillText(th+'°', tx-22, ry-12);
+
+  // Block at top (start)
+  const bw=28, bh=22;
+  const startX=tx-40, startY=ty+2;
+  ctx.fillStyle=dark_?'#5588e6':'#1a56c4';
+  ctx.beginPath(); ctx.roundRect(startX, startY, bw, bh, 3); ctx.fill();
+  ctx.fillStyle='#fff'; ctx.font='9px system-ui'; ctx.textAlign='center';
+  ctx.fillText('START', startX+bw/2, startY+bh/2+3);
+
+  // Block at bottom (end)
+  const endX=rx+20, endY=ry-bh-2;
+  ctx.fillStyle=dark_?'#e05050':'#b01e1e';
+  ctx.beginPath(); ctx.roundRect(endX, endY, bw, bh, 3); ctx.fill();
+  ctx.fillStyle='#fff'; ctx.textAlign='center';
+  ctx.fillText('END', endX+bw/2, endY+bh/2+3);
+
+  // Friction arrow along ramp
+  const midX=(startX+endX)/2+14, midY=(startY+endY)/2+11;
+  ctx.strokeStyle=Ef_col(); ctx.lineWidth=2; ctx.setLineDash([]);
+  const rAngle=Math.atan2(ty-ry,tx-rx);
+  ctx.beginPath(); ctx.moveTo(midX,midY); ctx.lineTo(midX+20*Math.cos(rAngle+Math.PI), midY+20*Math.sin(rAngle+Math.PI)); ctx.stroke();
+  ctx.fillStyle=Ef_col(); ctx.font='10px system-ui'; ctx.textAlign='center';
+  ctx.fillText('fₖ='+fk.toFixed(1)+'N', midX, midY-8);
+
+  // Height arrow (right side)
+  ctx.strokeStyle=Ep_col(); ctx.lineWidth=1; ctx.setLineDash([3,3]);
+  ctx.beginPath(); ctx.moveTo(tx+16,ty); ctx.lineTo(tx+16,ry); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle=Ep_col(); ctx.font='11px system-ui'; ctx.textAlign='left';
+  ctx.fillText('h='+h.toFixed(1)+'m', tx+20, (ty+ry)/2+4);
+
+  // ── Energy label strip (dedicated clear zone at bottom) ──
+  const sepY = labelZoneY + 4;
+  ctx.strokeStyle = dark_?'rgba(255,255,255,0.08)':'rgba(0,0,0,0.08)'; ctx.lineWidth=1; ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(8, sepY); ctx.lineTo(W-8, sepY); ctx.stroke();
+
+  // 2×2 grid: left col at x=10, right col at W/2+4
+  // Row 1: Eₚ₀  |  W_gesek
+  // Row 2: Eₖ akhir  |  v akhir
+  const col1 = 10, col2 = W / 2 + 4;
+  const row1 = sepY + 18, row2 = sepY + 36;
+  ctx.font = 'bold 12px system-ui';
+
+  ctx.fillStyle = Ep_col(); ctx.textAlign = 'left';
+  ctx.fillText('Eₚ₀ = ' + fmtJ(Ep0), col1, row1);
+
+  ctx.fillStyle = Ef_col();
+  ctx.fillText('W_gesek = ' + fmtJ(Wf), col2, row1);
+
+  ctx.fillStyle = Ek_col();
+  ctx.fillText('Eₖ akhir = ' + fmtJ(Ek1), col1, row2);
+
+  ctx.fillStyle = Ek_col();
+  ctx.fillText('v akhir = ' + v1.toFixed(2) + ' m/s', col2, row2);
+
+  // Comparison bar
+  const { W: cW, H: cH, ctx: cc } = gc('f-compare', 140);
+  cc.clearRect(0, 0, cW, cH);
+  const barsY = 20, barsH2 = cH - 50, barWide = (cW - 80) / 3;
+
+  const cases = [
+    { label:'Tanpa gesek (μ=0)', Ek: Ep0, color: Em_col() },
+    { label:`μ=${mu.toFixed(2)}`, Ek: Ek1, color: Ek_col() },
+    { label:'Hilang (panas)', Ek: Ep0-Ek1, color: Ef_col() },
+  ];
+  cases.forEach((c,i) => {
+    const bx2 = 30 + i*(barWide+10);
+    const bh2 = (c.Ek/Ep0)*barsH2;
+    cc.fillStyle = c.color;
+    cc.beginPath(); cc.roundRect(bx2, barsY+barsH2-bh2, barWide, bh2, 3); cc.fill();
+    cc.fillStyle = TC(); cc.font='10px system-ui'; cc.textAlign='center';
+    cc.fillText(c.label, bx2+barWide/2, cH-22);
+    cc.fillText(fmtJ(c.Ek), bx2+barWide/2, barsY+barsH2-bh2-4);
+  });
+  document.getElementById('f-compare-info').innerHTML =
+    `<div class="co co-amber">Tanpa gesekan: v = ${Math.sqrt(2*Ep0/m).toFixed(2)} m/s &nbsp;|&nbsp; Dengan gesekan μ=${mu}: v = ${v1.toFixed(2)} m/s &nbsp;|&nbsp; Selisih = ${(Math.sqrt(2*Ep0/m)-v1).toFixed(2)} m/s</div>`;
+}
+
+/* ═══════════════════════════════════════════
+   6. KONVERSI ENERGI
+═══════════════════════════════════════════ */
+let currentSc = 0, scRAF2 = null, scT2 = 0;
+
+const scenarios = [
+  {
+    name:'Terjun Bebas',
+    desc:'Seorang atlet bermassa 60 kg meloncat dari ketinggian 10 m. Seluruh Eₚ → Eₖ (tanpa hambatan udara).',
+    draw(ctx, W, H, t) {
+      const dark_=dark();
+      // Sky
+      ctx.fillStyle=dark_?'#1a1e2c':'#d4e8f8'; ctx.fillRect(0,0,W,H*0.88);
+      // Ground
+      ctx.fillStyle=dark_?'#2a2e20':'#b8d4a8'; ctx.fillRect(0,H*0.88,W,H*0.12);
+      const h0=10, phase=(t*0.4)%1;
+      const h=Math.max(0, h0*(1-phase*phase));
+      const y=H*0.82 - h/h0*H*0.72;
+      const m=60, Ep=m*g*h, Ek=m*g*(h0-h), Em=m*g*h0;
+      // Figure
+      ctx.fillStyle=dark_?'#e8a030':'#c07010';
+      ctx.beginPath(); ctx.arc(W*0.45, y-18, 10, 0, Math.PI*2); ctx.fill();
+      ctx.fillRect(W*0.45-5, y-8, 10, 20);
+      // Height line
+      ctx.strokeStyle=Ep_col(); ctx.lineWidth=1; ctx.setLineDash([3,3]);
+      ctx.beginPath(); ctx.moveTo(W*0.6, y); ctx.lineTo(W*0.6, H*0.82); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle=Ep_col(); ctx.font='11px system-ui'; ctx.textAlign='left';
+      ctx.fillText('h='+h.toFixed(1)+'m', W*0.61, (y+H*0.82)/2+4);
+      // Energy bar at right
+      const bx=W*0.75, bW=W*0.2, bH=H*0.6, bY=H*0.15;
+      ctx.fillStyle=dark_?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.04)';
+      ctx.fillRect(bx,bY,bW,bH);
+      const epH=bH*(Ep/Em), ekH=bH*(Ek/Em);
+      ctx.fillStyle=Ep_col(); ctx.fillRect(bx,bY,bW,epH);
+      ctx.fillStyle=Ek_col(); ctx.fillRect(bx,bY+epH,bW,ekH);
+      ctx.fillStyle=TC(); ctx.font='10px system-ui'; ctx.textAlign='center';
+      ctx.fillText('Eₚ', bx+bW/2, bY+epH/2+4);
+      if(ekH>14) { ctx.fillStyle='#fff'; ctx.fillText('Eₖ', bx+bW/2, bY+epH+ekH/2+4); }
+      ctx.fillStyle=TC(); ctx.fillText('v='+Math.sqrt(2*Ek/m).toFixed(1)+'m/s', W*0.45, H*0.92);
+    }
+  },
+  {
+    name:'Ayunan',
+    desc:'Ayunan panjang 2 m, massa 5 kg, dilepas dari sudut 45°. Eₚ ↔ Eₖ bergantian setiap setengah periode.',
+    draw(ctx, W, H, t) {
+      const dark_=dark(), L=2, m=5, th0=45*Math.PI/180;
+      const w0=Math.sqrt(g/L), theta=th0*Math.cos(w0*t);
+      const h=L*(1-Math.cos(theta)), Em=m*g*L*(1-Math.cos(th0));
+      const Ep=m*g*h, Ek=Em-Ep;
+      const pivX=W/2, pivY=H*0.15, sc=Math.min((H*0.7)/L,80);
+      const bx=pivX+sc*L*Math.sin(theta), by=pivY+sc*L*Math.cos(theta);
+      ctx.fillStyle=dark_?'#22262e':'#eef4f8'; ctx.fillRect(0,0,W,H);
+      ctx.fillStyle=dark_?'#3a3836':'#ccc'; ctx.fillRect(0,pivY-6,W,6);
+      ctx.fillStyle=dark_?'#555':'#aaa'; ctx.beginPath(); ctx.arc(pivX,pivY,5,0,Math.PI*2); ctx.fill();
+      ctx.strokeStyle=dark_?'#888':'#555'; ctx.lineWidth=1.5; ctx.setLineDash([]);
+      ctx.beginPath(); ctx.moveTo(pivX,pivY); ctx.lineTo(bx,by); ctx.stroke();
+      const grad=ctx.createRadialGradient(bx-5,by-5,1,bx,by,16);
+      grad.addColorStop(0,dark_?'#f0a060':'#e86020'); grad.addColorStop(1,dark_?'#b04010':'#802010');
+      ctx.fillStyle=grad; ctx.beginPath(); ctx.arc(bx,by,16,0,Math.PI*2); ctx.fill();
+      const baseY=pivY+sc*L;
+      ctx.strokeStyle=Ep_col(); ctx.lineWidth=1; ctx.setLineDash([3,3]);
+      ctx.beginPath(); ctx.moveTo(bx,by); ctx.lineTo(bx,baseY); ctx.stroke(); ctx.setLineDash([]);
+      // Energy strip
+      const sy=H*0.88, sW=W*0.7, sx=(W-sW)/2;
+      ctx.fillStyle=dark_?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.04)'; ctx.fillRect(sx,sy,sW,H*0.08);
+      ctx.fillStyle=Ep_col(); ctx.fillRect(sx,sy,(Ep/Em)*sW,H*0.08);
+      ctx.fillStyle=Ek_col(); ctx.fillRect(sx+(Ep/Em)*sW,sy,(Ek/Em)*sW,H*0.08);
+      ctx.font='11px system-ui'; ctx.textAlign='left'; ctx.fillStyle=Ep_col();
+      ctx.fillText('Eₚ='+fmtJ(Ep), sx+4, H*0.965);
+      ctx.fillStyle=Ek_col(); ctx.textAlign='right'; ctx.fillText('Eₖ='+fmtJ(Ek), sx+sW-4, H*0.965);
+    }
+  },
+  {
+    name:'Pengereman Mobil',
+    desc:'Mobil 1200 kg kecepatan 80 km/h (22.2 m/s) mengerem. Seluruh Eₖ → panas akibat gesekan rem.',
+    draw(ctx, W, H, t) {
+      const dark_=dark(), m=1200, v0=22.2;
+      const Em0=0.5*m*v0*v0, decel=8;
+      const phase=Math.min(1, (t*0.3)%1.2);
+      const v=Math.max(0, v0-decel*phase*(v0/decel));
+      const Ek=0.5*m*v*v, Efrict=Em0-Ek;
+      // Road
+      ctx.fillStyle=dark_?'#2a2a2a':'#888'; ctx.fillRect(0,H*0.62,W,H*0.38);
+      ctx.fillStyle=dark_?'#3a3a3a':'#999'; ctx.fillRect(0,H*0.6,W,H*0.04);
+      // Road markings
+      for(let i=0;i<8;i++){ctx.fillStyle=dark_?'#555':'#ccc'; ctx.fillRect(i*W/7+((phase*W*0.4)%(W/7)),H*0.608,W/14,4);}
+      // Car body
+      const carX=W*0.15+(1-v/v0)*W*0.5;
+      ctx.fillStyle=dark_?'#5588e6':'#1a56c4';
+      ctx.beginPath(); ctx.roundRect(carX,H*0.38,W*0.25,H*0.22,6); ctx.fill();
+      ctx.fillStyle=dark_?'#3355aa':'#1040a0';
+      ctx.beginPath(); ctx.roundRect(carX+W*0.04,H*0.32,W*0.16,H*0.1,4); ctx.fill();
+      [[carX+W*0.04,H*0.6],[carX+W*0.19,H*0.6]].forEach(([wx,wy])=>{
+        ctx.fillStyle='#111'; ctx.beginPath(); ctx.arc(wx,wy,H*0.06,0,Math.PI*2); ctx.fill();
+        ctx.fillStyle='#444'; ctx.beginPath(); ctx.arc(wx,wy,H*0.03,0,Math.PI*2); ctx.fill();
+      });
+      // Skid marks
+      if(v<v0*0.95){
+        ctx.strokeStyle=dark_?'#222':'#555'; ctx.lineWidth=3; ctx.setLineDash([]);
+        [[carX+W*0.04],[carX+W*0.19]].forEach(([wx])=>{
+          ctx.beginPath(); ctx.moveTo(wx,H*0.66); ctx.lineTo(wx-W*0.08*(1-v/v0)*4,H*0.66); ctx.stroke();
+        });
+      }
+      // Heat cloud if braking
+      if(v<v0*0.8){
+        ctx.fillStyle=dark_?'rgba(255,150,50,0.3)':'rgba(255,100,0,0.2)';
+        [[carX+W*0.04],[carX+W*0.19]].forEach(([wx])=>{
+          ctx.beginPath(); ctx.arc(wx,H*0.58,H*0.07*(1-v/v0)*3,0,Math.PI*2); ctx.fill();
+        });
+      }
+      // Energy bars
+      ctx.font='11px system-ui'; ctx.textAlign='left';
+      ctx.fillStyle=Ek_col(); ctx.fillText('Eₖ='+fmtJ(Ek)+' v='+v.toFixed(1)+'m/s',4,H-18);
+      ctx.fillStyle=Ef_col(); ctx.textAlign='right'; ctx.fillText('Panas='+fmtJ(Efrict),W-4,H-18);
+      // Strip
+      const sY=H*0.86,sW=W-20;
+      ctx.fillStyle=dark_?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.04)'; ctx.fillRect(10,sY,sW,14);
+      ctx.fillStyle=Ek_col(); ctx.fillRect(10,sY,(Ek/Em0)*sW,14);
+      ctx.fillStyle=Ef_col(); ctx.fillRect(10+(Ek/Em0)*sW,sY,(Efrict/Em0)*sW,14);
+    }
+  },
+  {
+    name:'Bendungan PLTA',
+    desc:'Air bermassa 1000 kg/s jatuh dari ketinggian 80 m menggerakkan turbin. η = 90%.',
+    draw(ctx, W, H, t) {
+      const dark_=dark(), eta=0.9, h0=80, flowRate=1000;
+      const Ein=flowRate*g*h0, Eout=Ein*eta, Eloss=Ein-Eout;
+      // Dam body
+      ctx.fillStyle=dark_?'#3a3634':'#b4a898'; ctx.fillRect(W*0.35,H*0.1,W*0.15,H*0.8);
+      // Water reservoir
+      ctx.fillStyle=dark_?'rgba(50,100,180,0.5)':'rgba(80,140,220,0.4)';
+      ctx.beginPath(); ctx.moveTo(0,H*0.3); ctx.lineTo(W*0.35,H*0.3); ctx.lineTo(W*0.35,H*0.9); ctx.lineTo(0,H*0.9); ctx.closePath(); ctx.fill();
+      ctx.fillStyle=dark_?'rgba(50,100,180,0.7)':'rgba(80,140,220,0.6)';
+      const waveY=H*0.28+Math.sin(t*2)*4;
+      ctx.fillRect(0,waveY,W*0.35,8);
+      // Falling water
+      const drop=((t*60)%H*0.7);
+      ctx.fillStyle=dark_?'rgba(100,160,220,0.7)':'rgba(60,120,200,0.6)';
+      for(let i=0;i<4;i++){ctx.beginPath();ctx.arc(W*0.42+i*5,H*0.3+drop*((i+1)/4)%(H*0.7),4,0,Math.PI*2);ctx.fill();}
+      // Turbine circle
+      const tx2=W*0.43+8, ty2=H*0.7;
+      ctx.strokeStyle=dark_?'#888':'#555'; ctx.lineWidth=2; ctx.setLineDash([]);
+      ctx.beginPath(); ctx.arc(tx2,ty2,20,0,Math.PI*2); ctx.stroke();
+      for(let i=0;i<6;i++){const a=t*3+i*Math.PI/3; ctx.beginPath(); ctx.moveTo(tx2,ty2); ctx.lineTo(tx2+20*Math.cos(a),ty2+20*Math.sin(a)); ctx.stroke();}
+      // Power line
+      ctx.strokeStyle=dark_?'#e8a020':'#a06000'; ctx.lineWidth=2;
+      for(let i=0;i<3;i++){
+        ctx.beginPath(); ctx.moveTo(W*0.56+(i+0.5)*W*0.12, H*0.55); ctx.quadraticCurveTo(W*0.56+(i+1)*W*0.12,H*0.65,W*0.56+(i+1.5)*W*0.12,H*0.55); ctx.stroke();
+      }
+      // Labels
+      ctx.font='11px system-ui'; ctx.textAlign='left'; ctx.fillStyle=Ep_col();
+      ctx.fillText('Eₚ masuk='+fmtJ(Ein)+'/s', 4, H-30);
+      ctx.fillStyle=Em_col();
+      ctx.fillText('Listrik='+fmtJ(Eout)+'/s (η=90%)', 4, H-18);
+      ctx.fillStyle=Ef_col(); ctx.textAlign='right';
+      ctx.fillText('Panas='+fmtJ(Eloss)+'/s', W-4, H-18);
+      // Height
+      ctx.strokeStyle=Ep_col(); ctx.lineWidth=1; ctx.setLineDash([3,3]);
+      ctx.beginPath(); ctx.moveTo(W*0.32,H*0.28); ctx.lineTo(W*0.32,H*0.88); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle=Ep_col(); ctx.textAlign='right'; ctx.font='10px system-ui';
+      ctx.fillText('h=80m', W*0.31, H*0.6);
+    }
+  }
+];
+
+function setSc(i, el) {
+  currentSc = i;
+  document.querySelectorAll('.sc-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  scT2 = 0;
+  if (scRAF2) cancelAnimationFrame(scRAF2);
+
+  const sc = scenarios[i];
+  document.getElementById('sc-info').innerHTML =
+    `<div class="co co-blue">${sc.desc}</div>`;
+
+  function draw() {
+    scT2 += 0.025;
+    const { W, H, ctx } = gc('sc-c', 220);
+    ctx.clearRect(0, 0, W, H);
+    sc.draw(ctx, W, H, scT2);
+    scRAF2 = requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+function calcEff() {
+  const ein  = +document.getElementById('ein').value;
+  const eta  = +document.getElementById('eeta').value;
+  document.getElementById('einv').textContent  = ein + ' J';
+  document.getElementById('eetav').textContent = eta + '%';
+  const eout = ein * eta / 100;
+  const eloss = ein - eout;
+
+  document.getElementById('eff-res').innerHTML =
+    `<div class="fm">E_out = E_in × η = ${ein} × ${eta}% = ${eout.toFixed(0)} J</div>
+     <div class="fm">E_hilang = ${ein} − ${eout.toFixed(0)} = ${eloss.toFixed(0)} J (panas, suara, dll)</div>`;
+
+  const { W, H, ctx } = gc('eff-c', 60);
+  ctx.clearRect(0, 0, W, H);
+  const usable = (eout / ein) * W;
+  ctx.fillStyle = Em_col(); ctx.beginPath(); ctx.roundRect(0, 10, usable, 30, [4,0,0,4]); ctx.fill();
+  ctx.fillStyle = Ef_col(); ctx.beginPath(); ctx.roundRect(usable, 10, W - usable, 30, [0,4,4,0]); ctx.fill();
+  ctx.fillStyle = '#fff'; ctx.font = 'bold 12px system-ui'; ctx.textAlign = 'center';
+  if (usable > 50) ctx.fillText('E_out = ' + eout.toFixed(0) + ' J (' + eta + '%)', usable / 2, 30);
+  if (W - usable > 50) ctx.fillText('Hilang: ' + eloss.toFixed(0) + ' J', usable + (W - usable) / 2, 30);
+}
+
+/* ═══════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════ */
+window.addEventListener('load', () => {
+  calcUsaha(); calcE();
+  setTimeout(() => {
+    updateRC();
+    setTimeout(() => {
+      resetBandul();
+      resetPegas();
+      updateFric();
+      setSc(0, document.querySelector('.sc-btn'));
+      calcEff();
+    }, 80);
+  }, 80);
+});
+window.addEventListener('resize', () => initActive());
+</script>
+</body>
+</html>
