@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 8: Dinamika Rotasi — Fisika Interaktif</title>
+<style>
+:root{
+  --bg:#f4f5f9;--bg2:#ffffff;--bg3:#edf0f8;
+  --text:#1c1e2e;--text2:#6b6e88;--text3:#9ea1b8;
+  --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.14);
+  --primary:#1e2d56;--accent:#3a68d0;--accent2:#1e48a8;
+  --green:#1a7a4a;--amber:#a05c00;--red:#b02020;--orange:#d06020;--purple:#6535c0;
+  --r:10px;--rs:6px;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#1c1e2a;--bg2:#242535;--bg3:#2a2c3e;
+  --text:#e8eaf2;--text2:#9ea3b5;--text3:#666a80;
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.15);
+  --primary:#7a90cc;--accent:#7898d2;--accent2:#9ab8e8;
+  --green:#4ab870;--amber:#d49020;--red:#e05050;--orange:#e08040;--purple:#9a70e8;
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 20px;height:52px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:50}
+.brand{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0}
+.logo{width:32px;height:32px;background:var(--primary);border-radius:7px;display:grid;place-items:center;color:#fff;font-size:15px;flex-shrink:0;line-height:1}
+.brand-name{font-size:13px;font-weight:600;color:var(--text);line-height:1.3}
+.brand-sub{font-size:10px;color:var(--text2);line-height:1.3}
+.hd-sep{color:var(--text3);font-size:14px}
+.hd-unit{font-size:13px;font-weight:500;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hd-back{margin-left:auto;font-size:12px;font-weight:500;color:var(--accent);text-decoration:none;padding:5px 12px;border:1px solid var(--border2);border-radius:var(--rs);white-space:nowrap;flex-shrink:0}
+.hd-back:hover{background:var(--bg3)}
+nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 20px;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+.nt{padding:10px 14px;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;border-radius:6px 6px 0 0;border:1px solid transparent;border-bottom:none;white-space:nowrap;background:none;transition:.15s}
+.nt:hover{color:var(--text);background:var(--bg3)}
+.nt.active{color:var(--accent);background:var(--bg2);border-color:var(--border);margin-bottom:-1px}
+main{padding:18px 20px;max-width:960px;margin:0 auto}
+.sec{display:none}.sec.active{display:block}
+.sec-title{font-size:17px;font-weight:600;margin-bottom:3px}
+.sec-desc{font-size:13px;color:var(--text2);margin-bottom:16px}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.card-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:620px){.two{grid-template-columns:1fr}}
+.cr{display:flex;align-items:center;gap:8px;margin:7px 0}
+.cr label{font-size:12px;color:var(--text2);min-width:160px;flex-shrink:0}
+.cr input[type=range]{flex:1;accent-color:var(--accent)}
+.cv{font-size:13px;font-weight:600;min-width:72px;text-align:right;font-variant-numeric:tabular-nums}
+canvas{display:block;border-radius:var(--rs);max-width:100%}
+.pills{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.pill{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 12px;text-align:center;min-width:90px}
+.pill .pl{font-size:10px;color:var(--text3);margin-bottom:2px;text-transform:uppercase;letter-spacing:.04em}
+.pill .pv{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums}
+.fm{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:7px 12px;font-family:'Courier New',monospace;font-size:12px;color:var(--accent);margin:5px 0;line-height:1.7}
+.co{border-radius:var(--rs);padding:9px 13px;font-size:13px;margin:8px 0;line-height:1.6}
+.co-blue{background:color-mix(in srgb,var(--accent) 10%,transparent);color:var(--accent)}
+.co-green{background:color-mix(in srgb,var(--green) 10%,transparent);color:var(--green)}
+.co-amber{background:color-mix(in srgb,var(--amber) 12%,transparent);color:var(--amber)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border-radius:var(--rs);font-size:13px;font-weight:600;cursor:pointer;border:none;transition:.15s;font-family:inherit}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:var(--accent2)}
+.btn-outline{background:var(--bg);border:1px solid var(--border2);color:var(--text)}.btn-outline:hover{background:var(--bg3)}
+.btns{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;padding:6px 8px;border-bottom:1px solid var(--border);text-align:left;font-weight:600}
+td{padding:7px 8px;border-bottom:1px solid var(--border)}
+tr:last-child td{border-bottom:none}
+td.num{font-family:'Courier New',monospace;color:var(--accent)}
+select{padding:6px 10px;border:1px solid var(--border2);border-radius:var(--rs);background:var(--bg);color:var(--text);font-size:13px;font-family:inherit}
+</style>
+</head>
+<body>
+<header>
+  <a class="brand" href="/">
+    <div class="logo">⚛</div>
+    <div>
+      <div class="brand-name">Fisika Interaktif</div>
+      <div class="brand-sub">SMA 10 · Kurikulum Merdeka</div>
+    </div>
+  </a>
+  <span class="hd-sep">›</span>
+  <span class="hd-unit">Unit 8: Dinamika Rotasi</span>
+  <a class="hd-back" href="/">← Dashboard</a>
+</header>
+<nav>
+  <div class="nt active" onclick="showSec('torsi',this)">⟳ Torsi</div>
+  <div class="nt" onclick="showSec('inersia',this)">⊙ Momen Inersia</div>
+  <div class="nt" onclick="showSec('setimbang',this)">⚖ Kesetimbangan</div>
+  <div class="nt" onclick="showSec('referensi',this)">📖 Referensi</div>
+</nav>
+<main>
+
+<!-- ══ TORSI ══ -->
+<div class="sec active" id="s-torsi">
+  <div class="sec-title">Torsi (Momen Gaya)</div>
+  <div class="sec-desc">Torsi adalah gaya yang menyebabkan rotasi. Besarnya bergantung pada gaya, jarak ke poros (lengan torsi), dan sudut antara keduanya.</div>
+  <div class="card">
+    <div class="card-title">Parameter</div>
+    <div class="cr"><label>Gaya F (N)</label><input type="range" id="t-f" min="1" max="100" value="40" oninput="tDraw()"><span class="cv" id="t-fv">40 N</span></div>
+    <div class="cr"><label>Lengan torsi r (m)</label><input type="range" id="t-r" min="0.1" max="3" value="1.5" step="0.05" oninput="tDraw()"><span class="cv" id="t-rv">1.50 m</span></div>
+    <div class="cr"><label>Sudut θ (°)</label><input type="range" id="t-ang" min="0" max="180" value="90" oninput="tDraw()"><span class="cv" id="t-angv">90°</span></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Diagram Torsi</div>
+    <canvas id="t-canvas" height="260"></canvas>
+  </div>
+  <div class="card">
+    <div class="card-title">Hasil</div>
+    <div id="t-pills" class="pills"></div>
+    <div class="fm" id="t-fm" style="margin-top:10px"></div>
+  </div>
+</div>
+
+<!-- ══ MOMEN INERSIA ══ -->
+<div class="sec" id="s-inersia">
+  <div class="sec-title">Momen Inersia</div>
+  <div class="sec-desc">Momen inersia adalah ukuran resistensi benda terhadap perubahan rotasi — analog dengan massa dalam gerak translasi.</div>
+  <div class="card">
+    <div class="card-title">Pilih Bentuk Benda</div>
+    <div class="cr"><label>Bentuk</label>
+      <select id="i-shape" onchange="iDraw()">
+        <option value="disk">Cakram Pejal (poros tengah)</option>
+        <option value="ring">Cincin (poros tengah)</option>
+        <option value="sphere">Bola Pejal</option>
+        <option value="rod_center">Batang (poros tengah)</option>
+        <option value="rod_end">Batang (poros ujung)</option>
+        <option value="point">Massa Titik</option>
+      </select>
+    </div>
+    <div class="cr"><label>Massa m (kg)</label><input type="range" id="i-m" min="0.5" max="20" value="5" step="0.5" oninput="iDraw()"><span class="cv" id="i-mv">5.0 kg</span></div>
+    <div class="cr"><label>Jari-jari / panjang (m)</label><input type="range" id="i-r" min="0.1" max="3" value="1" step="0.05" oninput="iDraw()"><span class="cv" id="i-rv">1.00 m</span></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Visualisasi</div>
+    <canvas id="i-canvas" height="240"></canvas>
+  </div>
+  <div class="card">
+    <div class="card-title">Momen Inersia</div>
+    <div id="i-result"></div>
+    <div style="margin-top:12px">
+      <div class="card-title" style="margin-bottom:8px">Perbandingan Semua Bentuk (m=5 kg, r/L=1 m)</div>
+      <div id="i-compare"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ KESETIMBANGAN ══ -->
+<div class="sec" id="s-setimbang">
+  <div class="sec-title">Kesetimbangan Rotasi</div>
+  <div class="sec-desc">Benda setimbang jika resultan gaya = 0 (translasi) DAN resultan torsi = 0 (rotasi). Atur dua gaya pada batang dan temukan titik kesetimbangannya.</div>
+  <div class="card">
+    <div class="card-title">Gaya pada Batang (panjang 4 m, poros di tengah)</div>
+    <div class="cr"><label>Gaya F₁ (N) — kiri</label><input type="range" id="sb-f1" min="1" max="100" value="30" oninput="sbDraw()"><span class="cv" id="sb-f1v">30 N</span></div>
+    <div class="cr"><label>Posisi d₁ dari poros (m)</label><input type="range" id="sb-d1" min="0.1" max="2" value="1.5" step="0.05" oninput="sbDraw()"><span class="cv" id="sb-d1v">1.50 m</span></div>
+    <div class="cr"><label>Gaya F₂ (N) — kanan</label><input type="range" id="sb-f2" min="1" max="100" value="45" oninput="sbDraw()"><span class="cv" id="sb-f2v">45 N</span></div>
+    <div class="cr"><label>Posisi d₂ dari poros (m)</label><input type="range" id="sb-d2" min="0.1" max="2" value="1.0" step="0.05" oninput="sbDraw()"><span class="cv" id="sb-d2v">1.00 m</span></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Diagram Batang</div>
+    <canvas id="sb-canvas" height="220"></canvas>
+  </div>
+  <div class="card">
+    <div class="card-title">Analisis Torsi</div>
+    <div id="sb-pills" class="pills"></div>
+    <div id="sb-status" style="margin-top:10px"></div>
+    <div class="fm" id="sb-fm" style="margin-top:8px"></div>
+  </div>
+</div>
+
+<!-- ══ REFERENSI ══ -->
+<div class="sec" id="s-referensi">
+  <div class="sec-title">Referensi Dinamika Rotasi</div>
+  <div class="sec-desc">Rumus dan konsep penting dalam dinamika rotasi.</div>
+  <div class="two">
+    <div class="card">
+      <div class="card-title">Torsi</div>
+      <div class="fm">τ = r × F = r · F · sin θ</div>
+      <div class="fm">τ = I · α</div>
+      <div class="fm">Satuan: N·m</div>
+      <div class="co co-blue">τ positif = berlawanan jarum jam (CCW). τ negatif = searah jarum jam (CW).</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Momen Inersia</div>
+      <div class="fm">I = Σ mᵢ · rᵢ²</div>
+      <div class="fm">Teorema Sumbu Sejajar:</div>
+      <div class="fm">I = I_cm + m · d²</div>
+      <div class="co co-amber">I_cm = momen inersia terhadap sumbu melalui pusat massa. d = jarak sumbu baru ke pusat massa.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Rumus Momen Inersia Berbagai Benda</div>
+    <table>
+      <tr><th>Benda</th><th>Poros</th><th>Rumus I</th></tr>
+      <tr><td>Massa titik</td><td>jarak r</td><td class="num">I = m·r²</td></tr>
+      <tr><td>Batang</td><td>tengah</td><td class="num">I = (1/12)mL²</td></tr>
+      <tr><td>Batang</td><td>ujung</td><td class="num">I = (1/3)mL²</td></tr>
+      <tr><td>Cakram/Silinder pejal</td><td>tengah</td><td class="num">I = (1/2)mR²</td></tr>
+      <tr><td>Cincin/Silinder berongga</td><td>tengah</td><td class="num">I = mR²</td></tr>
+      <tr><td>Bola pejal</td><td>diameter</td><td class="num">I = (2/5)mR²</td></tr>
+      <tr><td>Bola berongga</td><td>diameter</td><td class="num">I = (2/3)mR²</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <div class="card-title">Analogi Translasi ↔ Rotasi</div>
+    <table>
+      <tr><th>Translasi</th><th>Rotasi</th></tr>
+      <tr><td>Massa m</td><td class="num">Momen inersia I</td></tr>
+      <tr><td>Gaya F</td><td class="num">Torsi τ</td></tr>
+      <tr><td>Percepatan a</td><td class="num">Percepatan sudut α</td></tr>
+      <tr><td>F = m·a</td><td class="num">τ = I·α</td></tr>
+      <tr><td>Kecepatan v</td><td class="num">Kecepatan sudut ω</td></tr>
+      <tr><td>p = mv</td><td class="num">L = Iω (momentum sudut)</td></tr>
+    </table>
+  </div>
+</div>
+</main>
+
+<script>
+const dark=()=>matchMedia('(prefers-color-scheme:dark)').matches;
+const tc=()=>dark()?'#c8cde8':'#1c1e2e';
+const tc2=()=>dark()?'#9ea3b5':'#6b6e88';
+const tc3=()=>dark()?'#666a80':'#9ea1b8';
+const ac=()=>dark()?'#7898d2':'#3a68d0';
+const gc=()=>dark()?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.04)';
+
+function getCanvas(id,h){
+  const cv=document.getElementById(id);
+  const W=cv.parentElement.offsetWidth||500;
+  const dpr=window.devicePixelRatio||1;
+  cv.width=Math.round(W*dpr); cv.height=Math.round(h*dpr);
+  cv.style.width=W+'px'; cv.style.height=h+'px';
+  const ctx=cv.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  return{W,H:h,ctx};
+}
+
+function drawArrow(ctx,x1,y1,x2,y2,color,lw=2,label=''){
+  const dx=x2-x1,dy=y2-y1,len=Math.hypot(dx,dy);
+  if(len<2)return;
+  const ux=dx/len,uy=dy/len,hs=Math.min(11,len*0.3);
+  ctx.strokeStyle=color;ctx.lineWidth=lw;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+  ctx.fillStyle=color;
+  ctx.beginPath();
+  ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-ux*hs+uy*hs*0.4,y2-uy*hs-ux*hs*0.4);
+  ctx.lineTo(x2-ux*hs-uy*hs*0.4,y2-uy*hs+ux*hs*0.4);
+  ctx.closePath();ctx.fill();
+  if(label){
+    ctx.fillStyle=color;ctx.font='bold 11px system-ui';ctx.textAlign='center';
+    ctx.fillText(label,(x1+x2)/2-uy*14,(y1+y2)/2+ux*14);
+  }
+}
+
+/* ══ TORSI ══ */
+function tDraw(){
+  const F=+document.getElementById('t-f').value;
+  const r=+document.getElementById('t-r').value;
+  const ang=+document.getElementById('t-ang').value;
+  document.getElementById('t-fv').textContent=F+' N';
+  document.getElementById('t-rv').textContent=r.toFixed(2)+' m';
+  document.getElementById('t-angv').textContent=ang+'°';
+
+  const tau=F*r*Math.sin(ang*Math.PI/180);
+  const{W,H,ctx}=getCanvas('t-canvas',260);
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle=dark()?'#1e2030':'#f0f2f8';ctx.fillRect(0,0,W,H);
+
+  const ox=Math.max(W*0.2,80), oy=H*0.55;
+  const scale=Math.min((W-ox-20)/r/1.1, 80);
+  const armLen=r*scale;
+  const rad=ang*Math.PI/180;
+
+  // Pivot
+  ctx.fillStyle=dark()?'#505070':'#8890b0';
+  ctx.beginPath();ctx.arc(ox,oy,10,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle=dark()?'#7080a0':'#a0a8c0';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.arc(ox,oy,10,0,Math.PI*2);ctx.stroke();
+  // Triangle support
+  ctx.fillStyle=dark()?'#404060':'#b0b8d0';
+  ctx.beginPath();ctx.moveTo(ox,oy+10);ctx.lineTo(ox-12,oy+26);ctx.lineTo(ox+12,oy+26);ctx.closePath();ctx.fill();
+  // Lever arm
+  const ex=ox+armLen, ey=oy;
+  ctx.strokeStyle=dark()?'#8090b0':'#6070a0';ctx.lineWidth=6;
+  ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(ox-20,oy);ctx.lineTo(ex+10,oy);ctx.stroke();
+  ctx.lineCap='butt';
+
+  // Force arrow (at angle from the end of arm)
+  const fScale=Math.min(70,F*0.7);
+  const fx=ex+Math.cos(Math.PI-rad)*fScale;
+  const fy=ey+Math.sin(Math.PI-rad)*fScale;
+  drawArrow(ctx,ex,ey,ex-Math.cos(rad)*fScale,ey+Math.sin(rad)*fScale,dark()?'#e08040':'#d06020',2.5,'F='+F+'N');
+
+  // Perpendicular component dashed
+  const fperp=F*Math.sin(rad);
+  if(Math.abs(fperp)>0.5){
+    ctx.strokeStyle=dark()?'rgba(224,128,64,0.35)':'rgba(208,96,32,0.25)';
+    ctx.lineWidth=1;ctx.setLineDash([4,4]);
+    ctx.beginPath();ctx.moveTo(ex,ey);ctx.lineTo(ex,ey+fperp*fScale/F);ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle=dark()?'rgba(224,128,64,0.7)':'rgba(208,96,32,0.7)';
+    ctx.font='10px system-ui';ctx.textAlign='left';
+    ctx.fillText('F⊥='+fperp.toFixed(1)+'N',ex+5,ey+fperp*fScale/F/2);
+  }
+
+  // Arm distance label
+  ctx.strokeStyle=dark()?'rgba(120,152,210,0.5)':'rgba(58,104,208,0.4)';
+  ctx.lineWidth=1;ctx.setLineDash([]);
+  ctx.fillStyle=ac();ctx.font='11px system-ui';ctx.textAlign='center';
+  ctx.fillText('r = '+r.toFixed(2)+' m',ox+armLen/2,oy-14);
+
+  // Angle arc
+  ctx.strokeStyle=dark()?'#e08040':'#d06020';ctx.lineWidth=1.2;
+  ctx.beginPath();ctx.arc(ex,ey,28,Math.PI,-rad,ang>0);ctx.stroke();
+  ctx.fillStyle=dark()?'#e08040':'#d06020';ctx.font='10px system-ui';ctx.textAlign='center';
+  ctx.fillText(ang+'°',ex+38*Math.cos(Math.PI/2-rad/2),ey+14*Math.sin(Math.PI/2-rad/2)-4);
+
+  // Rotation arc
+  if(Math.abs(tau)>0.1){
+    const dir=tau>0?1:-1;
+    ctx.strokeStyle=dark()?'rgba(120,152,210,0.4)':'rgba(58,104,208,0.3)';
+    ctx.lineWidth=3;
+    ctx.beginPath();ctx.arc(ox,oy,32,-Math.PI/2,-Math.PI/2+dir*Math.PI*1.5,dir<0);ctx.stroke();
+    ctx.fillStyle=dark()?'rgba(120,152,210,0.7)':'rgba(58,104,208,0.6)';
+    ctx.font='10px system-ui';ctx.textAlign='center';
+    ctx.fillText(tau>0?'CCW ↺':'CW ↻',ox,oy-44);
+  }
+
+  document.getElementById('t-pills').innerHTML=[
+    ['Torsi τ',tau.toFixed(2)+' N·m'],
+    ['F sin θ',(F*Math.sin(rad)).toFixed(2)+' N'],
+    ['Arah',tau>0?'CCW (↺)':tau<0?'CW (↻)':'Nol'],
+  ].map(([l,v])=>`<div class="pill"><div class="pl">${l}</div><div class="pv" style="font-size:12px">${v}</div></div>`).join('');
+  document.getElementById('t-fm').innerHTML=
+    `τ = r · F · sin θ = ${r.toFixed(2)} × ${F} × sin(${ang}°)<br>`+
+    `τ = ${r.toFixed(2)} × ${F} × ${Math.sin(rad).toFixed(4)} = <b>${tau.toFixed(3)} N·m</b>`;
+}
+
+/* ══ MOMEN INERSIA ══ */
+const SHAPES={
+  disk:{label:'Cakram Pejal',fn:(m,r)=>0.5*m*r*r,formula:'I = ½mR²',param:'R'},
+  ring:{label:'Cincin',fn:(m,r)=>m*r*r,formula:'I = mR²',param:'R'},
+  sphere:{label:'Bola Pejal',fn:(m,r)=>0.4*m*r*r,formula:'I = ⅖mR²',param:'R'},
+  rod_center:{label:'Batang (poros tengah)',fn:(m,r)=>m*r*r/12,formula:'I = (1/12)mL²',param:'L'},
+  rod_end:{label:'Batang (poros ujung)',fn:(m,r)=>m*r*r/3,formula:'I = (1/3)mL²',param:'L'},
+  point:{label:'Massa Titik',fn:(m,r)=>m*r*r,formula:'I = mR²',param:'R'},
+};
+
+function iDraw(){
+  const shape=document.getElementById('i-shape').value;
+  const m=+document.getElementById('i-m').value;
+  const r=+document.getElementById('i-r').value;
+  document.getElementById('i-mv').textContent=m.toFixed(1)+' kg';
+  document.getElementById('i-rv').textContent=r.toFixed(2)+' m';
+
+  const s=SHAPES[shape];
+  const I=s.fn(m,r);
+
+  const{W,H,ctx}=getCanvas('i-canvas',240);
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle=dark()?'#1e2030':'#f0f2f8';ctx.fillRect(0,0,W,H);
+  const cx=W/2,cy=H/2,sc=Math.min(W,H)*0.32;
+
+  // Draw shape
+  ctx.lineWidth=2;
+  if(shape==='disk'){
+    ctx.fillStyle=dark()?'rgba(120,152,210,0.25)':'rgba(58,104,208,0.15)';
+    ctx.strokeStyle=ac();
+    ctx.beginPath();ctx.arc(cx,cy,Math.min(r*sc,sc),0,Math.PI*2);ctx.fill();ctx.stroke();
+    // Radial lines
+    for(let i=0;i<8;i++){
+      const a=i/8*Math.PI*2;
+      ctx.strokeStyle=dark()?'rgba(120,152,210,0.15)':'rgba(58,104,208,0.1)';ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(a)*Math.min(r*sc,sc),cy+Math.sin(a)*Math.min(r*sc,sc));ctx.stroke();
+    }
+  }else if(shape==='ring'){
+    const R=Math.min(r*sc,sc);
+    ctx.fillStyle=dark()?'rgba(120,152,210,0.25)':'rgba(58,104,208,0.15)';
+    ctx.strokeStyle=ac();
+    ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();ctx.stroke();
+    ctx.fillStyle=dark()?'#1e2030':'#f0f2f8';
+    ctx.beginPath();ctx.arc(cx,cy,R*0.65,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle=ac();ctx.beginPath();ctx.arc(cx,cy,R*0.65,0,Math.PI*2);ctx.stroke();
+  }else if(shape==='sphere'){
+    const R=Math.min(r*sc,sc);
+    const grad=ctx.createRadialGradient(cx-R*0.3,cy-R*0.3,R*0.05,cx,cy,R);
+    grad.addColorStop(0,dark()?'rgba(180,200,240,0.5)':'rgba(180,200,240,0.7)');
+    grad.addColorStop(1,dark()?'rgba(80,100,180,0.3)':'rgba(58,104,208,0.2)');
+    ctx.fillStyle=grad;ctx.strokeStyle=ac();
+    ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();ctx.stroke();
+    ctx.strokeStyle=dark()?'rgba(120,152,210,0.3)':'rgba(58,104,208,0.2)';ctx.setLineDash([3,4]);
+    ctx.beginPath();ctx.ellipse(cx,cy,R,R*0.3,0,0,Math.PI*2);ctx.stroke();
+    ctx.setLineDash([]);
+  }else if(shape.startsWith('rod')){
+    const L=Math.min(r*sc*1.8,W*0.7);
+    const isEnd=shape==='rod_end';
+    const x0=isEnd?cx-L*0.02:cx-L/2;
+    ctx.fillStyle=dark()?'rgba(120,152,210,0.25)':'rgba(58,104,208,0.15)';
+    ctx.strokeStyle=ac();
+    ctx.beginPath();ctx.roundRect(x0,cy-10,L,20,4);ctx.fill();ctx.stroke();
+    // Pivot marker
+    const px=isEnd?cx:cx;
+    ctx.fillStyle=dark()?'#e08040':'#d06020';
+    ctx.beginPath();ctx.arc(isEnd?x0:cx,cy,5,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle=tc2();ctx.font='10px system-ui';ctx.textAlign='center';
+    ctx.fillText(isEnd?'poros ujung':'poros tengah',isEnd?x0:cx,cy+22);
+  }else if(shape==='point'){
+    const R=Math.min(r*sc,sc);
+    ctx.strokeStyle=dark()?'rgba(120,152,210,0.2)':'rgba(58,104,208,0.12)';ctx.lineWidth=1;ctx.setLineDash([3,4]);
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+R,cy);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle=dark()?'rgba(120,152,210,0.2)':'rgba(58,104,208,0.1)';
+    ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle=dark()?'#7898d2':'#3a68d0';
+    ctx.beginPath();ctx.arc(cx+R,cy,8,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle=tc2();ctx.font='10px system-ui';ctx.textAlign='center';
+    ctx.fillText('r = '+r.toFixed(2)+' m',cx+R/2,cy-12);
+    ctx.fillStyle=dark()?'#7898d2':'#3a68d0';ctx.font='11px system-ui';
+    ctx.fillText('m',cx+R,cy+18);
+  }
+  // Axis indicator
+  ctx.fillStyle=dark()?'#505070':'#8890b0';
+  ctx.beginPath();ctx.arc(cx,cy,4,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle=tc3();ctx.font='10px system-ui';ctx.textAlign='center';
+  ctx.fillText(s.param+'='+r.toFixed(2)+'m | m='+m.toFixed(1)+'kg',cx,H-8);
+
+  document.getElementById('i-result').innerHTML=`
+    <div class="fm">${s.formula} = ${s.formula.replace('m',m.toFixed(1)+'').replace('R²',r.toFixed(2)+'²').replace('L²',r.toFixed(2)+'²')} = <b>${I.toFixed(4)} kg·m²</b></div>
+    <div class="co co-blue">I = ${I.toFixed(4)} kg·m² — semakin besar I, semakin sulit mengubah rotasi benda.</div>`;
+
+  // Comparison bars
+  const allI=Object.entries(SHAPES).map(([k,v])=>({k,I:v.fn(m,r),label:v.label}));
+  const maxI=Math.max(...allI.map(d=>d.I));
+  document.getElementById('i-compare').innerHTML=allI.map(d=>`
+    <div style="margin-bottom:6px">
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:2px">
+        <span>${d.label}</span><span style="font-family:monospace;color:var(--accent)">${d.I.toFixed(3)} kg·m²</span>
+      </div>
+      <div style="height:6px;background:var(--bg3);border-radius:3px;overflow:hidden">
+        <div style="height:100%;width:${(d.I/maxI*100).toFixed(1)}%;background:${d.k===shape?'var(--accent)':'color-mix(in srgb,var(--accent) 40%,transparent)'};border-radius:3px;transition:width .3s"></div>
+      </div>
+    </div>`).join('');
+}
+
+/* ══ KESETIMBANGAN ══ */
+function sbDraw(){
+  const f1=+document.getElementById('sb-f1').value;
+  const d1=+document.getElementById('sb-d1').value;
+  const f2=+document.getElementById('sb-f2').value;
+  const d2=+document.getElementById('sb-d2').value;
+  document.getElementById('sb-f1v').textContent=f1+' N';
+  document.getElementById('sb-d1v').textContent=d1.toFixed(2)+' m';
+  document.getElementById('sb-f2v').textContent=f2+' N';
+  document.getElementById('sb-d2v').textContent=d2.toFixed(2)+' m';
+
+  const tau1=f1*d1; // CCW (+)
+  const tau2=f2*d2; // CW  (-)
+  const tauNet=tau1-tau2;
+  const eq=Math.abs(tauNet)<0.5;
+
+  const{W,H,ctx}=getCanvas('sb-canvas',220);
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle=dark()?'#1e2030':'#f0f2f8';ctx.fillRect(0,0,W,H);
+
+  const cx=W/2, beamY=H*0.48, beamLen=W*0.82, beamH=10;
+  const bx=cx-beamLen/2;
+  // Beam — tilt if not balanced
+  const tilt=Math.min(Math.max(tauNet*0.008,-0.18),0.18);
+  ctx.save();ctx.translate(cx,beamY);ctx.rotate(tilt);
+  // Beam body
+  ctx.fillStyle=dark()?'rgba(100,110,160,0.7)':'rgba(140,155,200,0.5)';
+  ctx.strokeStyle=dark()?'#8090b0':'#7080a0';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.roundRect(-beamLen/2,-beamH/2,beamLen,beamH,3);ctx.fill();ctx.stroke();
+  // Scale markers
+  for(let i=-4;i<=4;i++){
+    const x=i/4*beamLen/2;
+    ctx.strokeStyle=tc3();ctx.lineWidth=0.8;
+    ctx.beginPath();ctx.moveTo(x,-beamH/2-3);ctx.lineTo(x,-beamH/2);ctx.stroke();
+    ctx.fillStyle=tc3();ctx.font='8px system-ui';ctx.textAlign='center';
+    ctx.fillText(i/2,x,-beamH/2-6);
+  }
+  // F1 (left, downward)
+  const x1=-d1/2*beamLen;
+  const fScale=Math.min(80,f1*0.7);
+  drawArrow(ctx,x1,-beamH/2,x1,-beamH/2-fScale,dark()?'#7898d2':'#3a68d0',2.5,'F₁='+f1+'N');
+  // F2 (right, downward)
+  const x2=d2/2*beamLen;
+  const fScale2=Math.min(80,f2*0.7);
+  drawArrow(ctx,x2,-beamH/2,x2,-beamH/2-fScale2,dark()?'#e08040':'#d06020',2.5,'F₂='+f2+'N');
+  ctx.restore();
+
+  // Pivot
+  ctx.fillStyle=dark()?'#607088':'#9098b8';
+  ctx.beginPath();ctx.moveTo(cx,beamY+beamH/2+1);ctx.lineTo(cx-14,beamY+beamH/2+24);ctx.lineTo(cx+14,beamY+beamH/2+24);ctx.closePath();ctx.fill();
+  ctx.strokeStyle=dark()?'#8090a8':'#a0a8c0';ctx.lineWidth=1;ctx.stroke();
+
+  document.getElementById('sb-pills').innerHTML=[
+    ['τ₁ (CCW)',tau1.toFixed(2)+' N·m'],
+    ['τ₂ (CW)',tau2.toFixed(2)+' N·m'],
+    ['τ_net',(tauNet).toFixed(2)+' N·m'],
+    ['Status',eq?'Setimbang':'Tidak Setimbang'],
+  ].map(([l,v])=>`<div class="pill"><div class="pl">${l}</div><div class="pv" style="font-size:12px">${v}</div></div>`).join('');
+
+  document.getElementById('sb-status').innerHTML=eq
+    ?`<div class="co co-green">✓ Setimbang rotasi! Σ τ = 0.</div>`
+    :`<div class="co co-amber">⚠ Tidak setimbang. τ_net = ${tauNet.toFixed(2)} N·m → benda berotasi ${tauNet>0?'CCW (↺)':'CW (↻)'}.<br>Untuk setimbang: pindahkan F₂ ke d₂ = ${(tau1/f2).toFixed(2)} m.</div>`;
+
+  document.getElementById('sb-fm').innerHTML=
+    `Σ τ = τ₁ − τ₂ = F₁·d₁ − F₂·d₂<br>`+
+    `= ${f1}×${d1.toFixed(2)} − ${f2}×${d2.toFixed(2)}<br>`+
+    `= ${tau1.toFixed(2)} − ${tau2.toFixed(2)} = ${tauNet.toFixed(2)} N·m`;
+}
+
+function showSec(id,el){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nt').forEach(t=>t.classList.remove('active'));
+  document.getElementById('s-'+id).classList.add('active');
+  el.classList.add('active');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    if(id==='torsi') tDraw();
+    if(id==='inersia') iDraw();
+    if(id==='setimbang') sbDraw();
+  }));
+}
+
+window.addEventListener('load',()=>{ tDraw(); });
+window.addEventListener('resize',()=>{
+  const id=document.querySelector('.sec.active')?.id;
+  if(id==='s-torsi') tDraw();
+  if(id==='s-inersia') iDraw();
+  if(id==='s-setimbang') sbDraw();
+});
+</script>
+</body>
+</html>

@@ -45,6 +45,8 @@ const HTML_SIMS: Record<string, string> = {
   'vektor':           '/unit2-vektor.html',
   'gerak-lurus':      '/unit3-gerak-lurus.html',
   'gerak-parabola':   '/unit6-gerak-parabola.html',
+  'hukum-newton':     '/unit7-hukum-newton.html',
+  'dinamika-rotasi':  '/unit8-dinamika-rotasi.html',
   'usaha-energi':     '/unit9-usaha-energi.html',
   'gelombang':        '/unit11-gelombang.html',
   'optik':            '/unit12-cahaya-optik.html',

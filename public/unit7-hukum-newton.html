@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 7: Hukum Newton — Fisika Interaktif</title>
+<style>
+:root{
+  --bg:#f4f5f9;--bg2:#ffffff;--bg3:#edf0f8;
+  --text:#1c1e2e;--text2:#6b6e88;--text3:#9ea1b8;
+  --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.14);
+  --primary:#1e2d56;--accent:#3a68d0;--accent2:#1e48a8;
+  --green:#1a7a4a;--amber:#a05c00;--red:#b02020;--orange:#d06020;--purple:#6535c0;
+  --r:10px;--rs:6px;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#1c1e2a;--bg2:#242535;--bg3:#2a2c3e;
+  --text:#e8eaf2;--text2:#9ea3b5;--text3:#666a80;
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.15);
+  --primary:#7a90cc;--accent:#7898d2;--accent2:#9ab8e8;
+  --green:#4ab870;--amber:#d49020;--red:#e05050;--orange:#e08040;--purple:#9a70e8;
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 20px;height:52px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:50}
+.brand{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0}
+.logo{width:32px;height:32px;background:var(--primary);border-radius:7px;display:grid;place-items:center;color:#fff;font-size:15px;flex-shrink:0;line-height:1}
+.brand-name{font-size:13px;font-weight:600;color:var(--text);line-height:1.3}
+.brand-sub{font-size:10px;color:var(--text2);line-height:1.3}
+.hd-sep{color:var(--text3);font-size:14px}
+.hd-unit{font-size:13px;font-weight:500;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hd-back{margin-left:auto;font-size:12px;font-weight:500;color:var(--accent);text-decoration:none;padding:5px 12px;border:1px solid var(--border2);border-radius:var(--rs);white-space:nowrap;flex-shrink:0}
+.hd-back:hover{background:var(--bg3)}
+nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 20px;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+.nt{padding:10px 14px;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;border-radius:6px 6px 0 0;border:1px solid transparent;border-bottom:none;white-space:nowrap;background:none;transition:.15s}
+.nt:hover{color:var(--text);background:var(--bg3)}
+.nt.active{color:var(--accent);background:var(--bg2);border-color:var(--border);margin-bottom:-1px}
+main{padding:18px 20px;max-width:960px;margin:0 auto}
+.sec{display:none}.sec.active{display:block}
+.sec-title{font-size:17px;font-weight:600;margin-bottom:3px}
+.sec-desc{font-size:13px;color:var(--text2);margin-bottom:16px}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.card-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:620px){.two{grid-template-columns:1fr}}
+.cr{display:flex;align-items:center;gap:8px;margin:7px 0}
+.cr label{font-size:12px;color:var(--text2);min-width:150px;flex-shrink:0}
+.cr input[type=range]{flex:1;accent-color:var(--accent)}
+.cv{font-size:13px;font-weight:600;min-width:72px;text-align:right;font-variant-numeric:tabular-nums}
+canvas{display:block;border-radius:var(--rs);max-width:100%}
+.pills{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.pill{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 12px;text-align:center;min-width:90px}
+.pill .pl{font-size:10px;color:var(--text3);margin-bottom:2px;text-transform:uppercase;letter-spacing:.04em}
+.pill .pv{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums}
+.fm{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:7px 12px;font-family:'Courier New',monospace;font-size:12px;color:var(--accent);margin:5px 0;line-height:1.7}
+.co{border-radius:var(--rs);padding:9px 13px;font-size:13px;margin:8px 0;line-height:1.6}
+.co-blue{background:color-mix(in srgb,var(--accent) 10%,transparent);color:var(--accent)}
+.co-green{background:color-mix(in srgb,var(--green) 10%,transparent);color:var(--green)}
+.co-amber{background:color-mix(in srgb,var(--amber) 12%,transparent);color:var(--amber)}
+.co-red{background:color-mix(in srgb,var(--red) 12%,transparent);color:var(--red)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border-radius:var(--rs);font-size:13px;font-weight:600;cursor:pointer;border:none;transition:.15s;font-family:inherit}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:var(--accent2)}
+.btn-outline{background:var(--bg);border:1px solid var(--border2);color:var(--text)}.btn-outline:hover{background:var(--bg3)}
+.btns{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;padding:6px 8px;border-bottom:1px solid var(--border);text-align:left;font-weight:600}
+td{padding:7px 8px;border-bottom:1px solid var(--border)}
+tr:last-child td{border-bottom:none}
+td.num{font-family:'Courier New',monospace;color:var(--accent)}
+/* Body diagram */
+.fbd-wrap{position:relative;display:flex;justify-content:center;align-items:center;height:220px;background:var(--bg3);border-radius:var(--rs);overflow:hidden;margin:10px 0;border:1px solid var(--border)}
+.block{position:absolute;width:60px;height:60px;background:var(--accent);border-radius:8px;display:grid;place-items:center;font-size:22px;box-shadow:0 2px 8px rgba(0,0,0,0.15)}
+.arrow-label{position:absolute;font-size:11px;font-weight:600;white-space:nowrap}
+</style>
+</head>
+<body>
+<header>
+  <a class="brand" href="/">
+    <div class="logo">⚛</div>
+    <div>
+      <div class="brand-name">Fisika Interaktif</div>
+      <div class="brand-sub">SMA 10 · Kurikulum Merdeka</div>
+    </div>
+  </a>
+  <span class="hd-sep">›</span>
+  <span class="hd-unit">Unit 7: Hukum Newton</span>
+  <a class="hd-back" href="/">← Dashboard</a>
+</header>
+<nav>
+  <div class="nt active" onclick="showSec('n1',this)">I Kelembaman</div>
+  <div class="nt" onclick="showSec('n2',this)">II F = ma</div>
+  <div class="nt" onclick="showSec('n3',this)">III Aksi–Reaksi</div>
+  <div class="nt" onclick="showSec('referensi',this)">📖 Referensi</div>
+</nav>
+<main>
+
+<!-- ══ HUKUM I ══ -->
+<div class="sec active" id="s-n1">
+  <div class="sec-title">Hukum I Newton — Kelembaman</div>
+  <div class="sec-desc">Benda yang diam akan tetap diam, dan benda yang bergerak akan terus bergerak lurus beraturan, selama tidak ada gaya resultan yang bekerja padanya.</div>
+  <div class="card">
+    <div class="card-title">Kesetimbangan Gaya</div>
+    <div class="cr"><label>Gaya kanan F₁ (N)</label><input type="range" id="n1-f1" min="0" max="100" value="40" oninput="n1Draw()"><span class="cv" id="n1-f1v">40 N</span></div>
+    <div class="cr"><label>Gaya kiri F₂ (N)</label><input type="range" id="n1-f2" min="0" max="100" value="40" oninput="n1Draw()"><span class="cv" id="n1-f2v">40 N</span></div>
+    <div class="cr"><label>Gaya atas F₃ (N)</label><input type="range" id="n1-f3" min="0" max="60" value="30" oninput="n1Draw()"><span class="cv" id="n1-f3v">30 N</span></div>
+    <div class="cr"><label>Gaya bawah F₄ (N)</label><input type="range" id="n1-f4" min="0" max="60" value="30" oninput="n1Draw()"><span class="cv" id="n1-f4v">30 N</span></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Diagram Gaya Bebas (FBD)</div>
+    <canvas id="n1-canvas" height="240"></canvas>
+  </div>
+  <div class="card">
+    <div class="card-title">Resultan & Status</div>
+    <div id="n1-pills" class="pills"></div>
+    <div id="n1-status" style="margin-top:10px"></div>
+  </div>
+</div>
+
+<!-- ══ HUKUM II ══ -->
+<div class="sec" id="s-n2">
+  <div class="sec-title">Hukum II Newton — F = ma</div>
+  <div class="sec-desc">Percepatan suatu benda berbanding lurus dengan gaya resultan dan berbanding terbalik dengan massanya.</div>
+  <div class="card">
+    <div class="card-title">Parameter</div>
+    <div class="two">
+      <div>
+        <div class="cr"><label>Gaya F (N)</label><input type="range" id="n2-f" min="0" max="200" value="60" oninput="n2Update()"><span class="cv" id="n2-fv">60 N</span></div>
+        <div class="cr"><label>Massa m (kg)</label><input type="range" id="n2-m" min="0.5" max="30" value="5" step="0.5" oninput="n2Update()"><span class="cv" id="n2-mv">5.0 kg</span></div>
+        <div class="cr"><label>Gesekan μ</label><input type="range" id="n2-mu" min="0" max="0.8" value="0" step="0.01" oninput="n2Update()"><span class="cv" id="n2-muv">0.00</span></div>
+        <div class="cr"><label>g (m/s²)</label><input type="range" id="n2-g" min="1" max="25" value="9.8" step="0.1" oninput="n2Update()"><span class="cv" id="n2-gv">9.8</span></div>
+      </div>
+      <div id="n2-pills" class="pills" style="align-content:start"></div>
+    </div>
+    <div class="btns">
+      <button class="btn btn-primary" onclick="n2Play()">▶ Animasi</button>
+      <button class="btn btn-outline" onclick="n2Reset()">↺ Reset</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Simulasi Gerak</div>
+    <canvas id="n2-canvas" height="160"></canvas>
+  </div>
+  <div class="card">
+    <div class="card-title">Grafik v–t</div>
+    <canvas id="n2-vt" height="180"></canvas>
+  </div>
+</div>
+
+<!-- ══ HUKUM III ══ -->
+<div class="sec" id="s-n3">
+  <div class="sec-title">Hukum III Newton — Aksi & Reaksi</div>
+  <div class="sec-desc">Setiap gaya aksi menimbulkan gaya reaksi yang sama besar, berlawanan arah, dan bekerja pada benda yang berbeda.</div>
+  <div class="card">
+    <div class="card-title">Pasangan Aksi–Reaksi</div>
+    <div class="cr"><label>Gaya aksi (N)</label><input type="range" id="n3-f" min="5" max="120" value="50" oninput="n3Draw()"><span class="cv" id="n3-fv">50 N</span></div>
+    <div class="cr"><label>Massa benda A (kg)</label><input type="range" id="n3-mA" min="1" max="20" value="5" step="0.5" oninput="n3Draw()"><span class="cv" id="n3-mAv">5.0 kg</span></div>
+    <div class="cr"><label>Massa benda B (kg)</label><input type="range" id="n3-mB" min="1" max="20" value="8" step="0.5" oninput="n3Draw()"><span class="cv" id="n3-mBv">8.0 kg</span></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Diagram</div>
+    <canvas id="n3-canvas" height="200"></canvas>
+  </div>
+  <div class="card">
+    <div class="card-title">Percepatan Masing-masing Benda</div>
+    <div id="n3-pills" class="pills"></div>
+    <div class="co co-blue" style="margin-top:10px">Gaya aksi dan reaksi <b>sama besar</b>, tetapi percepatan berbeda karena massa berbeda.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Contoh Pasangan Aksi–Reaksi</div>
+    <table>
+      <tr><th>Situasi</th><th>Gaya Aksi</th><th>Gaya Reaksi</th></tr>
+      <tr><td>Buku di meja</td><td>Gravitasi bumi → buku (ke bawah)</td><td>Buku menarik bumi (ke atas)</td></tr>
+      <tr><td>Roket</td><td>Roket mendorong gas (ke belakang)</td><td>Gas mendorong roket (ke depan)</td></tr>
+      <tr><td>Berenang</td><td>Tangan mendorong air (ke belakang)</td><td>Air mendorong tangan (ke depan)</td></tr>
+      <tr><td>Tembakan senjata</td><td>Bubuk mesiu → peluru (ke depan)</td><td>Peluru → senjata mundur (ke belakang)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ══ REFERENSI ══ -->
+<div class="sec" id="s-referensi">
+  <div class="sec-title">Referensi Hukum Newton</div>
+  <div class="sec-desc">Rumus-rumus dan konsep penting hukum gerak Newton.</div>
+  <div class="two">
+    <div class="card">
+      <div class="card-title">Hukum I Newton</div>
+      <div class="co co-blue">ΣF = 0 → a = 0 (diam atau GLB)</div>
+      <div class="fm">ΣFₓ = 0 dan ΣFᵧ = 0</div>
+      <p style="font-size:13px;margin-top:8px">Berlaku dalam kerangka acuan inersial. Menjelaskan sifat <b>kelembaman (inersia)</b> — kecenderungan benda mempertahankan keadaan geraknya.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Hukum II Newton</div>
+      <div class="co co-amber">ΣF ≠ 0 → a = ΣF / m</div>
+      <div class="fm">ΣF = m · a</div>
+      <div class="fm">a = ΣF / m</div>
+      <div class="fm">Satuan: 1 N = 1 kg·m/s²</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Hukum III Newton</div>
+    <div class="fm">F_aksi = −F_reaksi</div>
+    <div class="fm">|F_aksi| = |F_reaksi|</div>
+    <div class="co co-green">Syarat pasangan aksi-reaksi: (1) sama besar, (2) berlawanan arah, (3) pada garis kerja yang sama, (4) bekerja pada <b>dua benda berbeda</b>.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Gaya-Gaya Umum</div>
+    <table>
+      <tr><th>Gaya</th><th>Rumus</th><th>Keterangan</th></tr>
+      <tr><td>Berat</td><td class="num">W = m · g</td><td>g ≈ 9.8 m/s²</td></tr>
+      <tr><td>Normal</td><td class="num">N = m · g · cos θ</td><td>Tegak lurus permukaan</td></tr>
+      <tr><td>Gesekan statis</td><td class="num">f_s ≤ μ_s · N</td><td>Saat benda diam</td></tr>
+      <tr><td>Gesekan kinetis</td><td class="num">f_k = μ_k · N</td><td>Saat benda bergerak</td></tr>
+      <tr><td>Tegangan tali</td><td class="num">T</td><td>Melalui tali (ringan & tak elastis)</td></tr>
+    </table>
+  </div>
+</div>
+</main>
+
+<script>
+const dark=()=>matchMedia('(prefers-color-scheme:dark)').matches;
+const tc=()=>dark()?'#c8cde8':'#1c1e2e';
+const tc2=()=>dark()?'#9ea3b5':'#6b6e88';
+const tc3=()=>dark()?'#666a80':'#9ea1b8';
+const ac=()=>dark()?'#7898d2':'#3a68d0';
+const gc=()=>dark()?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.04)';
+
+function getCanvas(id,h){
+  const cv=document.getElementById(id);
+  const W=cv.parentElement.offsetWidth||500;
+  const dpr=window.devicePixelRatio||1;
+  cv.width=Math.round(W*dpr); cv.height=Math.round(h*dpr);
+  cv.style.width=W+'px'; cv.style.height=h+'px';
+  const ctx=cv.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  return{W,H:h,ctx};
+}
+
+function arrow(ctx,x1,y1,x2,y2,color,lw=2,label=''){
+  const dx=x2-x1,dy=y2-y1,len=Math.hypot(dx,dy);
+  if(len<2)return;
+  const ux=dx/len,uy=dy/len,hs=Math.min(10,len*0.3);
+  ctx.strokeStyle=color;ctx.lineWidth=lw;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+  ctx.fillStyle=color;
+  ctx.beginPath();
+  ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-ux*hs+uy*hs*0.4,y2-uy*hs-ux*hs*0.4);
+  ctx.lineTo(x2-ux*hs-uy*hs*0.4,y2-uy*hs+ux*hs*0.4);
+  ctx.closePath();ctx.fill();
+  if(label){
+    ctx.fillStyle=color;ctx.font='bold 11px system-ui';ctx.textAlign='center';
+    ctx.fillText(label,(x1+x2)/2-uy*14,(y1+y2)/2+ux*14);
+  }
+}
+
+/* ══ Hukum I ══ */
+function n1Draw(){
+  const f1=+document.getElementById('n1-f1').value;
+  const f2=+document.getElementById('n1-f2').value;
+  const f3=+document.getElementById('n1-f3').value;
+  const f4=+document.getElementById('n1-f4').value;
+  document.getElementById('n1-f1v').textContent=f1+' N';
+  document.getElementById('n1-f2v').textContent=f2+' N';
+  document.getElementById('n1-f3v').textContent=f3+' N';
+  document.getElementById('n1-f4v').textContent=f4+' N';
+
+  const{W,H,ctx}=getCanvas('n1-canvas',240);
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle=dark()?'#1e2030':'#f0f2f8';ctx.fillRect(0,0,W,H);
+  const cx=W/2,cy=H/2,sc=Math.min(W,H)*0.0028;
+  // Block
+  const bs=40;
+  ctx.fillStyle=dark()?'rgba(120,152,210,0.25)':'rgba(58,104,208,0.15)';
+  ctx.strokeStyle=ac();ctx.lineWidth=2;
+  ctx.beginPath();ctx.roundRect(cx-bs/2,cy-bs/2,bs,bs,6);ctx.fill();ctx.stroke();
+  ctx.fillStyle=tc();ctx.font='18px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('📦',cx,cy);ctx.textBaseline='alphabetic';
+
+  const maxLen=Math.min(W,H)*0.38;
+  const maxF=Math.max(f1,f2,f3,f4,1);
+  const scale=maxLen/maxF;
+
+  if(f1>0) arrow(ctx,cx,cy,cx+f1*scale,cy,dark()?'#e08040':'#d06020',2.5,'F₁='+f1+'N');
+  if(f2>0) arrow(ctx,cx,cy,cx-f2*scale,cy,dark()?'#7898d2':'#3a68d0',2.5,'F₂='+f2+'N');
+  if(f3>0) arrow(ctx,cx,cy,cx,cy-f3*scale,dark()?'#4ab870':'#1a7a4a',2.5,'F₃='+f3+'N');
+  if(f4>0) arrow(ctx,cx,cy,cx,cy+f4*scale,dark()?'#c875e8':'#7030c0',2.5,'F₄='+f4+'N');
+
+  const Rx=f1-f2, Ry=f3-f4;
+  const Rnet=Math.hypot(Rx,Ry);
+  const eq=Rnet<0.5;
+  document.getElementById('n1-pills').innerHTML=[
+    ['ΣFₓ',Rx.toFixed(1)+' N'],
+    ['ΣFᵧ',Ry.toFixed(1)+' N'],
+    ['|ΣF|',Rnet.toFixed(1)+' N'],
+    ['Status',eq?'Setimbang':'Tidak Setimbang'],
+  ].map(([l,v])=>`<div class="pill"><div class="pl">${l}</div><div class="pv" style="font-size:13px">${v}</div></div>`).join('');
+  document.getElementById('n1-status').innerHTML=eq
+    ?`<div class="co co-green">✓ Benda dalam kesetimbangan (ΣF = 0). Jika diam → tetap diam. Jika bergerak → GLB.</div>`
+    :`<div class="co co-red">⚠ Ada gaya resultan ${Rnet.toFixed(1)} N. Benda akan mengalami percepatan.</div>`;
+}
+
+/* ══ Hukum II ══ */
+let n2Anim=null,n2X=0,n2V=0,n2T=0,n2Data=[];
+
+function n2Update(){
+  const F=+document.getElementById('n2-f').value;
+  const m=+document.getElementById('n2-m').value;
+  const mu=+document.getElementById('n2-mu').value;
+  const g=+document.getElementById('n2-g').value;
+  document.getElementById('n2-fv').textContent=F+' N';
+  document.getElementById('n2-mv').textContent=m.toFixed(1)+' kg';
+  document.getElementById('n2-muv').textContent=mu.toFixed(2);
+  document.getElementById('n2-gv').textContent=g.toFixed(1);
+  const fric=mu*m*g;
+  const Fnet=Math.max(0,F-fric);
+  const a=Fnet/m;
+  document.getElementById('n2-pills').innerHTML=[
+    ['Gaya F',F+' N'],
+    ['Gesekan f',(fric).toFixed(1)+' N'],
+    ['F_net',Fnet.toFixed(1)+' N'],
+    ['Percepatan a',a.toFixed(2)+' m/s²'],
+  ].map(([l,v])=>`<div class="pill"><div class="pl">${l}</div><div class="pv" style="font-size:12px">${v}</div></div>`).join('');
+  n2DrawScene(0,0);
+  n2DrawVT([]);
+}
+
+function n2DrawScene(x,v_){
+  const{W,H,ctx}=getCanvas('n2-canvas',160);
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle=dark()?'#1e2030':'#f0f2f8';ctx.fillRect(0,0,W,H);
+  // Ground
+  ctx.fillStyle=dark()?'rgba(120,150,180,0.15)':'rgba(100,120,180,0.1)';
+  ctx.fillRect(0,H-28,W,28);
+  ctx.strokeStyle=dark()?'rgba(120,150,210,0.3)':'rgba(80,100,180,0.25)';
+  ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,H-28);ctx.lineTo(W,H-28);ctx.stroke();
+  // Block
+  const maxX=W-100, bw=52, bh=44;
+  const bx=30+Math.min(x*2,maxX), by=H-28-bh;
+  ctx.fillStyle=dark()?'rgba(120,152,210,0.3)':'rgba(58,104,208,0.18)';
+  ctx.strokeStyle=ac();ctx.lineWidth=2;
+  ctx.beginPath();ctx.roundRect(bx,by,bw,bh,6);ctx.fill();ctx.stroke();
+  ctx.font='24px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('📦',bx+bw/2,by+bh/2);ctx.textBaseline='alphabetic';
+  // Force arrow
+  const F=+document.getElementById('n2-f').value;
+  if(F>0){
+    const alen=Math.min(F*0.4,70);
+    arrow(ctx,bx-8,by+bh/2,bx-8+alen,by+bh/2,dark()?'#e08040':'#d06020',2.5,'F');
+  }
+  // Velocity label
+  if(v_>0.05){
+    ctx.fillStyle=ac();ctx.font='11px system-ui';ctx.textAlign='left';
+    ctx.fillText('v = '+v_.toFixed(1)+' m/s',bx,by-6);
+  }
+}
+
+function n2DrawVT(data){
+  const{W,H,ctx}=getCanvas('n2-vt',180);
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle=dark()?'#1e2030':'#f0f2f8';ctx.fillRect(0,0,W,H);
+  const ml=44,mr=16,mt=14,mb=28;
+  const pw=W-ml-mr,ph=H-mt-mb;
+  // Axes
+  ctx.strokeStyle=dark()?'rgba(180,185,210,0.25)':'rgba(60,65,100,0.15)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(ml,mt);ctx.lineTo(ml,mt+ph);ctx.lineTo(ml+pw,mt+ph);ctx.stroke();
+  ctx.fillStyle=tc3();ctx.font='9px system-ui';ctx.textAlign='right';
+  ctx.fillText('v (m/s)',ml-2,mt+6);ctx.textAlign='center';ctx.fillText('t (s)',ml+pw/2,mt+ph+18);
+  if(data.length<2){ctx.fillStyle=tc3();ctx.textAlign='center';ctx.fillText('Mulai animasi untuk melihat grafik',ml+pw/2,mt+ph/2);return;}
+  const maxT=data[data.length-1][0]||1;
+  const maxV=Math.max(...data.map(d=>d[1]),0.1);
+  const toX=t=>ml+t/maxT*pw;
+  const toY=v=>mt+ph-(v/maxV)*ph;
+  // Grid
+  ctx.strokeStyle=gc();ctx.lineWidth=0.6;
+  for(let i=1;i<=5;i++){
+    const y=mt+ph*i/5;ctx.beginPath();ctx.moveTo(ml,y);ctx.lineTo(ml+pw,y);ctx.stroke();
+    ctx.fillStyle=tc3();ctx.font='9px system-ui';ctx.textAlign='right';
+    ctx.fillText((maxV*(1-i/5)).toFixed(1),ml-3,y+4);
+  }
+  ctx.strokeStyle=ac();ctx.lineWidth=2;
+  ctx.beginPath();
+  data.forEach(([t,v],i)=>i===0?ctx.moveTo(toX(t),toY(v)):ctx.lineTo(toX(t),toY(v)));
+  ctx.stroke();
+}
+
+function n2Play(){
+  if(n2Anim) cancelAnimationFrame(n2Anim);
+  const F=+document.getElementById('n2-f').value;
+  const m=+document.getElementById('n2-m').value;
+  const mu=+document.getElementById('n2-mu').value;
+  const g=+document.getElementById('n2-g').value;
+  const fric=mu*m*g;
+  const a=Math.max(0,(F-fric)/m);
+  n2X=0;n2V=0;n2T=0;n2Data=[[0,0]];
+  const maxTime=Math.sqrt(2*(+document.getElementById('n2-canvas').style.width.replace('px','')-80)/(a||0.01)/2);
+  function step(){
+    n2T+=1/60;n2V+=a/60;n2X+=n2V/60;
+    n2Data.push([n2T,n2V]);
+    n2DrawScene(n2X,n2V);
+    n2DrawVT(n2Data);
+    if(n2X<300) n2Anim=requestAnimationFrame(step);
+  }
+  n2Anim=requestAnimationFrame(step);
+}
+
+function n2Reset(){
+  if(n2Anim) cancelAnimationFrame(n2Anim);
+  n2X=0;n2V=0;n2T=0;n2Data=[];
+  n2Update();
+}
+
+/* ══ Hukum III ══ */
+function n3Draw(){
+  const F=+document.getElementById('n3-f').value;
+  const mA=+document.getElementById('n3-mA').value;
+  const mB=+document.getElementById('n3-mB').value;
+  document.getElementById('n3-fv').textContent=F+' N';
+  document.getElementById('n3-mAv').textContent=mA.toFixed(1)+' kg';
+  document.getElementById('n3-mBv').textContent=mB.toFixed(1)+' kg';
+
+  const{W,H,ctx}=getCanvas('n3-canvas',200);
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle=dark()?'#1e2030':'#f0f2f8';ctx.fillRect(0,0,W,H);
+
+  const cx=W/2,cy=H/2;
+  const gap=18,bwA=Math.min(50+mA*3,90),bwB=Math.min(50+mB*3,90),bh=48;
+  const xA=cx-gap/2-bwA,xB=cx+gap/2;
+
+  // Block A
+  ctx.fillStyle=dark()?'rgba(120,152,210,0.25)':'rgba(58,104,208,0.15)';
+  ctx.strokeStyle=ac();ctx.lineWidth=2;
+  ctx.beginPath();ctx.roundRect(xA,cy-bh/2,bwA,bh,6);ctx.fill();ctx.stroke();
+  ctx.font='20px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('🟦',xA+bwA/2,cy);
+  ctx.fillStyle=tc();ctx.font='bold 11px system-ui';
+  ctx.fillText('A ('+mA+'kg)',xA+bwA/2,cy-bh/2-8);ctx.textBaseline='alphabetic';
+
+  // Block B
+  ctx.fillStyle=dark()?'rgba(224,128,64,0.2)':'rgba(208,96,32,0.12)';
+  ctx.strokeStyle=dark()?'#e08040':'#d06020';ctx.lineWidth=2;
+  ctx.beginPath();ctx.roundRect(xB,cy-bh/2,bwB,bh,6);ctx.fill();ctx.stroke();
+  ctx.font='20px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('🟧',xB+bwB/2,cy);
+  ctx.fillStyle=tc();ctx.font='bold 11px system-ui';ctx.textBaseline='alphabetic';
+  ctx.fillText('B ('+mB+'kg)',xB+bwB/2,cy-bh/2-8);
+
+  // Contact zone
+  ctx.fillStyle=dark()?'rgba(255,255,255,0.08)':'rgba(0,0,0,0.06)';
+  ctx.fillRect(cx-gap/2,cy-bh/2,gap,bh);
+
+  const sc=Math.min((W-bwA-bwB-gap-40)/2/F,1.2);
+  const alen=F*sc;
+  // Reaction on A (←)
+  arrow(ctx,xA,cy,xA-alen,cy,dark()?'#e08040':'#d06020',2.5,'F_reaksi='+F+'N');
+  // Action on B (→)
+  arrow(ctx,xB+bwB,cy,xB+bwB+alen,cy,ac(),2.5,'F_aksi='+F+'N');
+
+  const aA=F/mA, aB=F/mB;
+  document.getElementById('n3-pills').innerHTML=[
+    ['Gaya aksi/reaksi',F+' N'],
+    ['a benda A',(aA).toFixed(2)+' m/s²'],
+    ['a benda B',(aB).toFixed(2)+' m/s²'],
+    ['Rasio a_A/a_B',(aA/aB).toFixed(2)],
+  ].map(([l,v])=>`<div class="pill"><div class="pl">${l}</div><div class="pv" style="font-size:12px">${v}</div></div>`).join('');
+}
+
+function showSec(id,el){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nt').forEach(t=>t.classList.remove('active'));
+  document.getElementById('s-'+id).classList.add('active');
+  el.classList.add('active');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    if(id==='n1') n1Draw();
+    if(id==='n2') n2Update();
+    if(id==='n3') n3Draw();
+  }));
+}
+
+window.addEventListener('load',()=>{ n1Draw(); });
+window.addEventListener('resize',()=>{
+  const id=document.querySelector('.sec.active')?.id;
+  if(id==='s-n1') n1Draw();
+  if(id==='s-n2') n2Update();
+  if(id==='s-n3') n3Draw();
+});
+</script>
+</body>
+</html>
