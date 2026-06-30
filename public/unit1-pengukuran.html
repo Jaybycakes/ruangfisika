@@ -276,7 +276,8 @@ const bg3  = () => dark()?'#2a2c3e':'#edf0f8';
 
 function getCanvas(id, h) {
   const cv = document.getElementById(id);
-  const W  = cv.offsetWidth || cv.parentElement?.offsetWidth || 520;
+  // Prefer parent width — canvas default offsetWidth is 300px regardless of layout
+  const W  = cv.parentElement?.clientWidth || cv.offsetWidth || 520;
   const dpr = window.devicePixelRatio || 1;
   if (cv.width !== Math.round(W*dpr) || cv.height !== Math.round(h*dpr)) {
     cv.width  = Math.round(W * dpr);
