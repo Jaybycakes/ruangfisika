@@ -324,8 +324,8 @@ function cDraw(q1,q2,r_cm,F,attract){
   // Force arrows — fixed length so μN-range forces are still visible
   const fscale=F>0?50:0;
   if(attract){
-    drawArrow(ctx,x1-r_draw,cy,x1-r_draw+fscale,cy,chargeColor(q1),2.5);
-    drawArrow(ctx,x2+r_draw,cy,x2+r_draw-fscale,cy,chargeColor(q2),2.5);
+    drawArrow(ctx,x1+r_draw,cy,x1+r_draw+fscale,cy,chargeColor(q1),2.5);
+    drawArrow(ctx,x2-r_draw,cy,x2-r_draw-fscale,cy,chargeColor(q2),2.5);
     ctx.fillStyle=tc2();ctx.font='bold 10px system-ui';ctx.textAlign='center';
     ctx.fillText('F='+fmtN(F),cx,cy-35);
   } else {
