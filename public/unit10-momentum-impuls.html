@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 10: Momentum &amp; Impuls — Fisika Interaktif</title>
+<style>
+:root{
+  --bg:#f4f5f9;--bg2:#ffffff;--bg3:#edf0f8;
+  --text:#1c1e2e;--text2:#6b6e88;--text3:#9ea1b8;
+  --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.14);
+  --primary:#1e2d56;--accent:#3a68d0;--accent2:#1e48a8;
+  --green:#1a7a4a;--amber:#a05c00;--red:#b02020;--orange:#d06020;--purple:#6535c0;
+  --r:10px;--rs:6px;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#1c1e2a;--bg2:#242535;--bg3:#2a2c3e;
+  --text:#e8eaf2;--text2:#9ea3b5;--text3:#666a80;
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.15);
+  --primary:#7a90cc;--accent:#7898d2;--accent2:#9ab8e8;
+  --green:#4ab870;--amber:#d49020;--red:#e05050;--orange:#e08040;--purple:#9a70e8;
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 20px;height:52px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:50}
+.brand{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0}
+.logo{width:32px;height:32px;background:var(--primary);border-radius:7px;display:grid;place-items:center;color:#fff;font-size:15px;flex-shrink:0;line-height:1}
+.brand-name{font-size:13px;font-weight:600;color:var(--text);line-height:1.3}
+.brand-sub{font-size:10px;color:var(--text2);line-height:1.3}
+.hd-sep{color:var(--text3);font-size:14px}
+.hd-unit{font-size:13px;font-weight:500;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hd-back{margin-left:auto;font-size:12px;font-weight:500;color:var(--accent);text-decoration:none;padding:5px 12px;border:1px solid var(--border2);border-radius:var(--rs);white-space:nowrap;flex-shrink:0}
+.hd-back:hover{background:var(--bg3)}
+nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 20px;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+.nt{padding:10px 14px;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;border-radius:6px 6px 0 0;border:1px solid transparent;border-bottom:none;white-space:nowrap;background:none;transition:.15s}
+.nt:hover{color:var(--text);background:var(--bg3)}
+.nt.active{color:var(--accent);background:var(--bg2);border-color:var(--border);margin-bottom:-1px}
+main{padding:18px 20px;max-width:960px;margin:0 auto}
+.sec{display:none}.sec.active{display:block}
+.sec-title{font-size:17px;font-weight:600;margin-bottom:3px}
+.sec-desc{font-size:13px;color:var(--text2);margin-bottom:16px}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.card-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:620px){.two{grid-template-columns:1fr}}
+.cr{display:flex;align-items:center;gap:8px;margin:7px 0}
+.cr label{font-size:12px;color:var(--text2);min-width:160px;flex-shrink:0}
+.cr input[type=range]{flex:1;accent-color:var(--accent)}
+.cv{font-size:13px;font-weight:600;min-width:80px;text-align:right;font-variant-numeric:tabular-nums}
+canvas{display:block;border-radius:var(--rs);max-width:100%}
+.pills{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.pill{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 12px;text-align:center;min-width:100px}
+.pill .pl{font-size:10px;color:var(--text3);margin-bottom:2px;text-transform:uppercase;letter-spacing:.04em}
+.pill .pv{font-size:14px;font-weight:700;font-variant-numeric:tabular-nums}
+.fm{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:7px 12px;font-family:'Courier New',monospace;font-size:12px;color:var(--accent);margin:5px 0;line-height:1.7}
+.co{border-radius:var(--rs);padding:9px 13px;font-size:13px;margin:8px 0;line-height:1.6}
+.co-blue{background:color-mix(in srgb,var(--accent) 10%,transparent);color:var(--accent)}
+.co-green{background:color-mix(in srgb,var(--green) 10%,transparent);color:var(--green)}
+.co-amber{background:color-mix(in srgb,var(--amber) 12%,transparent);color:var(--amber)}
+.co-red{background:color-mix(in srgb,var(--red) 12%,transparent);color:var(--red)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border-radius:var(--rs);font-size:13px;font-weight:600;cursor:pointer;border:none;transition:.15s;font-family:inherit}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:var(--accent2)}
+.btn-outline{background:var(--bg);border:1px solid var(--border2);color:var(--text)}.btn-outline:hover{background:var(--bg3)}
+.btns{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;padding:6px 8px;border-bottom:1px solid var(--border);text-align:left;font-weight:600}
+td{padding:7px 8px;border-bottom:1px solid var(--border)}
+tr:last-child td{border-bottom:none}
+td.num{font-family:'Courier New',monospace;color:var(--accent)}
+.sel{height:36px;width:100%;border-radius:var(--rs);border:1px solid var(--border2);background:var(--bg2);padding:0 10px;font-size:13px;color:var(--text);font-family:inherit;cursor:pointer;margin-top:4px}
+.sel:focus{outline:none;box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 25%,transparent)}
+</style>
+</head>
+<body>
+<header>
+  <a class="brand" href="/">
+    <div class="logo">⚛</div>
+    <div>
+      <div class="brand-name">Fisika Interaktif</div>
+      <div class="brand-sub">SMA 10 · Kurikulum Merdeka</div>
+    </div>
+  </a>
+  <span class="hd-sep">›</span>
+  <span class="hd-unit">Unit 10: Momentum &amp; Impuls</span>
+  <a class="hd-back" href="/">← Dashboard</a>
+</header>
+<nav>
+  <div class="nt active" onclick="showSec('tumbukan',this)">Tumbukan 1D</div>
+  <div class="nt" onclick="showSec('impuls',this)">Impuls</div>
+  <div class="nt" onclick="showSec('referensi',this)">📖 Referensi</div>
+</nav>
+<main>
+
+<!-- ══ TUMBUKAN ══ -->
+<div class="sec active" id="s-tumbukan">
+  <div class="sec-title">Tumbukan 1 Dimensi</div>
+  <div class="sec-desc">Dua benda bertumbukan. Momentum total selalu kekal; energi kinetik hanya kekal pada tumbukan elastis.</div>
+  <div class="two">
+    <div class="card">
+      <div class="card-title">Benda 1 (Biru)</div>
+      <div class="cr"><label>Massa m₁ (kg)</label><input type="range" id="t-m1" min="0.5" max="10" value="3" step="0.5" oninput="tUpdate()"><span class="cv" id="t-m1v">3.0</span></div>
+      <div class="cr"><label>Kecepatan awal v₁ (m/s)</label><input type="range" id="t-v1" min="-10" max="10" value="6" step="0.5" oninput="tUpdate()"><span class="cv" id="t-v1v">6.0</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Benda 2 (Oranye)</div>
+      <div class="cr"><label>Massa m₂ (kg)</label><input type="range" id="t-m2" min="0.5" max="10" value="5" step="0.5" oninput="tUpdate()"><span class="cv" id="t-m2v">5.0</span></div>
+      <div class="cr"><label>Kecepatan awal v₂ (m/s)</label><input type="range" id="t-v2" min="-10" max="10" value="-2" step="0.5" oninput="tUpdate()"><span class="cv" id="t-v2v">-2.0</span></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Jenis Tumbukan</div>
+    <select class="sel" id="t-type" onchange="tUpdate()">
+      <option value="1">Elastis sempurna (e = 1) — energi kinetik kekal</option>
+      <option value="0.5">Tidak elastis (e = 0.5)</option>
+      <option value="0">Tidak elastis sempurna (e = 0) — benda menyatu</option>
+    </select>
+  </div>
+  <div class="card">
+    <div class="card-title">Simulasi Tumbukan</div>
+    <canvas id="t-canvas" height="180"></canvas>
+    <div class="btns">
+      <button class="btn btn-primary" onclick="tPlay()">▶ Animasi</button>
+      <button class="btn btn-outline" onclick="tReset()">↺ Reset</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Hasil Tumbukan</div>
+    <div id="t-results"></div>
+  </div>
+</div>
+
+<!-- ══ IMPULS ══ -->
+<div class="sec" id="s-impuls">
+  <div class="sec-title">Impuls &amp; Perubahan Momentum</div>
+  <div class="sec-desc">Impuls adalah hasil kali gaya dan selang waktu. Impuls sama dengan perubahan momentum benda.</div>
+  <div class="card">
+    <div class="card-title">Parameter</div>
+    <div class="cr"><label>Gaya rata-rata F̄ (N)</label><input type="range" id="i-f" min="10" max="500" value="150" oninput="iUpdate()"><span class="cv" id="i-fv">150</span></div>
+    <div class="cr"><label>Selang waktu Δt (s)</label><input type="range" id="i-dt" min="0.05" max="2" value="0.5" step="0.05" oninput="iUpdate()"><span class="cv" id="i-dtv">0.50</span></div>
+    <div class="cr"><label>Massa benda m (kg)</label><input type="range" id="i-m" min="0.5" max="20" value="5" step="0.5" oninput="iUpdate()"><span class="cv" id="i-mv">5.0</span></div>
+    <div class="cr"><label>Kecepatan awal v₀ (m/s)</label><input type="range" id="i-vi" min="-20" max="20" value="0" step="0.5" oninput="iUpdate()"><span class="cv" id="i-viv">0.0</span></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Grafik Gaya–Waktu (Area = Impuls)</div>
+    <canvas id="i-canvas" height="200"></canvas>
+  </div>
+  <div class="card">
+    <div class="card-title">Hasil</div>
+    <div id="i-pills" class="pills"></div>
+  </div>
+</div>
+
+<!-- ══ REFERENSI ══ -->
+<div class="sec" id="s-referensi">
+  <div class="sec-title">Referensi Momentum &amp; Impuls</div>
+  <div class="sec-desc">Rumus-rumus utama dan contoh soal tumbukan.</div>
+  <div class="two">
+    <div class="card">
+      <div class="card-title">Momentum</div>
+      <div class="fm">p = m · v</div>
+      <div class="fm">Satuan: kg·m/s</div>
+      <div class="co co-blue">Momentum adalah besaran vektor. Arah momentum = arah kecepatan.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Impuls</div>
+      <div class="fm">J = F̄ · Δt</div>
+      <div class="fm">J = Δp = m·v_f − m·v_i</div>
+      <div class="co co-green">Impuls = perubahan momentum (teorema impuls-momentum)</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Hukum Kekekalan Momentum</div>
+    <div class="fm">p_total sebelum = p_total sesudah</div>
+    <div class="fm">m₁v₁ + m₂v₂ = m₁v₁' + m₂v₂'</div>
+    <div class="co co-amber">Berlaku jika tidak ada gaya luar (sistem terisolasi)</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Jenis Tumbukan</div>
+    <table>
+      <tr><th>Jenis</th><th>Koef. Restitusi (e)</th><th>Energi Kinetik</th></tr>
+      <tr><td>Elastis sempurna</td><td class="num">e = 1</td><td>Kekal</td></tr>
+      <tr><td>Tidak elastis</td><td class="num">0 &lt; e &lt; 1</td><td>Berkurang</td></tr>
+      <tr><td>Tidak elastis sempurna</td><td class="num">e = 0</td><td>Berkurang maksimum</td></tr>
+    </table>
+    <div class="fm" style="margin-top:10px">e = |v₂'− v₁'| / |v₁ − v₂|</div>
+    <div class="fm">v₁' = (m₁v₁ + m₂v₂ − m₂e(v₁−v₂)) / (m₁+m₂)</div>
+    <div class="fm">v₂' = (m₁v₁ + m₂v₂ + m₁e(v₁−v₂)) / (m₁+m₂)</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Contoh Soal</div>
+    <table>
+      <tr><th>Situasi</th><th>m₁</th><th>v₁</th><th>m₂</th><th>v₂</th><th>Jenis</th></tr>
+      <tr><td>Bola biliar</td><td class="num">0.17 kg</td><td class="num">3 m/s</td><td class="num">0.17 kg</td><td class="num">0 m/s</td><td>Elastis</td></tr>
+      <tr><td>Mobil tabrakan</td><td class="num">1500 kg</td><td class="num">10 m/s</td><td class="num">1200 kg</td><td class="num">−5 m/s</td><td>Tidak elastis sempurna</td></tr>
+    </table>
+  </div>
+</div>
+</main>
+
+<script>
+const dark=()=>matchMedia('(prefers-color-scheme:dark)').matches;
+const tc=()=>dark()?'#c8cde8':'#1c1e2e';
+const tc2=()=>dark()?'#9ea3b5':'#6b6e88';
+const tc3=()=>dark()?'#666a80':'#9ea1b8';
+const ac=()=>dark()?'#7898d2':'#3a68d0';
+const oc=()=>dark()?'#e08040':'#d06020';
+const gc=()=>dark()?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.04)';
+
+function getCanvas(id,h){
+  const cv=document.getElementById(id);
+  const W=cv.parentElement.offsetWidth-32||500;
+  const dpr=window.devicePixelRatio||1;
+  cv.width=Math.round(W*dpr);cv.height=Math.round(h*dpr);
+  cv.style.width=W+'px';cv.style.height=h+'px';
+  const ctx=cv.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  return{W,H:h,ctx};
+}
+
+function arrow(ctx,x1,y1,x2,y2,color,lw=2){
+  const dx=x2-x1,dy=y2-y1,len=Math.hypot(dx,dy);
+  if(len<4)return;
+  const ux=dx/len,uy=dy/len,hs=Math.min(10,len*0.35);
+  ctx.strokeStyle=color;ctx.lineWidth=lw;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+  ctx.fillStyle=color;
+  ctx.beginPath();
+  ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-ux*hs+uy*hs*0.4,y2-uy*hs-ux*hs*0.4);
+  ctx.lineTo(x2-ux*hs-uy*hs*0.4,y2-uy*hs+ux*hs*0.4);
+  ctx.closePath();ctx.fill();
+}
+
+/* ══ Tumbukan ══ */
+let tAnim=null,tCollided=false;
+let tPx1,tPx2,tPv1,tPv2,tBw1,tBw2,tM1,tM2,tV1post,tV2post,tW;
+
+function tCalc(m1,v1,m2,v2,e){
+  const M=m1+m2;
+  return{
+    v1p:(m1*v1+m2*v2-m2*e*(v1-v2))/M,
+    v2p:(m1*v1+m2*v2+m1*e*(v1-v2))/M,
+  };
+}
+
+function tUpdate(){
+  const m1=+document.getElementById('t-m1').value;
+  const v1=+document.getElementById('t-v1').value;
+  const m2=+document.getElementById('t-m2').value;
+  const v2=+document.getElementById('t-v2').value;
+  document.getElementById('t-m1v').textContent=m1.toFixed(1);
+  document.getElementById('t-m2v').textContent=m2.toFixed(1);
+  document.getElementById('t-v1v').textContent=v1.toFixed(1);
+  document.getElementById('t-v2v').textContent=v2.toFixed(1);
+  tShowResults(m1,v1,m2,v2);
+  tDrawStatic(m1,v1,m2,v2);
+}
+
+function tDrawStatic(m1,v1,m2,v2){
+  const{W,H,ctx}=getCanvas('t-canvas',180);
+  tW=W;
+  const bw1=Math.min(28+m1*5,72),bw2=Math.min(28+m2*5,72);
+  const by=H/2-24;const bh=48;
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle=dark()?'#1e2030':'#f0f2f8';ctx.fillRect(0,0,W,H);
+  // ground
+  ctx.fillStyle=dark()?'rgba(255,255,255,0.06)':'rgba(0,0,0,0.05)';
+  ctx.fillRect(0,H-20,W,20);
+  ctx.strokeStyle=dark()?'rgba(180,190,220,0.2)':'rgba(80,90,140,0.2)';
+  ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,H-20);ctx.lineTo(W,H-20);ctx.stroke();
+  // block1
+  const x1=W*0.12;const x2=W*0.72;
+  drawBlock(ctx,x1,by,bw1,bh,ac(),'1');
+  drawBlock(ctx,x2,by,bw2,bh,oc(),'2');
+  // velocity arrows
+  if(v1>0) arrow(ctx,x1+bw1,by+bh/2,x1+bw1+Math.min(v1*8,80),by+bh/2,ac(),2.5);
+  else if(v1<0) arrow(ctx,x1,by+bh/2,x1+Math.max(v1*8,-60),by+bh/2,ac(),2.5);
+  if(v2>0) arrow(ctx,x2+bw2,by+bh/2,x2+bw2+Math.min(v2*8,80),by+bh/2,oc(),2.5);
+  else if(v2<0) arrow(ctx,x2,by+bh/2,x2+Math.max(v2*8,-60),by+bh/2,oc(),2.5);
+  // labels
+  ctx.font='bold 11px system-ui';ctx.textAlign='center';
+  ctx.fillStyle=ac();ctx.fillText('v₁='+v1.toFixed(1)+' m/s',x1+bw1/2,by-8);
+  ctx.fillStyle=oc();ctx.fillText('v₂='+v2.toFixed(1)+' m/s',x2+bw2/2,by-8);
+}
+
+function drawBlock(ctx,x,y,w,h,color,label){
+  ctx.fillStyle=color+'30';ctx.strokeStyle=color;ctx.lineWidth=2;
+  ctx.beginPath();ctx.roundRect(x,y,w,h,6);ctx.fill();ctx.stroke();
+  ctx.fillStyle=color;ctx.font='bold 13px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText(label,x+w/2,y+h/2);ctx.textBaseline='alphabetic';
+}
+
+function tShowResults(m1,v1,m2,v2){
+  const e=+document.getElementById('t-type').value;
+  const{v1p,v2p}=tCalc(m1,v1,m2,v2,e);
+  const pBefore=m1*v1+m2*v2;
+  const pAfter=m1*v1p+m2*v2p;
+  const keBefore=0.5*m1*v1**2+0.5*m2*v2**2;
+  const keAfter=0.5*m1*v1p**2+0.5*m2*v2p**2;
+  document.getElementById('t-results').innerHTML=`
+    <div class="pills" style="margin-bottom:12px">
+      <div class="pill"><div class="pl">v₁′</div><div class="pv" style="color:var(--accent)">${v1p.toFixed(2)} m/s</div></div>
+      <div class="pill"><div class="pl">v₂′</div><div class="pv" style="color:var(--orange)">${v2p.toFixed(2)} m/s</div></div>
+      <div class="pill"><div class="pl">p sebelum</div><div class="pv">${pBefore.toFixed(2)} kg·m/s</div></div>
+      <div class="pill"><div class="pl">p sesudah</div><div class="pv">${pAfter.toFixed(2)} kg·m/s</div></div>
+    </div>
+    <table>
+      <tr><th>Besaran</th><th>Sebelum</th><th>Sesudah</th><th>Selisih</th></tr>
+      <tr><td>Momentum total (kg·m/s)</td><td class="num">${pBefore.toFixed(3)}</td><td class="num">${pAfter.toFixed(3)}</td><td class="num">${Math.abs(pBefore-pAfter)<0.001?'≈ 0':(pAfter-pBefore).toFixed(3)}</td></tr>
+      <tr><td>Energi kinetik total (J)</td><td class="num">${keBefore.toFixed(3)}</td><td class="num">${keAfter.toFixed(3)}</td><td class="num">${(keAfter-keBefore).toFixed(3)}</td></tr>
+    </table>
+    <div class="co co-green" style="margin-top:10px">✓ Momentum kekal: ${Math.abs(pBefore-pAfter)<0.01?'Ya (konservasi terpenuhi)':'Periksa parameter'}</div>
+  `;
+}
+
+function tPlay(){
+  if(tAnim) cancelAnimationFrame(tAnim);
+  const m1=+document.getElementById('t-m1').value;
+  const v1=+document.getElementById('t-v1').value;
+  const m2=+document.getElementById('t-m2').value;
+  const v2=+document.getElementById('t-v2').value;
+  const e=+document.getElementById('t-type').value;
+  const res=tCalc(m1,v1,m2,v2,e);
+  tBw1=Math.min(28+m1*5,72);tBw2=Math.min(28+m2*5,72);
+  tM1=m1;tM2=m2;tV1post=res.v1p;tV2post=res.v2p;
+  const{W,H}=getCanvas('t-canvas',180);tW=W;
+  tPx1=W*0.12;tPx2=W*0.72;
+  const spd=W/25/60;
+  tPv1=v1*spd;tPv2=v2*spd;
+  tCollided=false;
+
+  const by=H/2-24,bh=48;
+  function step(){
+    tPx1+=tPv1;tPx2+=tPv2;
+    if(!tCollided && tPx1+tBw1>=tPx2){
+      tCollided=true;
+      tPv1=tV1post*spd*60/60;
+      tPv2=tV2post*spd*60/60;
+      tPx2=tPx1+tBw1+1;
+    }
+    const{ctx}=getCanvas('t-canvas',180);
+    ctx.clearRect(0,0,tW,H);
+    ctx.fillStyle=dark()?'#1e2030':'#f0f2f8';ctx.fillRect(0,0,tW,H);
+    ctx.fillStyle=dark()?'rgba(255,255,255,0.06)':'rgba(0,0,0,0.05)';ctx.fillRect(0,H-20,tW,20);
+    ctx.strokeStyle=dark()?'rgba(180,190,220,0.2)':'rgba(80,90,140,0.2)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(0,H-20);ctx.lineTo(tW,H-20);ctx.stroke();
+    drawBlock(ctx,tPx1,by,tBw1,bh,ac(),'1');
+    drawBlock(ctx,tPx2,by,tBw2,bh,oc(),'2');
+    const outOfBounds=tPx1+tBw1<0||tPx1>tW||tPx2<0||tPx2>tW+tBw2;
+    if(!outOfBounds) tAnim=requestAnimationFrame(step);
+  }
+  tAnim=requestAnimationFrame(step);
+}
+
+function tReset(){
+  if(tAnim) cancelAnimationFrame(tAnim);
+  tCollided=false;
+  tUpdate();
+}
+
+/* ══ Impuls ══ */
+function iUpdate(){
+  const F=+document.getElementById('i-f').value;
+  const dt=+document.getElementById('i-dt').value;
+  const m=+document.getElementById('i-m').value;
+  const vi=+document.getElementById('i-vi').value;
+  document.getElementById('i-fv').textContent=F;
+  document.getElementById('i-dtv').textContent=dt.toFixed(2);
+  document.getElementById('i-mv').textContent=m.toFixed(1);
+  document.getElementById('i-viv').textContent=vi.toFixed(1);
+  const J=F*dt,dp=J,vf=vi+J/m;
+  document.getElementById('i-pills').innerHTML=[
+    ['Impuls J',J.toFixed(2)+' N·s'],
+    ['Δp = J',dp.toFixed(2)+' kg·m/s'],
+    ['v awal',vi.toFixed(2)+' m/s'],
+    ['v akhir vf',vf.toFixed(2)+' m/s'],
+  ].map(([l,v])=>`<div class="pill"><div class="pl">${l}</div><div class="pv" style="font-size:13px">${v}</div></div>`).join('');
+  iDraw(F,dt,J,vf,m,vi);
+}
+
+function iDraw(F,dt,J,vf,m,vi){
+  const{W,H,ctx}=getCanvas('i-canvas',200);
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle=dark()?'#1e2030':'#f0f2f8';ctx.fillRect(0,0,W,H);
+  const ml=50,mr=20,mt=20,mb=36;
+  const pw=W-ml-mr,ph=H-mt-mb;
+  // Draw F-t rectangle
+  const maxT=Math.max(dt*1.4,0.2),maxF=F*1.3;
+  const toX=t=>ml+t/maxT*pw;
+  const toY=f=>mt+ph-(f/maxF)*ph;
+  // Shaded area (impulse)
+  ctx.fillStyle=ac()+'28';
+  ctx.fillRect(toX(0),toY(F),toX(dt)-toX(0),toY(0)-toY(F));
+  // F line
+  ctx.strokeStyle=ac();ctx.lineWidth=2.5;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(toX(0),toY(F));ctx.lineTo(toX(dt),toY(F));ctx.stroke();
+  ctx.beginPath();ctx.moveTo(toX(dt),toY(F));ctx.lineTo(toX(dt),toY(0));ctx.stroke();
+  // Axes
+  ctx.strokeStyle=dark()?'rgba(180,185,210,0.3)':'rgba(60,65,100,0.2)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(ml,mt);ctx.lineTo(ml,mt+ph);ctx.lineTo(ml+pw,mt+ph);ctx.stroke();
+  // Labels
+  ctx.fillStyle=tc3();ctx.font='10px system-ui';ctx.textAlign='center';
+  ctx.fillText('t (s)',ml+pw/2,H-4);
+  ctx.textAlign='right';ctx.fillText('F (N)',ml-4,mt+8);
+  ctx.textAlign='center';
+  ctx.fillText('0',toX(0),mt+ph+14);
+  ctx.fillText(dt.toFixed(2),toX(dt),mt+ph+14);
+  ctx.textAlign='right';
+  ctx.fillText(F.toFixed(0),ml-4,toY(F)+4);
+  ctx.fillText('0',ml-4,toY(0)+4);
+  // Area label
+  ctx.fillStyle=ac();ctx.font='bold 12px system-ui';ctx.textAlign='center';
+  const cx=(toX(0)+toX(dt))/2,cy=(toY(F)+toY(0))/2;
+  ctx.fillText('J = '+J.toFixed(2)+' N·s',cx,cy);
+}
+
+function showSec(id,el){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nt').forEach(t=>t.classList.remove('active'));
+  document.getElementById('s-'+id).classList.add('active');
+  el.classList.add('active');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    if(id==='tumbukan') tUpdate();
+    if(id==='impuls') iUpdate();
+  }));
+}
+
+window.addEventListener('load',()=>{ tUpdate(); });
+window.addEventListener('resize',()=>{
+  const id=document.querySelector('.sec.active')?.id;
+  if(id==='s-tumbukan') tUpdate();
+  if(id==='s-impuls') iUpdate();
+});
+</script>
+</body>
+</html>

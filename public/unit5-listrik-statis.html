@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Listrik Statis — Fisika Interaktif</title>
+<style>
+:root{
+  --bg:#f4f5f9;--bg2:#ffffff;--bg3:#edf0f8;
+  --text:#1c1e2e;--text2:#6b6e88;--text3:#9ea1b8;
+  --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.14);
+  --primary:#1e2d56;--accent:#3a68d0;--accent2:#1e48a8;
+  --green:#1a7a4a;--amber:#a05c00;--red:#b02020;--orange:#d06020;--purple:#6535c0;
+  --r:10px;--rs:6px;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#1c1e2a;--bg2:#242535;--bg3:#2a2c3e;
+  --text:#e8eaf2;--text2:#9ea3b5;--text3:#666a80;
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.15);
+  --primary:#7a90cc;--accent:#7898d2;--accent2:#9ab8e8;
+  --green:#4ab870;--amber:#d49020;--red:#e05050;--orange:#e08040;--purple:#9a70e8;
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 20px;height:52px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:50}
+.brand{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0}
+.logo{width:32px;height:32px;background:var(--primary);border-radius:7px;display:grid;place-items:center;color:#fff;font-size:15px;flex-shrink:0;line-height:1}
+.brand-name{font-size:13px;font-weight:600;color:var(--text);line-height:1.3}
+.brand-sub{font-size:10px;color:var(--text2);line-height:1.3}
+.hd-sep{color:var(--text3);font-size:14px}
+.hd-unit{font-size:13px;font-weight:500;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hd-back{margin-left:auto;font-size:12px;font-weight:500;color:var(--accent);text-decoration:none;padding:5px 12px;border:1px solid var(--border2);border-radius:var(--rs);white-space:nowrap;flex-shrink:0}
+.hd-back:hover{background:var(--bg3)}
+nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 20px;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+.nt{padding:10px 14px;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;border-radius:6px 6px 0 0;border:1px solid transparent;border-bottom:none;white-space:nowrap;background:none;transition:.15s}
+.nt:hover{color:var(--text);background:var(--bg3)}
+.nt.active{color:var(--accent);background:var(--bg2);border-color:var(--border);margin-bottom:-1px}
+main{padding:18px 20px;max-width:960px;margin:0 auto}
+.sec{display:none}.sec.active{display:block}
+.sec-title{font-size:17px;font-weight:600;margin-bottom:3px}
+.sec-desc{font-size:13px;color:var(--text2);margin-bottom:16px}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.card-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:620px){.two{grid-template-columns:1fr}}
+.cr{display:flex;align-items:center;gap:8px;margin:7px 0}
+.cr label{font-size:12px;color:var(--text2);min-width:170px;flex-shrink:0}
+.cr input[type=range]{flex:1;accent-color:var(--accent)}
+.cv{font-size:13px;font-weight:600;min-width:80px;text-align:right;font-variant-numeric:tabular-nums}
+canvas{display:block;border-radius:var(--rs);max-width:100%}
+.pills{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.pill{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 12px;text-align:center;min-width:110px}
+.pill .pl{font-size:10px;color:var(--text3);margin-bottom:2px;text-transform:uppercase;letter-spacing:.04em}
+.pill .pv{font-size:13px;font-weight:700;font-variant-numeric:tabular-nums}
+.fm{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:7px 12px;font-family:'Courier New',monospace;font-size:12px;color:var(--accent);margin:5px 0;line-height:1.7}
+.co{border-radius:var(--rs);padding:9px 13px;font-size:13px;margin:8px 0;line-height:1.6}
+.co-blue{background:color-mix(in srgb,var(--accent) 10%,transparent);color:var(--accent)}
+.co-green{background:color-mix(in srgb,var(--green) 10%,transparent);color:var(--green)}
+.co-amber{background:color-mix(in srgb,var(--amber) 12%,transparent);color:var(--amber)}
+.co-red{background:color-mix(in srgb,var(--red) 12%,transparent);color:var(--red)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;padding:6px 8px;border-bottom:1px solid var(--border);text-align:left;font-weight:600}
+td{padding:7px 8px;border-bottom:1px solid var(--border)}
+tr:last-child td{border-bottom:none}
+td.num{font-family:'Courier New',monospace;color:var(--accent)}
+.sel{height:36px;width:100%;border-radius:var(--rs);border:1px solid var(--border2);background:var(--bg2);padding:0 10px;font-size:13px;color:var(--text);font-family:inherit;cursor:pointer;margin-top:4px}
+.sel:focus{outline:none;box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 25%,transparent)}
+</style>
+</head>
+<body>
+<header>
+  <a class="brand" href="/">
+    <div class="logo">⚛</div>
+    <div>
+      <div class="brand-name">Fisika Interaktif</div>
+      <div class="brand-sub">SMA 10 · Kurikulum Merdeka</div>
+    </div>
+  </a>
+  <span class="hd-sep">›</span>
+  <span class="hd-unit">Listrik Statis</span>
+  <a class="hd-back" href="/">← Dashboard</a>
+</header>
+<nav>
+  <div class="nt active" onclick="showSec('coulomb',this)">Hukum Coulomb</div>
+  <div class="nt" onclick="showSec('medan',this)">Medan Listrik</div>
+  <div class="nt" onclick="showSec('potensial',this)">Potensial Listrik</div>
+  <div class="nt" onclick="showSec('referensi',this)">📖 Referensi</div>
+</nav>
+<main>
+
+<!-- ══ COULOMB ══ -->
+<div class="sec active" id="s-coulomb">
+  <div class="sec-title">Hukum Coulomb</div>
+  <div class="sec-desc">Gaya antara dua muatan sebanding dengan besar kedua muatan dan berbanding terbalik dengan kuadrat jaraknya.</div>
+  <div class="two">
+    <div class="card">
+      <div class="card-title">Muatan 1</div>
+      <div class="cr"><label>q₁ (nC)</label><input type="range" id="c-q1" min="-100" max="100" value="30" oninput="cUpdate()"><span class="cv" id="c-q1v">+30</span></div>
+      <div style="margin-top:8px;font-size:12px;color:var(--text2)">Tanda: positif (+) atau negatif (−)</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Muatan 2</div>
+      <div class="cr"><label>q₂ (nC)</label><input type="range" id="c-q2" min="-100" max="100" value="-20" oninput="cUpdate()"><span class="cv" id="c-q2v">−20</span></div>
+      <div style="margin-top:8px;font-size:12px;color:var(--text2)">Tanda: positif (+) atau negatif (−)</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Jarak</div>
+    <div class="cr"><label>r (cm)</label><input type="range" id="c-r" min="1" max="50" value="15" oninput="cUpdate()"><span class="cv" id="c-rv">15</span></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Diagram Gaya</div>
+    <canvas id="c-canvas" height="180"></canvas>
+  </div>
+  <div class="card">
+    <div class="card-title">Hasil</div>
+    <div id="c-pills" class="pills"></div>
+    <div id="c-status" style="margin-top:10px"></div>
+  </div>
+</div>
+
+<!-- ══ MEDAN ══ -->
+<div class="sec" id="s-medan">
+  <div class="sec-title">Medan Listrik</div>
+  <div class="sec-desc">Medan listrik menunjukkan arah dan besar gaya yang akan dialami muatan uji positif di setiap titik.</div>
+  <div class="two">
+    <div class="card">
+      <div class="card-title">Muatan Sumber 1 (Kiri)</div>
+      <div class="cr"><label>q₁ (nC)</label><input type="range" id="m-q1" min="-80" max="80" value="40" oninput="mDraw()"><span class="cv" id="m-q1v">+40</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Muatan Sumber 2 (Kanan)</div>
+      <div class="cr"><label>q₂ (nC)</label><input type="range" id="m-q2" min="-80" max="80" value="-40" oninput="mDraw()"><span class="cv" id="m-q2v">−40</span></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Peta Medan Listrik (Panah = Arah & Besar Relatif E)</div>
+    <canvas id="m-canvas" height="300"></canvas>
+  </div>
+  <div class="co co-blue" style="margin:0 0 14px">Panah merah = menuju muatan negatif (masuk). Panah biru = menjauhi muatan positif (keluar). Panjang panah menunjukkan besar medan relatif.</div>
+</div>
+
+<!-- ══ POTENSIAL ══ -->
+<div class="sec" id="s-potensial">
+  <div class="sec-title">Potensial Listrik</div>
+  <div class="sec-desc">Potensial listrik adalah energi potensial per satuan muatan. Berbeda dengan gaya, potensial adalah besaran skalar.</div>
+  <div class="card">
+    <div class="card-title">Muatan Sumber</div>
+    <div class="cr"><label>Muatan q (nC)</label><input type="range" id="pot-q" min="-80" max="80" value="40" oninput="potUpdate()"><span class="cv" id="pot-qv">+40</span></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Titik Uji</div>
+    <div class="cr"><label>Jarak r dari q (cm)</label><input type="range" id="pot-r" min="1" max="60" value="20" oninput="potUpdate()"><span class="cv" id="pot-rv">20</span></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Grafik V vs r</div>
+    <canvas id="pot-canvas" height="220"></canvas>
+  </div>
+  <div class="card">
+    <div class="card-title">Hasil di Titik Uji</div>
+    <div id="pot-pills" class="pills"></div>
+  </div>
+</div>
+
+<!-- ══ REFERENSI ══ -->
+<div class="sec" id="s-referensi">
+  <div class="sec-title">Referensi Listrik Statis</div>
+  <div class="sec-desc">Rumus dan konstanta penting dalam listrik statis.</div>
+  <div class="two">
+    <div class="card">
+      <div class="card-title">Hukum Coulomb</div>
+      <div class="fm">F = k · |q₁·q₂| / r²</div>
+      <div class="fm">k = 8.99 × 10⁹ N·m²/C²</div>
+      <div class="fm">k = 1/(4πε₀)</div>
+      <div class="co co-blue">F positif = tolak-menolak, F negatif = tarik-menarik (muatan berlawanan)</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Medan Listrik</div>
+      <div class="fm">E = F/q_uji = k·|q|/r²</div>
+      <div class="fm">Satuan: N/C = V/m</div>
+      <div class="co co-amber">Arah E: menjauhi muatan positif, menuju muatan negatif</div>
+    </div>
+  </div>
+  <div class="two">
+    <div class="card">
+      <div class="card-title">Potensial Listrik</div>
+      <div class="fm">V = k·q/r</div>
+      <div class="fm">Satuan: Volt (V) = J/C</div>
+      <div class="co co-green">V adalah skalar — tidak ada arah, bisa dijumlahkan langsung</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Energi Potensial Listrik</div>
+      <div class="fm">Ep = k·q₁·q₂/r</div>
+      <div class="fm">Ep = q·V</div>
+      <div class="co co-blue">Ep > 0: muatan sejenis (tolak), Ep &lt; 0: muatan berlawanan (tarik)</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Perbandingan Besaran</div>
+    <table>
+      <tr><th>Besaran</th><th>Simbol</th><th>Rumus</th><th>Satuan</th><th>Skalar/Vektor</th></tr>
+      <tr><td>Gaya Coulomb</td><td class="num">F</td><td class="num">kq₁q₂/r²</td><td>Newton (N)</td><td>Vektor</td></tr>
+      <tr><td>Medan Listrik</td><td class="num">E</td><td class="num">kq/r²</td><td>N/C</td><td>Vektor</td></tr>
+      <tr><td>Potensial Listrik</td><td class="num">V</td><td class="num">kq/r</td><td>Volt (V)</td><td>Skalar</td></tr>
+      <tr><td>Energi Potensial</td><td class="num">Ep</td><td class="num">kq₁q₂/r</td><td>Joule (J)</td><td>Skalar</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <div class="card-title">Konstanta dan Satuan Penting</div>
+    <table>
+      <tr><th>Konstanta</th><th>Nilai</th></tr>
+      <tr><td>Konstanta Coulomb k</td><td class="num">8.99 × 10⁹ N·m²/C²</td></tr>
+      <tr><td>Permitivitas vakum ε₀</td><td class="num">8.85 × 10⁻¹² C²/(N·m²)</td></tr>
+      <tr><td>Muatan elektron e</td><td class="num">1.60 × 10⁻¹⁹ C</td></tr>
+    </table>
+  </div>
+</div>
+</main>
+
+<script>
+const dark=()=>matchMedia('(prefers-color-scheme:dark)').matches;
+const tc=()=>dark()?'#c8cde8':'#1c1e2e';
+const tc2=()=>dark()?'#9ea3b5':'#6b6e88';
+const tc3=()=>dark()?'#666a80':'#9ea1b8';
+const ac=()=>dark()?'#7898d2':'#3a68d0';
+const oc=()=>dark()?'#e08040':'#d06020';
+const rc=()=>dark()?'#e05050':'#b02020';
+const k_e=8.99e9;
+
+function getCanvas(id,h){
+  const cv=document.getElementById(id);
+  const W=cv.parentElement.offsetWidth-32||500;
+  const dpr=window.devicePixelRatio||1;
+  cv.width=Math.round(W*dpr);cv.height=Math.round(h*dpr);
+  cv.style.width=W+'px';cv.style.height=h+'px';
+  const ctx=cv.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  return{W,H:h,ctx};
+}
+
+function drawArrow(ctx,x1,y1,x2,y2,color,lw=1.5){
+  const dx=x2-x1,dy=y2-y1,len=Math.hypot(dx,dy);
+  if(len<3)return;
+  const ux=dx/len,uy=dy/len,hs=Math.min(6,len*0.4);
+  ctx.strokeStyle=color;ctx.lineWidth=lw;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2-ux*hs,y2-uy*hs);ctx.stroke();
+  ctx.fillStyle=color;
+  ctx.beginPath();
+  ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-ux*hs+uy*hs*0.4,y2-uy*hs-ux*hs*0.4);
+  ctx.lineTo(x2-ux*hs-uy*hs*0.4,y2-uy*hs+ux*hs*0.4);
+  ctx.closePath();ctx.fill();
+}
+
+function chargeColor(q){
+  if(q>0) return ac();
+  if(q<0) return rc();
+  return tc2();
+}
+
+function fmtQ(q){return(q>=0?'+':'')+q+' nC';}
+
+/* ══ Coulomb ══ */
+function cUpdate(){
+  const q1=+document.getElementById('c-q1').value;
+  const q2=+document.getElementById('c-q2').value;
+  const r_cm=+document.getElementById('c-r').value;
+  document.getElementById('c-q1v').textContent=(q1>=0?'+':'')+q1;
+  document.getElementById('c-q2v').textContent=(q2>=0?'+':'')+q2;
+  document.getElementById('c-rv').textContent=r_cm;
+  const r=r_cm/100;
+  const q1C=q1*1e-9,q2C=q2*1e-9;
+  const F=k_e*Math.abs(q1C*q2C)/(r*r);
+  const attract=q1*q2<0;
+  const E1=k_e*Math.abs(q1C)/(r*r);
+  const E2=k_e*Math.abs(q2C)/(r*r);
+  const V1=k_e*q1C/r,V2=k_e*q2C/r;
+  const Ep=k_e*q1C*q2C/r;
+
+  document.getElementById('c-pills').innerHTML=[
+    ['Gaya F',fmtN(F)],
+    ['Jenis',attract?'Tarik-menarik':'Tolak-menolak'],
+    ['E di q₂ oleh q₁',fmtSci(E1)+' N/C'],
+    ['Ep sistem',fmtSci(Ep)+' J'],
+  ].map(([l,v])=>`<div class="pill"><div class="pl">${l}</div><div class="pv" style="font-size:11px">${v}</div></div>`).join('');
+
+  document.getElementById('c-status').innerHTML=attract
+    ?`<div class="co co-blue">⚡ Gaya <b>tarik-menarik</b>: muatan berlawanan tanda. Energi potensial negatif (sistem stabil).</div>`
+    :`<div class="co co-amber">⚡ Gaya <b>tolak-menolak</b>: muatan sesama tanda. Energi potensial positif.</div>`;
+
+  cDraw(q1,q2,r_cm,F,attract);
+}
+
+function fmtN(F){
+  if(F>=1) return F.toFixed(3)+' N';
+  if(F>=1e-3) return (F*1e3).toFixed(3)+' mN';
+  if(F>=1e-6) return (F*1e6).toFixed(3)+' μN';
+  return fmtSci(F)+' N';
+}
+function fmtSci(x){
+  if(x===0)return'0';
+  const exp=Math.floor(Math.log10(Math.abs(x)));
+  const m=(x/10**exp).toFixed(2);
+  return m+'×10'+sup(exp);
+}
+function sup(n){const s=n.toString();return s.split('').map(c=>({'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'}[c]||c)).join('');}
+
+function cDraw(q1,q2,r_cm,F,attract){
+  const{W,H,ctx}=getCanvas('c-canvas',180);
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle=dark()?'#1e2030':'#f0f2f8';ctx.fillRect(0,0,W,H);
+  const margin=W*0.15,cx=W/2,cy=H/2;
+  const x1=cx-W*0.22,x2=cx+W*0.22;
+  const r_draw=22;
+  // Distance label
+  ctx.strokeStyle=tc3();ctx.lineWidth=1;ctx.setLineDash([4,3]);
+  ctx.beginPath();ctx.moveTo(x1,cy+45);ctx.lineTo(x2,cy+45);ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle=tc3();ctx.font='10px system-ui';ctx.textAlign='center';
+  ctx.fillText('r = '+r_cm+' cm',cx,cy+60);
+  // Tick marks on distance line
+  [x1,x2].forEach(x=>{ctx.beginPath();ctx.moveTo(x,cy+40);ctx.lineTo(x,cy+50);ctx.strokeStyle=tc3();ctx.lineWidth=1;ctx.setLineDash([]);ctx.stroke();});
+  // Force arrows
+  const fscale=Math.min(F*2e4,70);
+  if(attract){
+    drawArrow(ctx,x1-10,cy,x1-10+fscale,cy,chargeColor(q1),2.5);
+    drawArrow(ctx,x2+10,cy,x2+10-fscale,cy,chargeColor(q2),2.5);
+    ctx.fillStyle=tc2();ctx.font='bold 10px system-ui';ctx.textAlign='center';
+    ctx.fillText('F='+fmtN(F),cx,cy-35);
+  } else {
+    drawArrow(ctx,x1+r_draw,cy,x1+r_draw-fscale,cy,chargeColor(q1),2.5);
+    drawArrow(ctx,x2-r_draw,cy,x2-r_draw+fscale,cy,chargeColor(q2),2.5);
+    ctx.fillStyle=tc2();ctx.font='bold 10px system-ui';ctx.textAlign='center';
+    ctx.fillText('F='+fmtN(F),cx,cy-35);
+  }
+  // Charges
+  [q1,q2].forEach((q,i)=>{
+    const x=i===0?x1:x2;
+    const col=chargeColor(q);
+    ctx.fillStyle=col+'30';ctx.strokeStyle=col;ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.arc(x,cy,r_draw,0,Math.PI*2);ctx.fill();ctx.stroke();
+    ctx.fillStyle=col;ctx.font='bold 13px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(q>0?'+':q<0?'−':'0',x,cy);ctx.textBaseline='alphabetic';
+    ctx.fillStyle=tc();ctx.font='bold 11px system-ui';ctx.textAlign='center';
+    ctx.fillText('q'+(i+1)+'='+(q>=0?'+':'')+q+'nC',x,cy-r_draw-10);
+  });
+}
+
+/* ══ Medan ══ */
+function mDraw(){
+  const q1=+document.getElementById('m-q1').value;
+  const q2=+document.getElementById('m-q2').value;
+  document.getElementById('m-q1v').textContent=(q1>=0?'+':'')+q1;
+  document.getElementById('m-q2v').textContent=(q2>=0?'+':'')+q2;
+  const{W,H,ctx}=getCanvas('m-canvas',300);
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle=dark()?'#1e2030':'#f0f2f8';ctx.fillRect(0,0,W,H);
+
+  const q1C=q1*1e-9,q2C=q2*1e-9;
+  const px1=W*0.3,px2=W*0.7,py=H/2;
+  const scale=W*0.003; // world units per pixel
+
+  const cols=12,rows=9;
+  for(let ci=0;ci<cols;ci++){
+    for(let ri=0;ri<rows;ri++){
+      const px=W*0.04+ci*(W*0.92/(cols-1));
+      const py_=H*0.06+ri*(H*0.88/(rows-1));
+      const dx1=(px-px1)*scale,dy1=(py_-py)*scale;
+      const dx2=(px-px2)*scale,dy2=(py_-py)*scale;
+      const r1=Math.hypot(dx1,dy1),r2=Math.hypot(dx2,dy2);
+      if(r1<0.04||r2<0.04) continue;
+      const E1x=k_e*q1C*dx1/(r1**3),E1y=k_e*q1C*dy1/(r1**3);
+      const E2x=k_e*q2C*dx2/(r2**3),E2y=k_e*q2C*dy2/(r2**3);
+      const Ex=E1x+E2x,Ey=E1y+E2y;
+      const Emag=Math.hypot(Ex,Ey);
+      if(Emag<1) continue;
+      const len=Math.min(Math.log1p(Emag/1e4)*5,18);
+      const ux=Ex/Emag,uy=Ey/Emag;
+      // Color by dominant charge
+      const nearQ1=r1<r2;
+      const col=nearQ1?(q1>0?ac():rc()):(q2>0?ac():rc());
+      drawArrow(ctx,px-ux*len/2,py_-uy*len/2,px+ux*len/2,py_+uy*len/2,col,1.3);
+    }
+  }
+
+  // Draw charges
+  [[px1,q1],[px2,q2]].forEach(([x,q])=>{
+    const col=chargeColor(q);
+    ctx.fillStyle=col+'35';ctx.strokeStyle=col;ctx.lineWidth=2;
+    ctx.beginPath();ctx.arc(x,py,18,0,Math.PI*2);ctx.fill();ctx.stroke();
+    ctx.fillStyle=col;ctx.font='bold 14px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(q>0?'+':q<0?'−':'0',x,py);ctx.textBaseline='alphabetic';
+    ctx.fillStyle=tc();ctx.font='bold 10px system-ui';ctx.textAlign='center';
+    ctx.fillText((q>=0?'+':'')+q+'nC',x,py+30);
+  });
+}
+
+/* ══ Potensial ══ */
+function potUpdate(){
+  const q=+document.getElementById('pot-q').value;
+  const r_cm=+document.getElementById('pot-r').value;
+  document.getElementById('pot-qv').textContent=(q>=0?'+':'')+q;
+  document.getElementById('pot-rv').textContent=r_cm;
+  const qC=q*1e-9,r=r_cm/100;
+  const V=k_e*qC/r;
+  const E=k_e*Math.abs(qC)/(r*r);
+  const Ep_test=V*1e-9; // for a 1nC test charge
+  document.getElementById('pot-pills').innerHTML=[
+    ['Potensial V',fmtSci(V)+' V'],
+    ['Medan E',fmtSci(E)+' N/C'],
+    ['Ep (q_uji=1nC)',fmtSci(Ep_test)+' J'],
+  ].map(([l,v])=>`<div class="pill"><div class="pl">${l}</div><div class="pv" style="font-size:11px">${v}</div></div>`).join('');
+  potDraw(q,r_cm);
+}
+
+function potDraw(q,r_test_cm){
+  const{W,H,ctx}=getCanvas('pot-canvas',220);
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle=dark()?'#1e2030':'#f0f2f8';ctx.fillRect(0,0,W,H);
+  const ml=52,mr=16,mt=16,mb=32;
+  const pw=W-ml-mr,ph=H-mt-mb;
+  const qC=q*1e-9;
+  const maxR=0.6; // 60 cm
+  const minR=0.01;
+  const N=200;
+  const pts=Array.from({length:N},(_,i)=>{
+    const r=minR+(maxR-minR)*i/(N-1);
+    return[r*100,k_e*qC/r];
+  });
+  const maxV=k_e*Math.abs(qC)/minR;
+  const yRange=maxV*1.1;
+  const toX=r=>ml+((r-1)/(60-1))*pw;
+  const toY=v=>mt+ph/2-(v/yRange)*ph/2;
+  // Grid
+  ctx.strokeStyle=dark()?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.04)';ctx.lineWidth=0.6;
+  for(let i=1;i<=4;i++){
+    const y=mt+ph*i/4;ctx.beginPath();ctx.moveTo(ml,y);ctx.lineTo(ml+pw,y);ctx.stroke();
+  }
+  // Axes
+  ctx.strokeStyle=dark()?'rgba(180,185,210,0.3)':'rgba(60,65,100,0.2)';ctx.lineWidth=1;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(ml,mt);ctx.lineTo(ml,mt+ph);ctx.lineTo(ml+pw,mt+ph);ctx.stroke();
+  // Zero line
+  ctx.strokeStyle=dark()?'rgba(180,185,210,0.2)':'rgba(60,65,100,0.1)';
+  ctx.setLineDash([4,3]);
+  ctx.beginPath();ctx.moveTo(ml,toY(0));ctx.lineTo(ml+pw,toY(0));ctx.stroke();
+  ctx.setLineDash([]);
+  // Curve
+  const color=q>=0?ac():rc();
+  ctx.strokeStyle=color;ctx.lineWidth=2;
+  ctx.beginPath();
+  let first=true;
+  pts.forEach(([r,V])=>{
+    const x=toX(r),y=toY(V);
+    if(y<mt-5||y>mt+ph+5){first=true;return;}
+    first?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    first=false;
+  });
+  ctx.stroke();
+  // Test point marker
+  const rx=toX(r_test_cm);
+  const qC2=qC,r2=r_test_cm/100;
+  const Vtest=k_e*qC2/r2;
+  const ry=toY(Vtest);
+  ctx.fillStyle=oc();ctx.strokeStyle=oc();ctx.lineWidth=1.5;
+  ctx.setLineDash([3,3]);
+  ctx.beginPath();ctx.moveTo(rx,ry);ctx.lineTo(rx,toY(0));ctx.stroke();
+  ctx.beginPath();ctx.moveTo(ml,ry);ctx.lineTo(rx,ry);ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.beginPath();ctx.arc(rx,ry,5,0,Math.PI*2);ctx.fill();
+  // Axis labels
+  ctx.fillStyle=tc3();ctx.font='9px system-ui';
+  ctx.textAlign='center';ctx.fillText('r (cm)',ml+pw/2,H-4);
+  ctx.textAlign='right';ctx.fillText('V (V)',ml-4,mt+8);
+  [10,20,30,40,50,60].forEach(r=>{ctx.textAlign='center';ctx.fillText(r,toX(r),mt+ph+14);});
+}
+
+function showSec(id,el){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nt').forEach(t=>t.classList.remove('active'));
+  document.getElementById('s-'+id).classList.add('active');
+  el.classList.add('active');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    if(id==='coulomb') cUpdate();
+    if(id==='medan') mDraw();
+    if(id==='potensial') potUpdate();
+  }));
+}
+
+window.addEventListener('load',()=>{cUpdate();});
+window.addEventListener('resize',()=>{
+  const id=document.querySelector('.sec.active')?.id;
+  if(id==='s-coulomb') cUpdate();
+  if(id==='s-medan') mDraw();
+  if(id==='s-potensial') potUpdate();
+});
+</script>
+</body>
+</html>

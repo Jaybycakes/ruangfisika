@@ -449,12 +449,21 @@ function n3Draw(){
   ctx.fillStyle=dark()?'rgba(255,255,255,0.08)':'rgba(0,0,0,0.06)';
   ctx.fillRect(cx-gap/2,cy-bh/2,gap,bh);
 
-  const sc=Math.min((W-bwA-bwB-gap-40)/2/F,1.2);
-  const alen=F*sc;
-  // Reaction on A (←)
-  arrow(ctx,xA,cy,xA-alen,cy,dark()?'#e08040':'#d06020',2.5,'F_reaksi='+F+'N');
-  // Action on B (→)
-  arrow(ctx,xB+bwB,cy,xB+bwB+alen,cy,ac(),2.5,'F_aksi='+F+'N');
+  const availA=xA-10, availB=W-(xB+bwB)-10;
+  const sc=Math.min(availA/F, availB/F, 1.2);
+  const alen=Math.max(F*sc, 44);
+  const reaksiColor=dark()?'#e08040':'#d06020';
+  const aksiColor=ac();
+
+  // Reaction on A (←) — label above tip
+  arrow(ctx,xA,cy,xA-alen,cy,reaksiColor,2.5);
+  ctx.fillStyle=reaksiColor;ctx.font='bold 11px system-ui';ctx.textAlign='center';
+  ctx.fillText('F_reaksi='+F+'N', xA-alen, cy-14);
+
+  // Action on B (→) — label above tip
+  arrow(ctx,xB+bwB,cy,xB+bwB+alen,cy,aksiColor,2.5);
+  ctx.fillStyle=aksiColor;ctx.font='bold 11px system-ui';ctx.textAlign='center';
+  ctx.fillText('F_aksi='+F+'N', xB+bwB+alen, cy-14);
 
   const aA=F/mA, aB=F/mB;
   document.getElementById('n3-pills').innerHTML=[

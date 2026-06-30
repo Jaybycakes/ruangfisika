@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Getaran Harmonis — Fisika Interaktif</title>
+<style>
+:root{
+  --bg:#f4f5f9;--bg2:#ffffff;--bg3:#edf0f8;
+  --text:#1c1e2e;--text2:#6b6e88;--text3:#9ea1b8;
+  --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.14);
+  --primary:#1e2d56;--accent:#3a68d0;--accent2:#1e48a8;
+  --green:#1a7a4a;--amber:#a05c00;--red:#b02020;--orange:#d06020;--purple:#6535c0;
+  --r:10px;--rs:6px;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#1c1e2a;--bg2:#242535;--bg3:#2a2c3e;
+  --text:#e8eaf2;--text2:#9ea3b5;--text3:#666a80;
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.15);
+  --primary:#7a90cc;--accent:#7898d2;--accent2:#9ab8e8;
+  --green:#4ab870;--amber:#d49020;--red:#e05050;--orange:#e08040;--purple:#9a70e8;
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 20px;height:52px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:50}
+.brand{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0}
+.logo{width:32px;height:32px;background:var(--primary);border-radius:7px;display:grid;place-items:center;color:#fff;font-size:15px;flex-shrink:0;line-height:1}
+.brand-name{font-size:13px;font-weight:600;color:var(--text);line-height:1.3}
+.brand-sub{font-size:10px;color:var(--text2);line-height:1.3}
+.hd-sep{color:var(--text3);font-size:14px}
+.hd-unit{font-size:13px;font-weight:500;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hd-back{margin-left:auto;font-size:12px;font-weight:500;color:var(--accent);text-decoration:none;padding:5px 12px;border:1px solid var(--border2);border-radius:var(--rs);white-space:nowrap;flex-shrink:0}
+.hd-back:hover{background:var(--bg3)}
+nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 20px;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+.nt{padding:10px 14px;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;border-radius:6px 6px 0 0;border:1px solid transparent;border-bottom:none;white-space:nowrap;background:none;transition:.15s}
+.nt:hover{color:var(--text);background:var(--bg3)}
+.nt.active{color:var(--accent);background:var(--bg2);border-color:var(--border);margin-bottom:-1px}
+main{padding:18px 20px;max-width:960px;margin:0 auto}
+.sec{display:none}.sec.active{display:block}
+.sec-title{font-size:17px;font-weight:600;margin-bottom:3px}
+.sec-desc{font-size:13px;color:var(--text2);margin-bottom:16px}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.card-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:620px){.two{grid-template-columns:1fr}}
+.cr{display:flex;align-items:center;gap:8px;margin:7px 0}
+.cr label{font-size:12px;color:var(--text2);min-width:160px;flex-shrink:0}
+.cr input[type=range]{flex:1;accent-color:var(--accent)}
+.cv{font-size:13px;font-weight:600;min-width:72px;text-align:right;font-variant-numeric:tabular-nums}
+canvas{display:block;border-radius:var(--rs);max-width:100%}
+.pills{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.pill{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 12px;text-align:center;min-width:100px}
+.pill .pl{font-size:10px;color:var(--text3);margin-bottom:2px;text-transform:uppercase;letter-spacing:.04em}
+.pill .pv{font-size:14px;font-weight:700;font-variant-numeric:tabular-nums}
+.fm{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:7px 12px;font-family:'Courier New',monospace;font-size:12px;color:var(--accent);margin:5px 0;line-height:1.7}
+.co{border-radius:var(--rs);padding:9px 13px;font-size:13px;margin:8px 0;line-height:1.6}
+.co-blue{background:color-mix(in srgb,var(--accent) 10%,transparent);color:var(--accent)}
+.co-green{background:color-mix(in srgb,var(--green) 10%,transparent);color:var(--green)}
+.co-amber{background:color-mix(in srgb,var(--amber) 12%,transparent);color:var(--amber)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border-radius:var(--rs);font-size:13px;font-weight:600;cursor:pointer;border:none;transition:.15s;font-family:inherit}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:var(--accent2)}
+.btn-outline{background:var(--bg);border:1px solid var(--border2);color:var(--text)}.btn-outline:hover{background:var(--bg3)}
+.btns{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;padding:6px 8px;border-bottom:1px solid var(--border);text-align:left;font-weight:600}
+td{padding:7px 8px;border-bottom:1px solid var(--border)}
+tr:last-child td{border-bottom:none}
+td.num{font-family:'Courier New',monospace;color:var(--accent)}
+</style>
+</head>
+<body>
+<header>
+  <a class="brand" href="/">
+    <div class="logo">⚛</div>
+    <div>
+      <div class="brand-name">Fisika Interaktif</div>
+      <div class="brand-sub">SMA 10 · Kurikulum Merdeka</div>
+    </div>
+  </a>
+  <span class="hd-sep">›</span>
+  <span class="hd-unit">Getaran Harmonis Sederhana</span>
+  <a class="hd-back" href="/">← Dashboard</a>
+</header>
+<nav>
+  <div class="nt active" onclick="showSec('pegas',this)">Pegas–Massa</div>
+  <div class="nt" onclick="showSec('bandul',this)">Bandul</div>
+  <div class="nt" onclick="showSec('grafik',this)">Grafik x(t)</div>
+  <div class="nt" onclick="showSec('referensi',this)">📖 Referensi</div>
+</nav>
+<main>
+
+<!-- ══ PEGAS ══ -->
+<div class="sec active" id="s-pegas">
+  <div class="sec-title">Sistem Pegas–Massa</div>
+  <div class="sec-desc">Massa yang terhubung ke pegas bergetar bolak-balik. Periode hanya bergantung pada massa dan konstanta pegas.</div>
+  <div class="card">
+    <div class="card-title">Parameter</div>
+    <div class="cr"><label>Konstanta pegas k (N/m)</label><input type="range" id="p-k" min="5" max="200" value="40" oninput="pUpdate()"><span class="cv" id="p-kv">40</span></div>
+    <div class="cr"><label>Massa m (kg)</label><input type="range" id="p-m" min="0.1" max="10" value="1" step="0.1" oninput="pUpdate()"><span class="cv" id="p-mv">1.0</span></div>
+    <div class="cr"><label>Amplitudo A (m)</label><input type="range" id="p-a" min="0.1" max="2" value="0.8" step="0.05" oninput="pUpdate()"><span class="cv" id="p-av">0.80</span></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Animasi</div>
+    <canvas id="p-canvas" height="200"></canvas>
+    <div class="btns">
+      <button class="btn btn-primary" id="p-playbtn" onclick="pToggle()">▶ Mulai</button>
+      <button class="btn btn-outline" onclick="pReset()">↺ Reset</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Besaran Getaran</div>
+    <div id="p-pills" class="pills"></div>
+  </div>
+</div>
+
+<!-- ══ BANDUL ══ -->
+<div class="sec" id="s-bandul">
+  <div class="sec-title">Bandul Sederhana</div>
+  <div class="sec-desc">Bandul berayun bolak-balik. Periode hanya bergantung pada panjang tali dan gravitasi (sudut kecil).</div>
+  <div class="card">
+    <div class="card-title">Parameter</div>
+    <div class="cr"><label>Panjang tali L (m)</label><input type="range" id="b-l" min="0.1" max="5" value="1" step="0.05" oninput="bUpdate()"><span class="cv" id="b-lv">1.00</span></div>
+    <div class="cr"><label>Sudut awal θ₀ (°)</label><input type="range" id="b-theta" min="2" max="30" value="15" oninput="bUpdate()"><span class="cv" id="b-thetav">15</span></div>
+    <div class="cr"><label>Gravitasi g (m/s²)</label><input type="range" id="b-g" min="1" max="25" value="9.8" step="0.1" oninput="bUpdate()"><span class="cv" id="b-gv">9.8</span></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Animasi</div>
+    <canvas id="b-canvas" height="260"></canvas>
+    <div class="btns">
+      <button class="btn btn-primary" id="b-playbtn" onclick="bToggle()">▶ Mulai</button>
+      <button class="btn btn-outline" onclick="bReset()">↺ Reset</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Besaran Getaran</div>
+    <div id="b-pills" class="pills"></div>
+  </div>
+</div>
+
+<!-- ══ GRAFIK ══ -->
+<div class="sec" id="s-grafik">
+  <div class="sec-title">Grafik Getaran Harmonis</div>
+  <div class="sec-desc">Posisi, kecepatan, dan percepatan benda yang bergetar harmonis sebagai fungsi waktu.</div>
+  <div class="card">
+    <div class="card-title">Parameter</div>
+    <div class="cr"><label>Amplitudo A (m)</label><input type="range" id="g-a" min="0.1" max="3" value="1" step="0.1" oninput="gDraw()"><span class="cv" id="g-av">1.0</span></div>
+    <div class="cr"><label>Frekuensi f (Hz)</label><input type="range" id="g-f" min="0.1" max="4" value="1" step="0.1" oninput="gDraw()"><span class="cv" id="g-fv">1.0</span></div>
+    <div class="cr"><label>Fase awal φ (°)</label><input type="range" id="g-phi" min="0" max="360" value="0" step="5" oninput="gDraw()"><span class="cv" id="g-phiv">0</span></div>
+  </div>
+  <div class="card">
+    <div class="card-title">x(t) — Posisi</div>
+    <canvas id="g-x" height="120"></canvas>
+  </div>
+  <div class="card">
+    <div class="card-title">v(t) — Kecepatan</div>
+    <canvas id="g-v" height="120"></canvas>
+  </div>
+  <div class="card">
+    <div class="card-title">a(t) — Percepatan</div>
+    <canvas id="g-acc" height="120"></canvas>
+  </div>
+</div>
+
+<!-- ══ REFERENSI ══ -->
+<div class="sec" id="s-referensi">
+  <div class="sec-title">Referensi Getaran Harmonis</div>
+  <div class="sec-desc">Rumus utama dan perbandingan sistem pegas dan bandul.</div>
+  <div class="two">
+    <div class="card">
+      <div class="card-title">Persamaan Umum</div>
+      <div class="fm">x(t) = A · cos(ωt + φ)</div>
+      <div class="fm">v(t) = −Aω · sin(ωt + φ)</div>
+      <div class="fm">a(t) = −Aω² · cos(ωt + φ)</div>
+      <div class="co co-blue">a = −ω²x (percepatan selalu menuju titik setimbang)</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Besaran Getaran</div>
+      <div class="fm">T = 1/f = 2π/ω</div>
+      <div class="fm">ω = 2πf = 2π/T</div>
+      <div class="fm">v_maks = Aω</div>
+      <div class="fm">a_maks = Aω²</div>
+    </div>
+  </div>
+  <div class="two">
+    <div class="card">
+      <div class="card-title">Sistem Pegas–Massa</div>
+      <div class="fm">ω = √(k/m)</div>
+      <div class="fm">T = 2π√(m/k)</div>
+      <div class="co co-green">T tidak bergantung pada amplitudo A</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Bandul Sederhana</div>
+      <div class="fm">ω = √(g/L)</div>
+      <div class="fm">T = 2π√(L/g)</div>
+      <div class="co co-amber">Hanya berlaku untuk sudut kecil (θ &lt; 15°)</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Energi Getaran Harmonis</div>
+    <table>
+      <tr><th>Energi</th><th>Rumus</th><th>Maksimum saat</th></tr>
+      <tr><td>Potensial</td><td class="num">Ep = ½kx²</td><td>x = ±A (simpangan maksimum)</td></tr>
+      <tr><td>Kinetik</td><td class="num">Ek = ½mv²</td><td>x = 0 (titik setimbang)</td></tr>
+      <tr><td>Total</td><td class="num">E = ½kA²</td><td>Konstan (tidak bergantung posisi)</td></tr>
+    </table>
+  </div>
+</div>
+</main>
+
+<script>
+const dark=()=>matchMedia('(prefers-color-scheme:dark)').matches;
+const tc=()=>dark()?'#c8cde8':'#1c1e2e';
+const tc2=()=>dark()?'#9ea3b5':'#6b6e88';
+const tc3=()=>dark()?'#666a80':'#9ea1b8';
+const ac=()=>dark()?'#7898d2':'#3a68d0';
+const oc=()=>dark()?'#e08040':'#d06020';
+const gc_=()=>dark()?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.04)';
+const grc=()=>dark()?'#4ab870':'#1a7a4a';
+
+function getCanvas(id,h){
+  const cv=document.getElementById(id);
+  const W=cv.parentElement.offsetWidth-32||500;
+  const dpr=window.devicePixelRatio||1;
+  cv.width=Math.round(W*dpr);cv.height=Math.round(h*dpr);
+  cv.style.width=W+'px';cv.style.height=h+'px';
+  const ctx=cv.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  return{W,H:h,ctx};
+}
+
+function drawAxes(ctx,ml,mr,mt,mb,W,H,maxT,maxY,labelY){
+  const pw=W-ml-mr,ph=H-mt-mb;
+  ctx.strokeStyle=dark()?'rgba(180,185,210,0.25)':'rgba(60,65,100,0.15)';ctx.lineWidth=1;ctx.setLineDash([]);
+  for(let i=1;i<=4;i++){
+    const y=mt+ph*i/4;
+    ctx.beginPath();ctx.moveTo(ml,y);ctx.lineTo(ml+pw,y);ctx.stroke();
+  }
+  ctx.beginPath();ctx.moveTo(ml,mt);ctx.lineTo(ml,mt+ph);ctx.lineTo(ml+pw,mt+ph);ctx.stroke();
+  ctx.fillStyle=tc3();ctx.font='9px system-ui';
+  ctx.textAlign='right';ctx.fillText(labelY,ml-3,mt+8);
+  ctx.textAlign='center';ctx.fillText('t (s)',ml+pw/2,H-4);
+  const step=maxT<=4?1:2;
+  for(let t=0;t<=maxT;t+=step){
+    ctx.textAlign='center';ctx.fillText(t.toFixed(0),ml+t/maxT*pw,mt+ph+12);
+  }
+  return{pw,ph,toX:t=>ml+t/maxT*pw,toY:y=>mt+ph/2-(y/maxY)*ph/2};
+}
+
+function wavePlot(ctx,toX,toY,pts,color){
+  ctx.strokeStyle=color;ctx.lineWidth=2;ctx.setLineDash([]);
+  ctx.beginPath();
+  pts.forEach(([t,y],i)=>i===0?ctx.moveTo(toX(t),toY(y)):ctx.lineTo(toX(t),toY(y)));
+  ctx.stroke();
+}
+
+/* ══ Pegas ══ */
+let pAnim=null,pRunning=false,pT=0;
+
+function pUpdate(){
+  const k=+document.getElementById('p-k').value;
+  const m=+document.getElementById('p-m').value;
+  const A=+document.getElementById('p-a').value;
+  document.getElementById('p-kv').textContent=k;
+  document.getElementById('p-mv').textContent=m.toFixed(1);
+  document.getElementById('p-av').textContent=A.toFixed(2);
+  const om=Math.sqrt(k/m),T=2*Math.PI/om,f=1/T;
+  document.getElementById('p-pills').innerHTML=[
+    ['ω (rad/s)',om.toFixed(3)],
+    ['Periode T (s)',T.toFixed(3)],
+    ['Frekuensi f (Hz)',f.toFixed(3)],
+    ['v_maks (m/s)',(A*om).toFixed(3)],
+    ['a_maks (m/s²)',(A*om**2).toFixed(3)],
+  ].map(([l,v])=>`<div class="pill"><div class="pl">${l}</div><div class="pv" style="font-size:12px">${v}</div></div>`).join('');
+  if(!pRunning) pDrawFrame(0,k,m,A);
+}
+
+function pDrawFrame(t,k,m,A){
+  const{W,H,ctx}=getCanvas('p-canvas',200);
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle=dark()?'#1e2030':'#f0f2f8';ctx.fillRect(0,0,W,H);
+  const om=Math.sqrt(k/m);
+  const x=A*Math.cos(om*t);// displacement from equilibrium
+  // Wall on left
+  const wx=60,wallH=H;
+  ctx.fillStyle=dark()?'#2a2c3e':'#d0d4e8';
+  ctx.fillRect(0,0,wx,wallH);
+  ctx.strokeStyle=dark()?'rgba(255,255,255,0.1)':'rgba(0,0,0,0.1)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(wx,0);ctx.lineTo(wx,wallH);ctx.stroke();
+  // Equilibrium marker
+  const eq=W*0.62;
+  ctx.setLineDash([4,4]);ctx.strokeStyle=tc3();ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(eq,20);ctx.lineTo(eq,H-20);ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle=tc3();ctx.font='9px system-ui';ctx.textAlign='center';
+  ctx.fillText('setimbang',eq,16);
+  // Block position
+  const scale=(W-wx-80)/A/2; // px per meter
+  const blockX=eq+x*scale;
+  const blockW=44,blockH=44;
+  const by=H/2-blockH/2;
+  // Spring (zigzag)
+  const springEnd=blockX;
+  const coils=10,sh=14;
+  ctx.strokeStyle=ac();ctx.lineWidth=2;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(wx,H/2);
+  const sw=springEnd-wx;
+  for(let i=0;i<=coils*2;i++){
+    const sx=wx+sw*i/(coils*2);
+    const sy=H/2+(i%2===0?sh:-sh)*(i>0&&i<coils*2?1:0);
+    ctx.lineTo(sx,sy);
+  }
+  ctx.lineTo(springEnd,H/2);ctx.stroke();
+  // Block
+  ctx.fillStyle=dark()?'rgba(120,152,210,0.3)':'rgba(58,104,208,0.18)';
+  ctx.strokeStyle=ac();ctx.lineWidth=2;
+  ctx.beginPath();ctx.roundRect(blockX-blockW/2,by,blockW,blockH,6);ctx.fill();ctx.stroke();
+  ctx.font='18px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('📦',blockX,H/2);ctx.textBaseline='alphabetic';
+  // Displacement label
+  if(Math.abs(x)>0.01){
+    ctx.fillStyle=oc();ctx.font='bold 11px system-ui';ctx.textAlign='center';
+    ctx.fillText('x = '+x.toFixed(2)+' m',blockX,by-8);
+  }
+}
+
+function pToggle(){
+  if(pRunning){ pRunning=false;cancelAnimationFrame(pAnim);document.getElementById('p-playbtn').textContent='▶ Mulai';return; }
+  pRunning=true;document.getElementById('p-playbtn').textContent='⏸ Pause';
+  const k=+document.getElementById('p-k').value;
+  const m=+document.getElementById('p-m').value;
+  const A=+document.getElementById('p-a').value;
+  function step(){
+    if(!pRunning)return;
+    pT+=1/60;
+    pDrawFrame(pT,k,m,A);
+    pAnim=requestAnimationFrame(step);
+  }
+  step();
+}
+
+function pReset(){
+  pRunning=false;cancelAnimationFrame(pAnim);
+  pT=0;document.getElementById('p-playbtn').textContent='▶ Mulai';
+  pUpdate();
+}
+
+/* ══ Bandul ══ */
+let bAnim=null,bRunning=false,bT=0;
+
+function bUpdate(){
+  const L=+document.getElementById('b-l').value;
+  const th=+document.getElementById('b-theta').value;
+  const g=+document.getElementById('b-g').value;
+  document.getElementById('b-lv').textContent=L.toFixed(2);
+  document.getElementById('b-thetav').textContent=th;
+  document.getElementById('b-gv').textContent=g.toFixed(1);
+  const om=Math.sqrt(g/L),T=2*Math.PI/om,f=1/T;
+  document.getElementById('b-pills').innerHTML=[
+    ['ω (rad/s)',om.toFixed(3)],
+    ['Periode T (s)',T.toFixed(3)],
+    ['Frekuensi f (Hz)',f.toFixed(3)],
+    ['θ_maks',th+'°'],
+    ['s_maks (m)',(L*th*Math.PI/180).toFixed(3)],
+  ].map(([l,v])=>`<div class="pill"><div class="pl">${l}</div><div class="pv" style="font-size:12px">${v}</div></div>`).join('');
+  if(!bRunning) bDrawFrame(0,L,th,g);
+}
+
+function bDrawFrame(t,L,th0Deg,g){
+  const{W,H,ctx}=getCanvas('b-canvas',260);
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle=dark()?'#1e2030':'#f0f2f8';ctx.fillRect(0,0,W,H);
+  const om=Math.sqrt(g/L);
+  const theta=th0Deg*Math.PI/180*Math.cos(om*t);
+  const pivot={x:W/2,y:30};
+  const pxPerM=Math.min((H-60)/L,120);
+  const bob={x:pivot.x+Math.sin(theta)*L*pxPerM,y:pivot.y+Math.cos(theta)*L*pxPerM};
+  // Ceiling bar
+  ctx.fillStyle=dark()?'#3a3c50':'#c8ccdc';
+  ctx.fillRect(W/2-60,0,120,10);
+  // Equilibrium line (dashed)
+  ctx.setLineDash([4,4]);ctx.strokeStyle=tc3();ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(pivot.x,pivot.y);ctx.lineTo(pivot.x,pivot.y+L*pxPerM+20);ctx.stroke();
+  ctx.setLineDash([]);
+  // String
+  ctx.strokeStyle=dark()?'rgba(180,190,220,0.7)':'rgba(60,70,110,0.6)';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(pivot.x,pivot.y);ctx.lineTo(bob.x,bob.y);ctx.stroke();
+  // Pivot
+  ctx.fillStyle=tc2();
+  ctx.beginPath();ctx.arc(pivot.x,pivot.y,5,0,Math.PI*2);ctx.fill();
+  // Bob
+  const r=18;
+  ctx.fillStyle=dark()?'rgba(120,152,210,0.35)':'rgba(58,104,208,0.2)';
+  ctx.strokeStyle=ac();ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.arc(bob.x,bob.y,r,0,Math.PI*2);ctx.fill();ctx.stroke();
+  ctx.fillStyle=ac();ctx.font='14px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('●',bob.x,bob.y);ctx.textBaseline='alphabetic';
+  // Angle arc
+  if(Math.abs(theta)>0.01){
+    ctx.strokeStyle=oc();ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.arc(pivot.x,pivot.y,40,Math.PI/2-0.01,Math.PI/2-theta,theta>0);ctx.stroke();
+    ctx.fillStyle=oc();ctx.font='10px system-ui';ctx.textAlign='center';
+    ctx.fillText((theta*180/Math.PI).toFixed(1)+'°',pivot.x+(theta>0?-30:30),pivot.y+50);
+  }
+  // Displacement label
+  ctx.fillStyle=tc2();ctx.font='11px system-ui';ctx.textAlign='left';
+  ctx.fillText('θ = '+(theta*180/Math.PI).toFixed(1)+'°',8,H-8);
+}
+
+function bToggle(){
+  if(bRunning){bRunning=false;cancelAnimationFrame(bAnim);document.getElementById('b-playbtn').textContent='▶ Mulai';return;}
+  bRunning=true;document.getElementById('b-playbtn').textContent='⏸ Pause';
+  const L=+document.getElementById('b-l').value;
+  const th=+document.getElementById('b-theta').value;
+  const g=+document.getElementById('b-g').value;
+  function step(){
+    if(!bRunning)return;
+    bT+=1/60;
+    bDrawFrame(bT,L,th,g);
+    bAnim=requestAnimationFrame(step);
+  }
+  step();
+}
+
+function bReset(){
+  bRunning=false;cancelAnimationFrame(bAnim);
+  bT=0;document.getElementById('b-playbtn').textContent='▶ Mulai';
+  bUpdate();
+}
+
+/* ══ Grafik ══ */
+function gDraw(){
+  const A=+document.getElementById('g-a').value;
+  const f=+document.getElementById('g-f').value;
+  const phi=+document.getElementById('g-phi').value*Math.PI/180;
+  document.getElementById('g-av').textContent=A.toFixed(1);
+  document.getElementById('g-fv').textContent=f.toFixed(1);
+  document.getElementById('g-phiv').textContent=document.getElementById('g-phi').value;
+  const om=2*Math.PI*f;
+  const T=1/f,maxT=3*T;
+  const N=300;
+  const pts=Array.from({length:N},(_,i)=>{const t=i/N*maxT;return[t,A*Math.cos(om*t+phi)];});
+  const vpts=Array.from({length:N},(_,i)=>{const t=i/N*maxT;return[t,-A*om*Math.sin(om*t+phi)];});
+  const apts=Array.from({length:N},(_,i)=>{const t=i/N*maxT;return[t,-A*om**2*Math.cos(om*t+phi)];});
+
+  function drawPanel(id,h,data,color,label){
+    const{W,H,ctx}=getCanvas(id,h);
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle=dark()?'#1e2030':'#f0f2f8';ctx.fillRect(0,0,W,H);
+    const ml=42,mr=12,mt=14,mb=22;
+    const maxY=Math.max(...data.map(d=>Math.abs(d[1])),0.1)*1.1;
+    const{pw,ph,toX,toY}=drawAxes(ctx,ml,mr,mt,mb,W,H,maxT,maxY,label);
+    // Zero line
+    ctx.strokeStyle=dark()?'rgba(180,185,210,0.3)':'rgba(60,65,100,0.15)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(ml,toY(0));ctx.lineTo(ml+pw,toY(0));ctx.stroke();
+    wavePlot(ctx,toX,toY,data,color);
+  }
+
+  drawPanel('g-x',120,pts,ac(),'x (m)');
+  drawPanel('g-v',120,vpts,oc(),'v (m/s)');
+  drawPanel('g-acc',120,apts,grc(),'a (m/s²)');
+}
+
+function showSec(id,el){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nt').forEach(t=>t.classList.remove('active'));
+  document.getElementById('s-'+id).classList.add('active');
+  el.classList.add('active');
+  // Stop running animations when switching away
+  if(pRunning&&id!=='pegas'){pRunning=false;cancelAnimationFrame(pAnim);document.getElementById('p-playbtn').textContent='▶ Mulai';}
+  if(bRunning&&id!=='bandul'){bRunning=false;cancelAnimationFrame(bAnim);document.getElementById('b-playbtn').textContent='▶ Mulai';}
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    if(id==='pegas') pUpdate();
+    if(id==='bandul') bUpdate();
+    if(id==='grafik') gDraw();
+  }));
+}
+
+window.addEventListener('load',()=>{pUpdate();});
+window.addEventListener('resize',()=>{
+  const id=document.querySelector('.sec.active')?.id;
+  if(id==='s-pegas') pUpdate();
+  if(id==='s-bandul') bUpdate();
+  if(id==='s-grafik') gDraw();
+});
+</script>
+</body>
+</html>
