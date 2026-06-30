@@ -321,16 +321,16 @@ function cDraw(q1,q2,r_cm,F,attract){
   ctx.fillText('r = '+r_cm+' cm',cx,cy+60);
   // Tick marks on distance line
   [x1,x2].forEach(x=>{ctx.beginPath();ctx.moveTo(x,cy+40);ctx.lineTo(x,cy+50);ctx.strokeStyle=tc3();ctx.lineWidth=1;ctx.setLineDash([]);ctx.stroke();});
-  // Force arrows
-  const fscale=Math.min(F*2e4,70);
+  // Force arrows — fixed length so μN-range forces are still visible
+  const fscale=F>0?50:0;
   if(attract){
-    drawArrow(ctx,x1-10,cy,x1-10+fscale,cy,chargeColor(q1),2.5);
-    drawArrow(ctx,x2+10,cy,x2+10-fscale,cy,chargeColor(q2),2.5);
+    drawArrow(ctx,x1-r_draw,cy,x1-r_draw+fscale,cy,chargeColor(q1),2.5);
+    drawArrow(ctx,x2+r_draw,cy,x2+r_draw-fscale,cy,chargeColor(q2),2.5);
     ctx.fillStyle=tc2();ctx.font='bold 10px system-ui';ctx.textAlign='center';
     ctx.fillText('F='+fmtN(F),cx,cy-35);
   } else {
-    drawArrow(ctx,x1+r_draw,cy,x1+r_draw-fscale,cy,chargeColor(q1),2.5);
-    drawArrow(ctx,x2-r_draw,cy,x2-r_draw+fscale,cy,chargeColor(q2),2.5);
+    drawArrow(ctx,x1-r_draw,cy,x1-r_draw-fscale,cy,chargeColor(q1),2.5);
+    drawArrow(ctx,x2+r_draw,cy,x2+r_draw+fscale,cy,chargeColor(q2),2.5);
     ctx.fillStyle=tc2();ctx.font='bold 10px system-ui';ctx.textAlign='center';
     ctx.fillText('F='+fmtN(F),cx,cy-35);
   }
