@@ -283,7 +283,7 @@ function gcv(id){ return document.getElementById(id); }
 
 function getCanvas(id, h) {
   const cv = gcv(id);
-  const W  = cv.offsetWidth || cv.parentElement?.offsetWidth || 520;
+  const W  = cv.parentElement?.clientWidth || cv.parentElement?.offsetWidth || 520;
   const dpr = window.devicePixelRatio || 1;
   if (cv.width !== Math.round(W*dpr) || cv.height !== Math.round(h*dpr)) {
     cv.width  = Math.round(W * dpr);

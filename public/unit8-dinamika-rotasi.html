@@ -267,8 +267,8 @@ function tDraw(){
   ctx.clearRect(0,0,W,H);
   ctx.fillStyle=dark()?'#1e2030':'#f0f2f8';ctx.fillRect(0,0,W,H);
 
-  const ox=Math.max(W*0.2,80), oy=H*0.55;
-  const scale=Math.min((W-ox-20)/r/1.1, 80);
+  const ox=Math.max(W*0.12,60), oy=H*0.55;
+  const scale=Math.min((W-ox-70)/r, 300);
   const armLen=r*scale;
   const rad=ang*Math.PI/180;
 

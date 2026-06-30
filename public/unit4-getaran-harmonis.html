@@ -295,13 +295,14 @@ function pDrawFrame(t,k,m,A){
   ctx.fillStyle=tc3();ctx.font='9px system-ui';ctx.textAlign='center';
   ctx.fillText('setimbang',eq,16);
   // Block position
-  const scale=(W-wx-80)/A/2; // px per meter
+  const maxRight=W-50, maxLeft=wx+10;
+  const scale=Math.min((eq-maxLeft)/A,(maxRight-eq)/A);
   const blockX=eq+x*scale;
   const blockW=44,blockH=44;
   const by=H/2-blockH/2;
   // Spring (zigzag)
   const springEnd=blockX;
-  const coils=10,sh=14;
+  const coils=10,sh=Math.round(H*0.1);
   ctx.strokeStyle=ac();ctx.lineWidth=2;ctx.setLineDash([]);
   ctx.beginPath();ctx.moveTo(wx,H/2);
   const sw=springEnd-wx;
