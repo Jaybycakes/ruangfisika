@@ -404,41 +404,48 @@ function drawVernier(ctx,W,H,len,meas){
     ctx.beginPath();ctx.moveTo(x,oy);ctx.lineTo(x,oy+(major?18:mid?12:7));ctx.stroke();
     if(major)ctx.fillText(mm/10,x,oy+18+8);
   }
-  // Vernier jaw
-  const jawX=ox+(len-5)*scale;
-  ctx.fillStyle=dark()?'#3a80c0':'#1a60a0';
-  rr(ctx,jawX,oy-6,30,34,3);ctx.fill();
-  ctx.strokeStyle=dark()?'#5898d8':'#0a4880';ctx.lineWidth=1;
-  rr(ctx,jawX,oy-6,30,34,3);ctx.stroke();
-  // Vernier ticks
-  const vStep=scale*0.9;
-  for(let i=0;i<=10;i++){
-    const x=jawX+i*vStep;if(x>W-6)break;
-    ctx.strokeStyle='#e8f0ff';ctx.lineWidth=0.8;
-    ctx.beginPath();ctx.moveTo(x,oy-4);ctx.lineTo(x,oy-4+(i===0?18:10));ctx.stroke();
-  }
   // Object
   ctx.fillStyle=dark()?'#9890c0':'#6a63b0';
   ctx.fillRect(ox,oy+30,len*scale,18);
+  // Vernier jaw — left face aligned with measurement point
+  const jawX=ox+len*scale;
+  ctx.fillStyle=dark()?'#3a80c0':'#1a60a0';
+  rr(ctx,jawX,oy-6,32,34,3);ctx.fill();
+  ctx.strokeStyle=dark()?'#5898d8':'#0a4880';ctx.lineWidth=1;
+  rr(ctx,jawX,oy-6,32,34,3);ctx.stroke();
+  // Vernier ticks — highlight the coinciding tick (vernier reading)
+  const vStep=scale*0.9;
+  const coincide=Math.round((len%1)*10); // which tick aligns with main scale
+  for(let i=0;i<=10;i++){
+    const x=jawX+i*vStep;if(x>W-4)break;
+    const isMatch=i===coincide;
+    ctx.strokeStyle=isMatch?(dark()?'#ffcc40':'#e07800'):'#e8f0ff';
+    ctx.lineWidth=isMatch?2:0.8;
+    ctx.beginPath();ctx.moveTo(x,oy-4);ctx.lineTo(x,oy-4+(isMatch?20:i===0?18:10));ctx.stroke();
+    if(i===0||i===5||i===10){
+      ctx.fillStyle='rgba(232,240,255,0.8)';ctx.font='7px system-ui';ctx.textAlign='center';
+      ctx.fillText(i,x,oy+8);
+    }
+  }
   if(meas){
     const mx=ox+meas.val*scale;
     ctx.strokeStyle=dark()?'#e05050':'#c01010';ctx.lineWidth=1.5;ctx.setLineDash([3,3]);
     ctx.beginPath();ctx.moveTo(mx,oy+30);ctx.lineTo(mx,oy+52);ctx.stroke();
     ctx.setLineDash([]);
     ctx.fillStyle=dark()?'#e05050':'#c01010';ctx.font='10px system-ui';ctx.textAlign='left';
-    ctx.fillText(meas.val.toFixed(1)+' mm',mx+3,oy+64);
+    ctx.fillText(meas.val.toFixed(2)+' mm',mx+3,oy+64);
     // Reading display box
     ctx.fillStyle=dark()?'rgba(20,30,50,0.92)':'rgba(240,245,255,0.95)';
-    rr(ctx,W-130,oy+5,118,52,6);ctx.fill();
+    rr(ctx,W-132,oy+5,120,52,6);ctx.fill();
     ctx.strokeStyle=dark()?'rgba(60,80,160,0.5)':'rgba(80,100,180,0.3)';ctx.lineWidth=1;
-    rr(ctx,W-130,oy+5,118,52,6);ctx.stroke();
+    rr(ctx,W-132,oy+5,120,52,6);ctx.stroke();
     ctx.fillStyle=tc();ctx.font='11px system-ui';ctx.textAlign='left';
-    ctx.fillText('Skala utama:',W-123,oy+22);
+    ctx.fillText('Skala utama:',W-125,oy+22);
     ctx.fillStyle=ac();
-    ctx.fillText(Math.floor(meas.val/0.1)*0.1+' mm',W-50,oy+22);
-    ctx.fillStyle=tc2();ctx.fillText('Nonius: '+((meas.val%0.1).toFixed(2)),W-123,oy+37);
+    ctx.fillText((Math.floor(meas.val/0.1)*0.1).toFixed(1)+' mm',W-48,oy+22);
+    ctx.fillStyle=tc2();ctx.fillText('Nonius ('+coincide+'×0.1):',W-125,oy+37);
     ctx.fillStyle=tc();ctx.font='bold 12px system-ui';
-    ctx.fillText('Total: '+meas.val.toFixed(2)+' mm',W-123,oy+52);
+    ctx.fillText('Total: '+meas.val.toFixed(2)+' mm',W-125,oy+52);
   }
 }
 
@@ -458,23 +465,25 @@ function drawMikro(ctx,W,H,len,meas){
   ctx.fillRect(cx-112,cy-10,barLen,20);
   ctx.strokeStyle=dark()?'#505470':'#a8accc';ctx.lineWidth=1;
   ctx.strokeRect(cx-112,cy-10,barLen,20);
-  // Thimble (shows 0.5mm increments)
-  const thimbleX=cx-112+(len%25)*barLen/25;
+  // Thimble — clamp to barrel range to avoid jump at multiples of 25mm
+  const barOffset=Math.floor(len/25)*25; // which 25mm interval we're in
+  const lenInBar=len-barOffset;          // position within current barrel pass (0–25)
+  const thimbleX=cx-112+lenInBar*barLen/25;
   ctx.fillStyle=dark()?'#5868a8':'#3050a0';
   ctx.fillRect(thimbleX-20,cy-14,34,28);
   ctx.strokeStyle=dark()?'#7888c8':'#1a3878';ctx.lineWidth=1;
   ctx.strokeRect(thimbleX-20,cy-14,34,28);
-  // Barrel ticks
+  // Barrel ticks — labels reflect the current 25mm interval
   ctx.strokeStyle=dark()?'#9098b0':'#606890';ctx.lineWidth=0.8;
   ctx.fillStyle=tc2();ctx.font='7px system-ui';ctx.textAlign='center';
   for(let m=0;m<=25;m++){
     const x=cx-112+m*barLen/25;
     ctx.beginPath();ctx.moveTo(x,cy-10);ctx.lineTo(x,cy-(m%5===0?18:14));ctx.stroke();
-    if(m%5===0)ctx.fillText(m,x,cy-20);
+    if(m%5===0)ctx.fillText(barOffset+m,x,cy-20);
   }
-  // Spindle
+  // Spindle length matches measurement within current barrel pass
   ctx.fillStyle=dark()?'#9090a0':'#8088a8';
-  ctx.fillRect(cx-140,cy-3,len*barLen/25,6);
+  ctx.fillRect(cx-140,cy-3,lenInBar*barLen/25,6);
   // Thimble scale (0-50 markings)
   const thimbleDeg=((len%0.5)/0.5)*360;
   ctx.save();ctx.translate(thimbleX,cy);ctx.rotate(thimbleDeg*Math.PI/180);
