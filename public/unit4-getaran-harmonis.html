@@ -302,7 +302,7 @@ function pDrawFrame(t,k,m,A){
   const by=H/2-blockH/2;
   // Spring (zigzag)
   const springEnd=blockX;
-  const coils=10,sh=Math.round(H*0.1);
+  const sh=Math.round(H*0.17),coils=Math.max(5,Math.round((springEnd-wx)/(sh*2.8)));
   ctx.strokeStyle=ac();ctx.lineWidth=2;ctx.setLineDash([]);
   ctx.beginPath();ctx.moveTo(wx,H/2);
   const sw=springEnd-wx;
