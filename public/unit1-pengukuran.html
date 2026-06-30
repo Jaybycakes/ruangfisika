@@ -392,53 +392,75 @@ function drawRuler(ctx,W,H,len,meas){
 }
 
 function drawVernier(ctx,W,H,len,meas){
-  // Fixed scale showing 0–60 mm; only the jaw and object move
-  const maxMM=60;
-  const ox=30, oy=H*0.14;
-  const scaleW=W-ox-20;
-  const scale=scaleW/maxMM; // px per mm
+  const maxMM=60, maxLen=55;
+  const ox=30, oy=H*0.2;
+  // Scale: sized so jaw+all nonius ticks fit even at max measurement
+  // At maxLen mm, jaw is at ox+maxLen*scale, nonius spans 10*0.9*scale more → (maxLen+9)*scale+ox ≤ W-20
+  const scale=(W-ox-20)/(maxLen+9);
+  const scaleW=scale*maxMM;
+
   // Main scale body
   ctx.fillStyle=dark()?'#707880':'#c8cccc';
-  ctx.fillRect(ox-6,oy,scaleW+12,24);
+  ctx.fillRect(ox-6,oy,scaleW+12,22);
   ctx.strokeStyle=dark()?'#909898':'#a0a4a4';ctx.lineWidth=1;
-  ctx.strokeRect(ox-6,oy,scaleW+12,24);
-  // Main scale ticks
-  ctx.fillStyle=dark()?'#3a3e45':'#505050';ctx.font='8px system-ui';ctx.textAlign='center';
+  ctx.strokeRect(ox-6,oy,scaleW+12,22);
+
+  // Main scale ticks + cm labels below scale
+  const fs=Math.max(8,Math.min(11,scale*1.2));
+  ctx.font=fs+'px system-ui';ctx.textAlign='center';
   for(let mm=0;mm<=maxMM;mm++){
-    const x=ox+mm*scale;
+    const x=ox+mm*scale; if(x>ox+scaleW+2)break;
     const major=mm%10===0,mid=mm%5===0;
     ctx.strokeStyle=dark()?'#606870':'#404040';ctx.lineWidth=major?1.2:0.7;
-    ctx.beginPath();ctx.moveTo(x,oy);ctx.lineTo(x,oy+(major?18:mid?12:6));ctx.stroke();
-    if(major){ctx.fillStyle=dark()?'#3a3e45':'#505050';ctx.fillText(mm/10,x,oy+26);}
+    ctx.beginPath();ctx.moveTo(x,oy);ctx.lineTo(x,oy+(major?16:mid?10:6));ctx.stroke();
+    if(major){ctx.fillStyle=dark()?'#9ea3b5':'#606060';ctx.fillText(mm/10,x,oy+16+fs+1);}
   }
-  // Object (sits below main scale)
+
+  // Object bar (below scale)
   ctx.fillStyle=dark()?'#9890c0':'#6a63b0';
-  ctx.fillRect(ox,oy+32,len*scale,16);
-  // Jaw — left face at measurement point
+  ctx.fillRect(ox,oy+28,len*scale,14);
+
+  // Sliding jaw: left face = measurement point; wide enough to contain all 10 nonius divisions
   const jawX=ox+len*scale;
-  ctx.fillStyle=dark()?'#3a80c0':'#1a60a0';
-  rr(ctx,jawX,oy-5,30,32,3);ctx.fill();
-  ctx.strokeStyle=dark()?'#5898d8':'#0a4880';ctx.lineWidth=1;
-  rr(ctx,jawX,oy-5,30,32,3);ctx.stroke();
-  // Vernier ticks overlaid on main scale, starting at jaw left face
-  const vStep=scale*0.9; // 0.9 mm spacing → 10 divs = 9 mm
+  const vStep=scale*0.9;         // nonius division width (0.9 mm each)
+  const noniusSpan=10*vStep;
+  const jawW=noniusSpan+6;
+  const jawH=28;
+
+  ctx.fillStyle=dark()?'#2a5090':'#1a4878';
+  rr(ctx,jawX,oy-4,jawW,jawH,3);ctx.fill();
+  ctx.strokeStyle=dark()?'#4878c0':'#0a3860';ctx.lineWidth=1;
+  rr(ctx,jawX,oy-4,jawW,jawH,3);ctx.stroke();
+
+  // Nonius ticks on jaw
   const coincide=Math.round((len%1)*10);
+  ctx.save();
+  ctx.beginPath();ctx.rect(jawX,oy-4,jawW,jawH);ctx.clip(); // clip to jaw
   for(let i=0;i<=10;i++){
     const x=jawX+i*vStep;
-    if(x<ox||x>ox+scaleW+8) continue;
     const isMatch=i===coincide;
-    ctx.strokeStyle=isMatch?(dark()?'#ffcc40':'#e07800'):'#dde8ff';
+    ctx.strokeStyle=isMatch?(dark()?'#ffcc40':'#e07800'):(dark()?'#aabcf0':'#dde8ff');
     ctx.lineWidth=isMatch?2:0.8;
-    ctx.beginPath();ctx.moveTo(x,oy-3);ctx.lineTo(x,oy-3+(isMatch?22:i===0?20:11));ctx.stroke();
+    ctx.beginPath();ctx.moveTo(x,oy-2);ctx.lineTo(x,oy-2+(isMatch?20:i===0?18:10));ctx.stroke();
+    if(i%5===0){
+      ctx.fillStyle=dark()?'rgba(180,200,255,0.8)':'rgba(10,30,100,0.6)';
+      ctx.font='7px system-ui';ctx.textAlign='center';
+      ctx.fillText(i,x,oy+20);
+    }
   }
-  // Vernier label
-  ctx.fillStyle=tc3();ctx.font='9px system-ui';ctx.textAlign='left';
-  ctx.fillText('nonius →',jawX+2,oy-6);
+  ctx.restore();
+
+  // "nonius" label on jaw
+  ctx.fillStyle=dark()?'rgba(180,200,255,0.55)':'rgba(10,30,120,0.35)';
+  ctx.font='8px system-ui';ctx.textAlign='left';
+  ctx.fillText('nonius',jawX+4,oy+10);
+
+  // Reading box
   if(meas){
-    // Reading box — anchor to left of canvas when jaw is far right, otherwise right side
-    const boxW=128,boxH=56;
-    const boxX=jawX+38+boxW>W ? jawX-boxW-8 : jawX+38;
-    const boxY=oy+2;
+    const boxW=132,boxH=56;
+    // Prefer placing box to the right of jaw; if it clips, put it left
+    const boxX=(jawX+jawW+8+boxW<W)? jawX+jawW+8 : jawX-boxW-8;
+    const boxY=oy+32;
     ctx.fillStyle=dark()?'rgba(20,30,50,0.93)':'rgba(240,245,255,0.96)';
     rr(ctx,boxX,boxY,boxW,boxH,6);ctx.fill();
     ctx.strokeStyle=dark()?'rgba(60,80,160,0.5)':'rgba(80,100,180,0.3)';ctx.lineWidth=1;
@@ -452,65 +474,115 @@ function drawVernier(ctx,W,H,len,meas){
 }
 
 function drawMikro(ctx,W,H,len,meas){
-  const cx=W*0.5, cy=H*0.48;
-  // Frame (U-shape)
-  ctx.fillStyle=dark()?'#607070':'#9ab0b0';
-  ctx.fillRect(cx-140,cy-28,28,56);  // left post
-  ctx.fillRect(cx-140,cy-28,120,12); // top bar
-  ctx.fillRect(cx-140,cy+16,120,12); // bottom bar
-  ctx.fillStyle=dark()?'#809898':'#b8c8c8';
-  ctx.strokeStyle=dark()?'#a0b4b4':'#7898a0';ctx.lineWidth=1;
-  ctx.strokeRect(cx-140,cy-28,28,56);
-  // Barrel
-  const barLen=90;
+  // All dimensions proportional to canvas so it scales on any screen size
+  const instrH=H*0.65;
+  const cy=H*0.46;
+  const lx=W*0.05;                    // left edge of frame post
+  const fpW=instrH*0.25;              // frame post width
+  const fThick=instrH*0.18;           // frame arm thickness
+  const barStart=lx+fpW;
+  const barEnd=W*0.68;
+  const barLen=barEnd-barStart;
+  const barH=instrH*0.28;
+  const thimbleW=W*0.13;
+  const thimbleH=instrH*0.55;
+
+  const barOffset=Math.floor(len/25)*25;
+  const lenInBar=len-barOffset;
+  // thimbleX = left edge of thimble block
+  const thimbleX=barStart+lenInBar*barLen/25;
+
+  // ── Frame (C-shape) ──
+  const frameColor=dark()?'#607070':'#9ab0b0';
+  const frameStroke=dark()?'#a0b4b4':'#7898a0';
+  ctx.fillStyle=frameColor;
+  // left post
+  ctx.fillRect(lx,cy-instrH/2,fpW,instrH);
+  // top arm (stop before thimble centre)
+  ctx.fillRect(lx,cy-instrH/2,thimbleX-lx+thimbleW*0.3,fThick);
+  // bottom arm
+  ctx.fillRect(lx,cy+instrH/2-fThick,thimbleX-lx+thimbleW*0.3,fThick);
+  ctx.strokeStyle=frameStroke;ctx.lineWidth=1;
+  ctx.strokeRect(lx,cy-instrH/2,fpW,instrH);
+  ctx.strokeRect(lx,cy-instrH/2,thimbleX-lx+thimbleW*0.3,fThick);
+  ctx.strokeRect(lx,cy+instrH/2-fThick,thimbleX-lx+thimbleW*0.3,fThick);
+
+  // ── Barrel (sleeve) ──
   ctx.fillStyle=dark()?'#3a3e58':'#d0d4e8';
-  ctx.fillRect(cx-112,cy-10,barLen,20);
+  ctx.fillRect(barStart,cy-barH/2,barLen,barH);
   ctx.strokeStyle=dark()?'#505470':'#a8accc';ctx.lineWidth=1;
-  ctx.strokeRect(cx-112,cy-10,barLen,20);
-  // Thimble — clamp to barrel range to avoid jump at multiples of 25mm
-  const barOffset=Math.floor(len/25)*25; // which 25mm interval we're in
-  const lenInBar=len-barOffset;          // position within current barrel pass (0–25)
-  const thimbleX=cx-112+lenInBar*barLen/25;
-  ctx.fillStyle=dark()?'#5868a8':'#3050a0';
-  ctx.fillRect(thimbleX-20,cy-14,34,28);
-  ctx.strokeStyle=dark()?'#7888c8':'#1a3878';ctx.lineWidth=1;
-  ctx.strokeRect(thimbleX-20,cy-14,34,28);
-  // Barrel ticks — labels reflect the current 25mm interval
-  ctx.strokeStyle=dark()?'#9098b0':'#606890';ctx.lineWidth=0.8;
-  ctx.fillStyle=tc2();ctx.font='7px system-ui';ctx.textAlign='center';
+  ctx.strokeRect(barStart,cy-barH/2,barLen,barH);
+
+  // Barrel reference line (red datum line at centre)
+  ctx.strokeStyle=dark()?'#e05050':'#c01010';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(barStart,cy);ctx.lineTo(thimbleX,cy);ctx.stroke();
+
+  // Barrel ticks + labels (0,5,10…25 with barOffset)
+  const tickFs=Math.max(8,instrH*0.12);
+  ctx.fillStyle=tc2();ctx.font=tickFs+'px system-ui';ctx.textAlign='center';
   for(let m=0;m<=25;m++){
-    const x=cx-112+m*barLen/25;
-    ctx.beginPath();ctx.moveTo(x,cy-10);ctx.lineTo(x,cy-(m%5===0?18:14));ctx.stroke();
-    if(m%5===0)ctx.fillText(barOffset+m,x,cy-20);
+    const x=barStart+m*barLen/25;
+    const major=m%5===0;
+    ctx.strokeStyle=dark()?'#9098b0':'#606890';ctx.lineWidth=0.8;
+    ctx.beginPath();ctx.moveTo(x,cy-barH/2);ctx.lineTo(x,cy-barH/2-(major?8:4));ctx.stroke();
+    if(major)ctx.fillText(barOffset+m,x,cy-barH/2-tickFs-2);
   }
-  // Spindle length matches measurement within current barrel pass
+
+  // ── Spindle ──
   ctx.fillStyle=dark()?'#9090a0':'#8088a8';
-  ctx.fillRect(cx-140,cy-3,lenInBar*barLen/25,6);
-  // Thimble scale (0-50 markings)
-  const thimbleDeg=((len%0.5)/0.5)*360;
-  ctx.save();ctx.translate(thimbleX,cy);ctx.rotate(thimbleDeg*Math.PI/180);
-  for(let i=0;i<50;i++){
-    ctx.save();ctx.rotate(i/50*Math.PI*2);
-    ctx.strokeStyle=i%5===0?tc():'rgba(128,132,176,0.5)';ctx.lineWidth=i%5===0?1.2:0.7;
-    ctx.beginPath();ctx.moveTo(0,-10);ctx.lineTo(0,-14-(i%5===0?4:2));ctx.stroke();
-    ctx.restore();
+  ctx.fillRect(lx+fpW,cy-3,lenInBar*barLen/25,6);
+
+  // ── Thimble block ──
+  ctx.fillStyle=dark()?'#3a4880':'#2848a0';
+  ctx.fillRect(thimbleX,cy-thimbleH/2,thimbleW,thimbleH);
+  ctx.strokeStyle=dark()?'#6070b8':'#1a3070';ctx.lineWidth=1;
+  ctx.strokeRect(thimbleX,cy-thimbleH/2,thimbleW,thimbleH);
+
+  // ── Thimble scale: horizontal lines sliding past a window (side-view of cylinder) ──
+  // 50 divisions per revolution; show ~12 lines at a time through the window
+  const visLines=12;
+  const lSp=thimbleH/visLines;         // pixel spacing between lines
+  // Which fractional line should sit at centre (0–50)
+  const reading=((len%0.5)/0.5)*50;
+  const nearLine=Math.round(reading);
+  const frac=(reading-nearLine)*lSp;   // sub-line pixel shift
+
+  ctx.save();
+  ctx.beginPath();ctx.rect(thimbleX+1,cy-thimbleH/2+1,thimbleW-2,thimbleH-2);ctx.clip();
+  for(let i=Math.floor(-visLines/2)-1;i<=Math.ceil(visLines/2)+1;i++){
+    const lineNum=((nearLine+i)%50+50)%50;
+    const y=cy+i*lSp-frac;
+    const major=lineNum%5===0;
+    ctx.strokeStyle=major?(dark()?'#d0d8ff':'#1a2060'):(dark()?'rgba(160,168,220,0.45)':'rgba(40,60,180,0.25)');
+    ctx.lineWidth=major?1.5:0.7;
+    const lw=major?thimbleW*0.65:thimbleW*0.35;
+    ctx.beginPath();ctx.moveTo(thimbleX+(thimbleW-lw)/2,y);ctx.lineTo(thimbleX+(thimbleW+lw)/2,y);ctx.stroke();
+    if(major){
+      ctx.fillStyle=dark()?'rgba(210,216,255,0.8)':'rgba(10,20,80,0.7)';
+      ctx.font=Math.max(7,instrH*0.1)+'px system-ui';ctx.textAlign='left';
+      ctx.fillText(lineNum,thimbleX+thimbleW*0.72,y+3);
+    }
   }
   ctx.restore();
+
+  // ── Reading box ──
   if(meas){
+    const boxW=140,boxH=56,boxX=W-boxW-14,boxY=cy-instrH/2;
     ctx.fillStyle=dark()?'rgba(20,25,45,0.92)':'rgba(238,242,252,0.95)';
-    rr(ctx,W-144,cy-52,132,56,6);ctx.fill();
+    rr(ctx,boxX,boxY,boxW,boxH,6);ctx.fill();
     ctx.strokeStyle=dark()?'rgba(60,80,160,0.4)':'rgba(80,100,180,0.2)';ctx.lineWidth=1;
-    rr(ctx,W-144,cy-52,132,56,6);ctx.stroke();
-    const mm=Math.floor(meas.val), sub=(meas.val%1).toFixed(3);
+    rr(ctx,boxX,boxY,boxW,boxH,6);ctx.stroke();
+    const mm=Math.floor(meas.val),sub=(meas.val%1).toFixed(3);
     ctx.fillStyle=tc2();ctx.font='10px system-ui';ctx.textAlign='left';
-    ctx.fillText('Skala Utama: '+mm+'.0 mm',W-136,cy-35);
-    ctx.fillText('Thimble:    +'+sub+' mm',W-136,cy-22);
+    ctx.fillText('Skala Utama: '+mm+'.0 mm',boxX+8,boxY+18);
+    ctx.fillText('Thimble:    +'+sub+' mm',boxX+8,boxY+33);
     ctx.fillStyle=tc();ctx.font='bold 12px system-ui';
-    ctx.fillText('Hasil: '+meas.val.toFixed(3)+' mm',W-136,cy-8);
+    ctx.fillText('Hasil: '+meas.val.toFixed(3)+' mm',boxX+8,boxY+50);
   }
+
   // Object label
   ctx.fillStyle=tc3();ctx.font='10px system-ui';ctx.textAlign='center';
-  ctx.fillText('Benda: '+len.toFixed(2)+'mm',cx,cy+H*0.38);
+  ctx.fillText('Benda: '+len.toFixed(2)+' mm',W*0.38,cy+instrH*0.62);
 }
 
 function aUpdatePills(val,u,tool){
