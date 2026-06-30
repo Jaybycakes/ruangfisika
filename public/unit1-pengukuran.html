@@ -388,64 +388,62 @@ function drawRuler(ctx,W,H,len,meas){
 }
 
 function drawVernier(ctx,W,H,len,meas){
-  const scale=Math.min((W-80)/60,(H*0.4)/16);
-  const ox=40, oy=H*0.12;
-  const mainLen=Math.min(70,len+20);
-  // Main scale
+  // Fixed scale showing 0–60 mm; only the jaw and object move
+  const maxMM=60;
+  const ox=30, oy=H*0.14;
+  const scaleW=W-ox-20;
+  const scale=scaleW/maxMM; // px per mm
+  // Main scale body
   ctx.fillStyle=dark()?'#707880':'#c8cccc';
-  ctx.fillRect(ox-10,oy,mainLen*scale+30,24);
+  ctx.fillRect(ox-6,oy,scaleW+12,24);
   ctx.strokeStyle=dark()?'#909898':'#a0a4a4';ctx.lineWidth=1;
-  ctx.strokeRect(ox-10,oy,mainLen*scale+30,24);
-  ctx.fillStyle=dark()?'#3a3e45':'#606060';ctx.font='8px system-ui';ctx.textAlign='center';
-  for(let mm=0;mm<=mainLen+1;mm++){
-    const x=ox+mm*scale;if(x>W-14)break;
+  ctx.strokeRect(ox-6,oy,scaleW+12,24);
+  // Main scale ticks
+  ctx.fillStyle=dark()?'#3a3e45':'#505050';ctx.font='8px system-ui';ctx.textAlign='center';
+  for(let mm=0;mm<=maxMM;mm++){
+    const x=ox+mm*scale;
     const major=mm%10===0,mid=mm%5===0;
     ctx.strokeStyle=dark()?'#606870':'#404040';ctx.lineWidth=major?1.2:0.7;
-    ctx.beginPath();ctx.moveTo(x,oy);ctx.lineTo(x,oy+(major?18:mid?12:7));ctx.stroke();
-    if(major)ctx.fillText(mm/10,x,oy+18+8);
+    ctx.beginPath();ctx.moveTo(x,oy);ctx.lineTo(x,oy+(major?18:mid?12:6));ctx.stroke();
+    if(major){ctx.fillStyle=dark()?'#3a3e45':'#505050';ctx.fillText(mm/10,x,oy+26);}
   }
-  // Object
+  // Object (sits below main scale)
   ctx.fillStyle=dark()?'#9890c0':'#6a63b0';
-  ctx.fillRect(ox,oy+30,len*scale,18);
-  // Vernier jaw — left face aligned with measurement point
+  ctx.fillRect(ox,oy+32,len*scale,16);
+  // Jaw — left face at measurement point
   const jawX=ox+len*scale;
   ctx.fillStyle=dark()?'#3a80c0':'#1a60a0';
-  rr(ctx,jawX,oy-6,32,34,3);ctx.fill();
+  rr(ctx,jawX,oy-5,30,32,3);ctx.fill();
   ctx.strokeStyle=dark()?'#5898d8':'#0a4880';ctx.lineWidth=1;
-  rr(ctx,jawX,oy-6,32,34,3);ctx.stroke();
-  // Vernier ticks — highlight the coinciding tick (vernier reading)
-  const vStep=scale*0.9;
-  const coincide=Math.round((len%1)*10); // which tick aligns with main scale
+  rr(ctx,jawX,oy-5,30,32,3);ctx.stroke();
+  // Vernier ticks overlaid on main scale, starting at jaw left face
+  const vStep=scale*0.9; // 0.9 mm spacing → 10 divs = 9 mm
+  const coincide=Math.round((len%1)*10);
   for(let i=0;i<=10;i++){
-    const x=jawX+i*vStep;if(x>W-4)break;
+    const x=jawX+i*vStep;
+    if(x<ox||x>ox+scaleW+8) continue;
     const isMatch=i===coincide;
-    ctx.strokeStyle=isMatch?(dark()?'#ffcc40':'#e07800'):'#e8f0ff';
+    ctx.strokeStyle=isMatch?(dark()?'#ffcc40':'#e07800'):'#dde8ff';
     ctx.lineWidth=isMatch?2:0.8;
-    ctx.beginPath();ctx.moveTo(x,oy-4);ctx.lineTo(x,oy-4+(isMatch?20:i===0?18:10));ctx.stroke();
-    if(i===0||i===5||i===10){
-      ctx.fillStyle='rgba(232,240,255,0.8)';ctx.font='7px system-ui';ctx.textAlign='center';
-      ctx.fillText(i,x,oy+8);
-    }
+    ctx.beginPath();ctx.moveTo(x,oy-3);ctx.lineTo(x,oy-3+(isMatch?22:i===0?20:11));ctx.stroke();
   }
+  // Vernier label
+  ctx.fillStyle=tc3();ctx.font='9px system-ui';ctx.textAlign='left';
+  ctx.fillText('nonius →',jawX+2,oy-6);
   if(meas){
-    const mx=ox+meas.val*scale;
-    ctx.strokeStyle=dark()?'#e05050':'#c01010';ctx.lineWidth=1.5;ctx.setLineDash([3,3]);
-    ctx.beginPath();ctx.moveTo(mx,oy+30);ctx.lineTo(mx,oy+52);ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.fillStyle=dark()?'#e05050':'#c01010';ctx.font='10px system-ui';ctx.textAlign='left';
-    ctx.fillText(meas.val.toFixed(2)+' mm',mx+3,oy+64);
-    // Reading display box
-    ctx.fillStyle=dark()?'rgba(20,30,50,0.92)':'rgba(240,245,255,0.95)';
-    rr(ctx,W-132,oy+5,120,52,6);ctx.fill();
+    // Reading box — anchor to left of canvas when jaw is far right, otherwise right side
+    const boxW=128,boxH=56;
+    const boxX=jawX+38+boxW>W ? jawX-boxW-8 : jawX+38;
+    const boxY=oy+2;
+    ctx.fillStyle=dark()?'rgba(20,30,50,0.93)':'rgba(240,245,255,0.96)';
+    rr(ctx,boxX,boxY,boxW,boxH,6);ctx.fill();
     ctx.strokeStyle=dark()?'rgba(60,80,160,0.5)':'rgba(80,100,180,0.3)';ctx.lineWidth=1;
-    rr(ctx,W-132,oy+5,120,52,6);ctx.stroke();
-    ctx.fillStyle=tc();ctx.font='11px system-ui';ctx.textAlign='left';
-    ctx.fillText('Skala utama:',W-125,oy+22);
-    ctx.fillStyle=ac();
-    ctx.fillText((Math.floor(meas.val/0.1)*0.1).toFixed(1)+' mm',W-48,oy+22);
-    ctx.fillStyle=tc2();ctx.fillText('Nonius ('+coincide+'×0.1):',W-125,oy+37);
+    rr(ctx,boxX,boxY,boxW,boxH,6);ctx.stroke();
+    ctx.fillStyle=tc2();ctx.font='10px system-ui';ctx.textAlign='left';
+    ctx.fillText('Skala utama: '+(Math.floor(meas.val/0.1)*0.1).toFixed(1)+' mm',boxX+8,boxY+18);
+    ctx.fillText('Nonius  ('+coincide+' × 0.1 mm)',boxX+8,boxY+33);
     ctx.fillStyle=tc();ctx.font='bold 12px system-ui';
-    ctx.fillText('Total: '+meas.val.toFixed(2)+' mm',W-125,oy+52);
+    ctx.fillText('Total: '+meas.val.toFixed(2)+' mm',boxX+8,boxY+50);
   }
 }
 
