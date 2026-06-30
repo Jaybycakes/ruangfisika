@@ -161,7 +161,7 @@ td.num{font-family:'Courier New',monospace;color:var(--accent)}
 
   <div class="card">
     <div class="card-title">Tampilan Alat Ukur</div>
-    <canvas id="a-canvas" height="220"></canvas>
+    <canvas id="a-canvas"></canvas>
   </div>
 
   <div class="card">
@@ -339,7 +339,10 @@ function aMeasure(){
 }
 
 function aDraw(len,meas){
-  const {W,H,ctx}=getCanvas('a-canvas',220);
+  const cv=document.getElementById('a-canvas');
+  const W0=cv.offsetWidth||cv.parentElement?.offsetWidth||520;
+  const h=Math.max(200,Math.min(400,Math.round(W0*0.32)));
+  const {W,H,ctx}=getCanvas('a-canvas',h);
   const tool=document.getElementById('a-tool').value;
   ctx.clearRect(0,0,W,H);
   ctx.fillStyle=dark()?'#1e2030':'#f0f2f8';
