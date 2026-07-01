@@ -442,7 +442,7 @@ function redrawActive() {
 ══════════════════════════════════════ */
 function getCanvas(id, h) {
   const cv = document.getElementById(id);
-  const W = cv.offsetWidth || cv.parentElement?.offsetWidth || 500;
+  const W = cv.parentElement?.clientWidth || cv.offsetWidth || 500;
   const dpr = window.devicePixelRatio || 1;
   if (cv.width !== Math.round(W*dpr) || cv.height !== Math.round(h*dpr)) {
     cv.width  = Math.round(W * dpr);
@@ -627,7 +627,6 @@ function drawInterf() {
   document.getElementById('ip2v').textContent = p2 + '°';
 
   if (interfRAF) cancelAnimationFrame(interfRAF);
-  interfT = 0;
 
   function animate() {
     interfT += 0.025;

@@ -334,12 +334,12 @@ function pDrawFrame(t,k,m,A){
 function pToggle(){
   if(pRunning){ pRunning=false;cancelAnimationFrame(pAnim);document.getElementById('p-playbtn').textContent='▶ Mulai';return; }
   pRunning=true;document.getElementById('p-playbtn').textContent='⏸ Pause';
-  const k=+document.getElementById('p-k').value;
-  const m=+document.getElementById('p-m').value;
-  const A=+document.getElementById('p-a').value;
   function step(){
     if(!pRunning)return;
     pT+=1/60;
+    const k=+document.getElementById('p-k').value;
+    const m=+document.getElementById('p-m').value;
+    const A=+document.getElementById('p-a').value;
     pDrawFrame(pT,k,m,A);
     pAnim=requestAnimationFrame(step);
   }
@@ -417,12 +417,12 @@ function bDrawFrame(t,L,th0Deg,g){
 function bToggle(){
   if(bRunning){bRunning=false;cancelAnimationFrame(bAnim);document.getElementById('b-playbtn').textContent='▶ Mulai';return;}
   bRunning=true;document.getElementById('b-playbtn').textContent='⏸ Pause';
-  const L=+document.getElementById('b-l').value;
-  const th=+document.getElementById('b-theta').value;
-  const g=+document.getElementById('b-g').value;
   function step(){
     if(!bRunning)return;
     bT+=1/60;
+    const L=+document.getElementById('b-l').value;
+    const th=+document.getElementById('b-theta').value;
+    const g=+document.getElementById('b-g').value;
     bDrawFrame(bT,L,th,g);
     bAnim=requestAnimationFrame(step);
   }
