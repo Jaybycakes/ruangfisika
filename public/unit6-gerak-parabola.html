@@ -116,6 +116,7 @@ td:nth-child(2),td:nth-child(3){font-family:monospace;color:var(--accent)}
   <div class="nt" onclick="showSec('grafik',this)">Grafik</div>
   <div class="nt" onclick="showSec('jangkauan',this)">Jangkauan vs Sudut</div>
   <div class="nt" onclick="showSec('referensi',this)">Referensi</div>
+  <div class="nt" onclick="showSec('quiz',this);_initQuiz()">📝 Kuis</div>
 </nav>
 
 <main>
@@ -275,6 +276,11 @@ td:nth-child(2),td:nth-child(3){font-family:monospace;color:var(--accent)}
   </div>
 </div>
 
+<div class="sec" id="s-quiz">
+  <div class="card">
+    <div id="quiz-container" class="quiz-wrap"></div>
+  </div>
+</div>
 </main>
 
 <script>
@@ -717,5 +723,6 @@ window.addEventListener('resize',()=>{
   if(id==='s-jangkauan') drawJangkauan();
 });
 </script>
+<script src="quiz.js"></script>
 </body>
 </html>

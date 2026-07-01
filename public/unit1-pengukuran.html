@@ -129,6 +129,7 @@ td.num{font-family:'Courier New',monospace;color:var(--accent)}
   <div class="nt" onclick="showSec('konversi',this)">⇄ Konversi Satuan</div>
   <div class="nt" onclick="showSec('angpent',this)">✦ Angka Penting</div>
   <div class="nt" onclick="showSec('analisis',this)">⊕ Analisis Kesalahan</div>
+  <div class="nt" onclick="showSec('quiz',this);_initQuiz()">📝 Kuis</div>
 </nav>
 
 <main>
@@ -261,6 +262,11 @@ td.num{font-family:'Courier New',monospace;color:var(--accent)}
   </div>
 </div>
 
+<div class="sec" id="s-quiz">
+  <div class="card">
+    <div id="quiz-container" class="quiz-wrap"></div>
+  </div>
+</div>
 </main>
 
 <script>
@@ -863,5 +869,6 @@ window.addEventListener('resize',()=>{
   if(id==='s-analisis') drawDist();
 });
 </script>
+<script src="quiz.js"></script>
 </body>
 </html>

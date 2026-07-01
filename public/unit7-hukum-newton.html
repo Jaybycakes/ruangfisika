@@ -92,6 +92,7 @@ td.num{font-family:'Courier New',monospace;color:var(--accent)}
   <div class="nt" onclick="showSec('n2',this)">II F = ma</div>
   <div class="nt" onclick="showSec('n3',this)">III Aksi–Reaksi</div>
   <div class="nt" onclick="showSec('referensi',this)">📖 Referensi</div>
+  <div class="nt" onclick="showSec('quiz',this);_initQuiz()">📝 Kuis</div>
 </nav>
 <main>
 
@@ -213,6 +214,11 @@ td.num{font-family:'Courier New',monospace;color:var(--accent)}
       <tr><td>Gesekan kinetis</td><td class="num">f_k = μ_k · N</td><td>Saat benda bergerak</td></tr>
       <tr><td>Tegangan tali</td><td class="num">T</td><td>Melalui tali (ringan & tak elastis)</td></tr>
     </table>
+  </div>
+</div>
+<div class="sec" id="s-quiz">
+  <div class="card">
+    <div id="quiz-container" class="quiz-wrap"></div>
   </div>
 </div>
 </main>
@@ -494,5 +500,6 @@ window.addEventListener('resize',()=>{
   if(id==='s-n3') n3Draw();
 });
 </script>
+<script src="quiz.js"></script>
 </body>
 </html>

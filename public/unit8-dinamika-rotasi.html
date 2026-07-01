@@ -88,6 +88,7 @@ select{padding:6px 10px;border:1px solid var(--border2);border-radius:var(--rs);
   <div class="nt" onclick="showSec('inersia',this)">⊙ Momen Inersia</div>
   <div class="nt" onclick="showSec('setimbang',this)">⚖ Kesetimbangan</div>
   <div class="nt" onclick="showSec('referensi',this)">📖 Referensi</div>
+  <div class="nt" onclick="showSec('quiz',this);_initQuiz()">📝 Kuis</div>
 </nav>
 <main>
 
@@ -212,6 +213,11 @@ select{padding:6px 10px;border:1px solid var(--border2);border-radius:var(--rs);
       <tr><td>Kecepatan v</td><td class="num">Kecepatan sudut ω</td></tr>
       <tr><td>p = mv</td><td class="num">L = Iω (momentum sudut)</td></tr>
     </table>
+  </div>
+</div>
+<div class="sec" id="s-quiz">
+  <div class="card">
+    <div id="quiz-container" class="quiz-wrap"></div>
   </div>
 </div>
 </main>
@@ -532,5 +538,6 @@ window.addEventListener('resize',()=>{
   if(id==='s-setimbang') sbDraw();
 });
 </script>
+<script src="quiz.js"></script>
 </body>
 </html>

@@ -121,6 +121,7 @@ td:nth-child(2){font-family:monospace;color:var(--accent)}
   <div class="nt" onclick="showSec('pipa',this)">Pipa Resonansi</div>
   <div class="nt" onclick="showSec('doppler',this)">Efek Doppler</div>
   <div class="nt" onclick="showSec('intensitas',this)">Intensitas Bunyi</div>
+  <div class="nt" onclick="showSec('quiz',this);_initQuiz()">📝 Kuis</div>
 </nav>
 
 <main>
@@ -407,6 +408,11 @@ td:nth-child(2){font-family:monospace;color:var(--accent)}
   </div>
 </div>
 
+<div class="sec" id="s-quiz">
+  <div class="card">
+    <div id="quiz-container" class="quiz-wrap"></div>
+  </div>
+</div>
 </main>
 
 <script>
@@ -1249,5 +1255,6 @@ window.addEventListener('resize', () => {
   redrawActive();
 });
 </script>
+<script src="quiz.js"></script>
 </body>
 </html>

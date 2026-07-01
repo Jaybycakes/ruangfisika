@@ -114,6 +114,7 @@ tr:last-child td{border-bottom:none}
   <div class="nt"         onclick="go('pegas',this)">Pegas</div>
   <div class="nt"         onclick="go('gesekan',this)">Gesekan &amp; Energi</div>
   <div class="nt"         onclick="go('konversi',this)">Konversi Energi</div>
+  <div class="nt" onclick="showSec('quiz',this);_initQuiz()">📝 Kuis</div>
 </nav>
 
 <main>
@@ -360,6 +361,11 @@ tr:last-child td{border-bottom:none}
   </div>
 </div>
 
+<div class="sec" id="s-quiz">
+  <div class="card">
+    <div id="quiz-container" class="quiz-wrap"></div>
+  </div>
+</div>
 </main>
 
 <script>
@@ -1306,5 +1312,6 @@ window.addEventListener('load', () => {
 });
 window.addEventListener('resize', () => initActive());
 </script>
+<script src="quiz.js"></script>
 </body>
 </html>

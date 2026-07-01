@@ -86,6 +86,7 @@ td.num{font-family:'Courier New',monospace;color:var(--accent)}
   <div class="nt" onclick="showSec('medan',this)">Medan Listrik</div>
   <div class="nt" onclick="showSec('potensial',this)">Potensial Listrik</div>
   <div class="nt" onclick="showSec('referensi',this)">📖 Referensi</div>
+  <div class="nt" onclick="showSec('quiz',this);_initQuiz()">📝 Kuis</div>
 </nav>
 <main>
 
@@ -214,6 +215,11 @@ td.num{font-family:'Courier New',monospace;color:var(--accent)}
       <tr><td>Permitivitas vakum ε₀</td><td class="num">8.85 × 10⁻¹² C²/(N·m²)</td></tr>
       <tr><td>Muatan elektron e</td><td class="num">1.60 × 10⁻¹⁹ C</td></tr>
     </table>
+  </div>
+</div>
+<div class="sec" id="s-quiz">
+  <div class="card">
+    <div id="quiz-container" class="quiz-wrap"></div>
   </div>
 </div>
 </main>
@@ -495,5 +501,6 @@ window.addEventListener('resize',()=>{
   if(id==='s-potensial') potUpdate();
 });
 </script>
+<script src="quiz.js"></script>
 </body>
 </html>

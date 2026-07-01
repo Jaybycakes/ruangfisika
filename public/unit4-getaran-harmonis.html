@@ -87,6 +87,7 @@ td.num{font-family:'Courier New',monospace;color:var(--accent)}
   <div class="nt" onclick="showSec('bandul',this)">Bandul</div>
   <div class="nt" onclick="showSec('grafik',this)">Grafik x(t)</div>
   <div class="nt" onclick="showSec('referensi',this)">📖 Referensi</div>
+  <div class="nt" onclick="showSec('quiz',this);_initQuiz()">📝 Kuis</div>
 </nav>
 <main>
 
@@ -204,6 +205,11 @@ td.num{font-family:'Courier New',monospace;color:var(--accent)}
       <tr><td>Kinetik</td><td class="num">Ek = ½mv²</td><td>x = 0 (titik setimbang)</td></tr>
       <tr><td>Total</td><td class="num">E = ½kA²</td><td>Konstan (tidak bergantung posisi)</td></tr>
     </table>
+  </div>
+</div>
+<div class="sec" id="s-quiz">
+  <div class="card">
+    <div id="quiz-container" class="quiz-wrap"></div>
   </div>
 </div>
 </main>
@@ -485,5 +491,6 @@ window.addEventListener('resize',()=>{
   if(id==='s-grafik') gDraw();
 });
 </script>
+<script src="quiz.js"></script>
 </body>
 </html>

@@ -89,6 +89,7 @@ td.num{font-family:'Courier New',monospace;color:var(--accent)}
   <div class="nt active" onclick="showSec('tumbukan',this)">Tumbukan 1D</div>
   <div class="nt" onclick="showSec('impuls',this)">Impuls</div>
   <div class="nt" onclick="showSec('referensi',this)">📖 Referensi</div>
+  <div class="nt" onclick="showSec('quiz',this);_initQuiz()">📝 Kuis</div>
 </nav>
 <main>
 
@@ -194,6 +195,11 @@ td.num{font-family:'Courier New',monospace;color:var(--accent)}
       <tr><td>Bola biliar</td><td class="num">0.17 kg</td><td class="num">3 m/s</td><td class="num">0.17 kg</td><td class="num">0 m/s</td><td>Elastis</td></tr>
       <tr><td>Mobil tabrakan</td><td class="num">1500 kg</td><td class="num">10 m/s</td><td class="num">1200 kg</td><td class="num">−5 m/s</td><td>Tidak elastis sempurna</td></tr>
     </table>
+  </div>
+</div>
+<div class="sec" id="s-quiz">
+  <div class="card">
+    <div id="quiz-container" class="quiz-wrap"></div>
   </div>
 </div>
 </main>
@@ -433,5 +439,6 @@ window.addEventListener('resize',()=>{
   if(id==='s-impuls') iUpdate();
 });
 </script>
+<script src="quiz.js"></script>
 </body>
 </html>

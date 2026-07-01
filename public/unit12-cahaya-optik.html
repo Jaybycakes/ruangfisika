@@ -153,6 +153,7 @@
   <div class="nav-tab" onclick="showSection('dispersi',this)">Dispersi</div>
   <div class="nav-tab" onclick="showSection('mata',this)">Mata &amp; Cacat</div>
   <div class="nav-tab" onclick="showSection('alat',this)">Alat Optik</div>
+  <div class="nt" onclick="showSec('quiz',this);_initQuiz()">📝 Kuis</div>
 </nav>
 
 <main>
@@ -487,6 +488,11 @@
   <div id="tool-content"></div>
 </div>
 
+<div class="sec" id="s-quiz">
+  <div class="card">
+    <div id="quiz-container" class="quiz-wrap"></div>
+  </div>
+</div>
 </main>
 
 <script>
@@ -1681,5 +1687,6 @@ window.addEventListener('load', () => {
 });
 window.addEventListener('resize', () => { redrawAll(); });
 </script>
+<script src="quiz.js"></script>
 </body>
 </html>

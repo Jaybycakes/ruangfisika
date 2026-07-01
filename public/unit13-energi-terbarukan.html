@@ -121,6 +121,7 @@ canvas.sim-canvas{max-height:220px;width:100%;border-radius:var(--rad);backgroun
   <button class="tab" onclick="showTab('costbenefit')">Analisis Biaya</button>
   <button class="tab" onclick="showTab('compare')">Perbandingan</button>
   <button class="tab" onclick="showTab('indonesia')">Indonesia</button>
+  <button class="tab" onclick="showTab('quiz');_initQuiz()">📝 Kuis</button>
 </div>
 
 <!-- ===== RANTAI KONVERSI ===== -->
@@ -1013,6 +1014,16 @@ window.addEventListener('load',()=>{
   buildSolarAngleChart();
   setTimeout(buildMixChart,100);
 });
+</script>
+<div class="page" id="page-quiz">
+  <div class="card">
+    <div id="quiz-container" class="quiz-wrap"></div>
+  </div>
+</div>
+<script src="quiz.js"></script>
+<script>
+var _quizInited=false;
+function _initQuiz(){if(_quizInited)return;_quizInited=true;initQuiz('energi-terbarukan','quiz-container');}
 </script>
 </body>
 </html>

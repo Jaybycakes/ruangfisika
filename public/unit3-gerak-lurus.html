@@ -93,6 +93,7 @@ td.num{font-family:'Courier New',monospace;color:var(--accent)}
   <div class="nt" onclick="showSec('glbb',this)">⟹ GLBB</div>
   <div class="nt" onclick="showSec('grafik',this)">📈 Grafik v-t</div>
   <div class="nt" onclick="showSec('referensi',this)">📖 Referensi</div>
+  <div class="nt" onclick="showSec('quiz',this);_initQuiz()">📝 Kuis</div>
 </nav>
 <main>
 
@@ -223,6 +224,11 @@ td.num{font-family:'Courier New',monospace;color:var(--accent)}
   <div class="card">
     <div class="card-title">Contoh Soal</div>
     <div id="ref-examples"></div>
+  </div>
+</div>
+<div class="sec" id="s-quiz">
+  <div class="card">
+    <div id="quiz-container" class="quiz-wrap"></div>
   </div>
 </div>
 </main>
@@ -563,5 +569,6 @@ window.addEventListener('resize',()=>{
   if(id==='s-grafik') vtDraw();
 });
 </script>
+<script src="quiz.js"></script>
 </body>
 </html>

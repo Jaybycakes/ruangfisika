@@ -89,6 +89,7 @@ input[type=number]{padding:6px 10px;border:1px solid var(--border2);border-radiu
   <div class="nt" onclick="showSec('penguraian',this)">↗ Penguraian</div>
   <div class="nt" onclick="showSec('perkalian',this)">× Perkalian</div>
   <div class="nt" onclick="showSec('referensi',this)">📖 Referensi</div>
+  <div class="nt" onclick="showSec('quiz',this);_initQuiz()">📝 Kuis</div>
 </nav>
 <main>
 
@@ -208,6 +209,11 @@ input[type=number]{padding:6px 10px;border:1px solid var(--border2);border-radiu
       <tr><td>k̂</td><td>Sumbu +z</td><td class="num">(0, 0, 1)</td></tr>
       <tr><td>Â</td><td>Searah A</td><td class="num">A / |A|</td></tr>
     </table>
+  </div>
+</div>
+<div class="sec" id="s-quiz">
+  <div class="card">
+    <div id="quiz-container" class="quiz-wrap"></div>
   </div>
 </div>
 </main>
@@ -456,5 +462,6 @@ window.addEventListener('resize',()=>{
   if(id==='s-perkalian') calcProd();
 });
 </script>
+<script src="quiz.js"></script>
 </body>
 </html>
