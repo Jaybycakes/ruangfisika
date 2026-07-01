@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kuis Kustom — Fisika Interaktif</title>
+<style>
+:root {
+  --bg:#f4f5f9; --bg2:#ffffff; --bg3:#edf0f8;
+  --text:#1c1e2e; --text2:#6b6e88; --text3:#9ea1b8;
+  --border:rgba(0,0,0,0.08); --border2:rgba(0,0,0,0.14);
+  --primary:#1e2d56; --accent:#3a68d0; --accent2:#1e48a8;
+  --green:#1a7a4a; --amber:#a05c00; --red:#b02020; --orange:#c85c10;
+  --r:10px; --rs:6px;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#1c1e2a; --bg2:#242535; --bg3:#2a2c3e;
+  --text:#e8eaf2; --text2:#9ea3b5; --text3:#666a80;
+  --border:rgba(255,255,255,0.08); --border2:rgba(255,255,255,0.15);
+  --primary:#7a90cc; --accent:#7898d2; --accent2:#9ab8e8;
+  --green:#4ab870; --amber:#d49020; --red:#e05050; --orange:#e08040;
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+
+header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 20px;height:52px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:50}
+.brand{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0}
+.logo{width:32px;height:32px;background:var(--primary);border-radius:7px;display:grid;place-items:center;color:#fff;font-size:15px}
+.brand-name{font-size:13px;font-weight:600;color:var(--text);line-height:1.3}
+.brand-sub{font-size:10px;color:var(--text2);line-height:1.3}
+.hd-sep{color:var(--text3);font-size:14px}
+.hd-unit{font-size:13px;font-weight:500;color:var(--text)}
+.hd-back{margin-left:auto;font-size:12px;font-weight:500;color:var(--accent);text-decoration:none;padding:5px 12px;border:1px solid var(--border2);border-radius:var(--rs);white-space:nowrap;flex-shrink:0}
+.hd-back:hover{background:var(--bg3)}
+
+main{padding:24px 20px;max-width:860px;margin:0 auto}
+
+.page-title{font-size:20px;font-weight:700;margin-bottom:4px}
+.page-desc{font-size:13px;color:var(--text2);margin-bottom:22px}
+
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:14px}
+.card-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:14px}
+
+/* Unit grid */
+.unit-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
+.unit-check{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--border);border-radius:var(--rs);cursor:pointer;transition:.12s;user-select:none}
+.unit-check:hover{border-color:var(--accent);background:var(--bg3)}
+.unit-check.selected{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 10%,transparent)}
+.unit-check input[type=checkbox]{accent-color:var(--accent);width:15px;height:15px;flex-shrink:0;cursor:pointer}
+.unit-check-info{min-width:0}
+.unit-check-name{font-size:13px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.unit-check-meta{font-size:11px;color:var(--text3);margin-top:1px}
+
+.sem-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);margin:14px 0 8px}
+.sem-label:first-child{margin-top:0}
+
+.select-row{display:flex;gap:8px;margin-bottom:14px}
+.btn-sm{font-size:12px;padding:5px 12px;border-radius:var(--rs);cursor:pointer;border:1px solid var(--border2);background:var(--bg);color:var(--text);font-family:inherit;transition:.12s}
+.btn-sm:hover{background:var(--bg3)}
+
+/* Count slider */
+.count-row{display:flex;align-items:center;gap:12px;margin-top:4px}
+.count-row input[type=range]{flex:1;accent-color:var(--accent)}
+.count-badge{font-size:16px;font-weight:700;min-width:80px;text-align:right;font-variant-numeric:tabular-nums;color:var(--accent)}
+
+/* Selected count indicator */
+.sel-indicator{font-size:12px;color:var(--text2);margin-top:10px}
+.sel-indicator span{font-weight:600;color:var(--text)}
+
+/* Start button */
+.btn-start{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer;border:none;background:var(--accent);color:#fff;font-family:inherit;transition:.15s;margin-top:4px}
+.btn-start:hover:not(:disabled){background:var(--accent2)}
+.btn-start:disabled{opacity:.45;cursor:not-allowed}
+
+/* Quiz area */
+#quiz-area{display:none}
+.quiz-header{display:flex;align-items:center;justify-content:between;gap:10px;margin-bottom:16px}
+.quiz-prog-wrap{margin-bottom:20px}
+.quiz-prog-bar{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;margin-bottom:6px}
+.quiz-prog-fill{height:100%;background:var(--accent);border-radius:3px;transition:width .3s}
+.quiz-prog-label{font-size:12px;color:var(--text2)}
+.quiz-unit-tag{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+.quiz-question{font-size:16px;font-weight:600;line-height:1.5;margin-bottom:18px}
+.quiz-opts{display:flex;flex-direction:column;gap:8px}
+.quiz-opt{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border:1.5px solid var(--border2);border-radius:8px;cursor:pointer;background:var(--bg);text-align:left;font-family:inherit;font-size:14px;color:var(--text);transition:.12s;width:100%}
+.quiz-opt:hover:not(:disabled){border-color:var(--accent);background:var(--bg3)}
+.quiz-opt.correct{border-color:var(--green)!important;background:color-mix(in srgb,var(--green) 12%,transparent)!important}
+.quiz-opt.wrong{border-color:var(--red)!important;background:color-mix(in srgb,var(--red) 10%,transparent)!important}
+.quiz-opt:disabled{cursor:not-allowed}
+.quiz-opt-letter{font-size:12px;font-weight:700;background:var(--bg3);border-radius:4px;width:22px;height:22px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.quiz-feedback{margin-top:14px;padding:10px 14px;border-radius:var(--rs);font-size:13px;font-weight:500;min-height:0}
+.quiz-feedback.correct{background:color-mix(in srgb,var(--green) 12%,transparent);color:var(--green)}
+.quiz-feedback.wrong{background:color-mix(in srgb,var(--red) 10%,transparent);color:var(--red)}
+
+/* Results */
+.result-wrap{text-align:center;padding:20px 0}
+.result-icon{font-size:48px;margin-bottom:12px}
+.result-grade{font-size:28px;font-weight:800;margin-bottom:4px}
+.result-score{font-size:42px;font-weight:900;margin:12px 0 4px}
+.result-pct{font-size:16px;color:var(--text2);margin-bottom:14px}
+.result-bar-wrap{height:8px;background:var(--bg3);border-radius:4px;overflow:hidden;max-width:320px;margin:0 auto 12px}
+.result-bar-fill{height:100%;border-radius:4px;transition:width .6s}
+.result-msg{font-size:13px;color:var(--text2);margin-bottom:22px}
+.result-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn-result{padding:10px 22px;border-radius:var(--rs);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:.15s}
+.btn-result-primary{background:var(--accent);color:#fff;border:none}
+.btn-result-primary:hover{background:var(--accent2)}
+.btn-result-outline{background:var(--bg);border:1.5px solid var(--border2);color:var(--text)}
+.btn-result-outline:hover{background:var(--bg3)}
+
+/* Unit breakdown table */
+.breakdown{margin-top:24px;text-align:left}
+.breakdown-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:10px}
+.breakdown-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px}
+.breakdown-row:last-child{border-bottom:none}
+.breakdown-unit{flex:1;color:var(--text2)}
+.breakdown-score{font-weight:700;font-variant-numeric:tabular-nums}
+.breakdown-bar{flex:2;height:5px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.breakdown-bar-fill{height:100%;border-radius:3px}
+</style>
+</head>
+<body>
+<header>
+  <a class="brand" href="/">
+    <div class="logo">⚛</div>
+    <div><div class="brand-name">Fisika Interaktif</div><div class="brand-sub">SMA 10 · Kurikulum Merdeka</div></div>
+  </a>
+  <span class="hd-sep">›</span>
+  <span class="hd-unit">Kuis Kustom</span>
+  <a class="hd-back" href="/">← Beranda</a>
+</header>
+
+<main>
+  <div class="page-title">🎯 Kuis Kustom</div>
+  <div class="page-desc">Pilih unit yang ingin diuji, tentukan jumlah soal, lalu mulai kuis gabungan.</div>
+
+  <!-- Setup -->
+  <div id="setup-area">
+    <div class="card">
+      <div class="card-title">Pilih Unit</div>
+      <div class="select-row">
+        <button class="btn-sm" onclick="selectAll()">Pilih Semua</button>
+        <button class="btn-sm" onclick="selectSem(1)">Semester 1</button>
+        <button class="btn-sm" onclick="selectSem(2)">Semester 2</button>
+        <button class="btn-sm" onclick="clearAll()">Batalkan Semua</button>
+      </div>
+
+      <div class="sem-label">Semester 1</div>
+      <div class="unit-grid" id="grid-sem1"></div>
+      <div class="sem-label">Semester 2</div>
+      <div class="unit-grid" id="grid-sem2"></div>
+
+      <div class="sel-indicator">
+        <span id="sel-count">0</span> unit dipilih · estimasi <span id="sel-pool">0</span> soal tersedia
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Jumlah Soal</div>
+      <div class="count-row">
+        <input type="range" id="q-count" min="5" max="50" value="10" step="1" oninput="updateCountLabel()">
+        <div class="count-badge"><span id="q-count-val">10</span> soal</div>
+      </div>
+    </div>
+
+    <button class="btn-start" id="start-btn" onclick="startQuiz()" disabled>
+      Mulai Kuis ▶
+    </button>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz-area">
+    <div class="card" id="quiz-card">
+      <div class="quiz-prog-wrap">
+        <div class="quiz-prog-bar"><div class="quiz-prog-fill" id="prog-fill"></div></div>
+        <div class="quiz-prog-label" id="prog-label"></div>
+      </div>
+      <div class="quiz-unit-tag" id="q-unit-tag"></div>
+      <div class="quiz-question" id="q-text"></div>
+      <div class="quiz-opts" id="q-opts"></div>
+      <div class="quiz-feedback" id="q-feedback"></div>
+    </div>
+  </div>
+</main>
+
+<script src="quiz.js"></script>
+<script>
+const UNIT_LIST = [
+  { id:'pengukuran',       name:'Pengukuran & Besaran', topic:'Dasar',      sem:1 },
+  { id:'vektor',           name:'Vektor',               topic:'Dasar',      sem:1 },
+  { id:'gerak-lurus',      name:'Gerak Lurus',          topic:'Mekanika',   sem:1 },
+  { id:'gerak-parabola',   name:'Gerak Parabola',       topic:'Mekanika',   sem:1 },
+  { id:'hukum-newton',     name:'Hukum Newton',         topic:'Mekanika',   sem:1 },
+  { id:'dinamika-rotasi',  name:'Dinamika Rotasi',      topic:'Mekanika',   sem:1 },
+  { id:'usaha-energi',     name:'Usaha & Energi',       topic:'Energi',     sem:1 },
+  { id:'momentum-impuls',  name:'Momentum & Impuls',    topic:'Mekanika',   sem:2 },
+  { id:'getaran-harmonis', name:'Getaran Harmonis',     topic:'Gelombang',  sem:2 },
+  { id:'gelombang',        name:'Gelombang Mekanik',    topic:'Gelombang',  sem:2 },
+  { id:'cahaya-optik',     name:'Optik Geometri',       topic:'Optik',      sem:2 },
+  { id:'listrik-statis',   name:'Listrik Statis',       topic:'Listrik',    sem:2 },
+  { id:'energi-terbarukan',name:'Energi Terbarukan',    topic:'Energi',     sem:2 },
+];
+
+// Build checkboxes
+function buildGrid() {
+  [1, 2].forEach(s => {
+    const grid = document.getElementById('grid-sem' + s);
+    UNIT_LIST.filter(u => u.sem === s).forEach(u => {
+      const label = document.createElement('label');
+      label.className = 'unit-check';
+      label.innerHTML = `<input type="checkbox" value="${u.id}" onchange="onCheckChange()">
+        <div class="unit-check-info">
+          <div class="unit-check-name">${u.name}</div>
+          <div class="unit-check-meta">${u.topic} · ${(QUIZ_BANKS[u.id]||[]).length} soal</div>
+        </div>`;
+      label.querySelector('input').addEventListener('change', () => {
+        label.classList.toggle('selected', label.querySelector('input').checked);
+      });
+      grid.appendChild(label);
+    });
+  });
+}
+
+function getChecked() {
+  return [...document.querySelectorAll('.unit-check input:checked')].map(el => el.value);
+}
+
+function onCheckChange() {
+  const ids = getChecked();
+  const pool = ids.reduce((s,id) => s + (QUIZ_BANKS[id]||[]).length, 0);
+  document.getElementById('sel-count').textContent = ids.length;
+  document.getElementById('sel-pool').textContent = pool;
+  const max = Math.min(50, pool);
+  const countEl = document.getElementById('q-count');
+  countEl.max = max || 50;
+  if (+countEl.value > max) countEl.value = max;
+  updateCountLabel();
+  document.getElementById('start-btn').disabled = ids.length === 0;
+}
+
+function updateCountLabel() {
+  document.getElementById('q-count-val').textContent = document.getElementById('q-count').value;
+}
+
+function selectAll()  { document.querySelectorAll('.unit-check input').forEach(el => { el.checked=true; el.closest('label').classList.add('selected'); }); onCheckChange(); }
+function clearAll()   { document.querySelectorAll('.unit-check input').forEach(el => { el.checked=false; el.closest('label').classList.remove('selected'); }); onCheckChange(); }
+function selectSem(s) {
+  clearAll();
+  UNIT_LIST.filter(u=>u.sem===s).forEach(u => {
+    const el = document.querySelector(`.unit-check input[value="${u.id}"]`);
+    if(el){ el.checked=true; el.closest('label').classList.add('selected'); }
+  });
+  onCheckChange();
+}
+
+// Quiz state
+let questions=[], current=0, score=0, answered=false, lastN=10;
+let unitScores={};
+
+function shuffle(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+
+function startQuiz() {
+  const ids = getChecked();
+  if(!ids.length) return;
+  const n = +document.getElementById('q-count').value;
+  lastN = n;
+
+  // Build pool: tag each question with its unit
+  let pool = [];
+  ids.forEach(id => {
+    (QUIZ_BANKS[id]||[]).forEach(q => pool.push({...q, _unit: id}));
+  });
+  pool = shuffle(pool).slice(0, n);
+
+  // Shuffle answer options per question
+  questions = pool.map(q => {
+    const opts = q.opts.map((o,i)=>({text:o,orig:i}));
+    const shuffled = shuffle(opts);
+    return { q:q.q, opts:shuffled.map(o=>o.text), ans:shuffled.findIndex(o=>o.orig===q.ans), _unit:q._unit };
+  });
+
+  current=0; score=0; answered=false;
+  unitScores={};
+  ids.forEach(id => unitScores[id]={right:0,total:0});
+
+  document.getElementById('setup-area').style.display='none';
+  document.getElementById('quiz-area').style.display='block';
+  showQuestion();
+}
+
+function unitName(id){ return (UNIT_LIST.find(u=>u.id===id)||{}).name || id; }
+
+function showQuestion() {
+  answered=false;
+  const q=questions[current];
+  document.getElementById('prog-fill').style.width=((current/questions.length)*100)+'%';
+  document.getElementById('prog-label').textContent='Soal '+(current+1)+' / '+questions.length;
+  document.getElementById('q-unit-tag').textContent=unitName(q._unit);
+  document.getElementById('q-text').textContent=q.q;
+  const letters=['A','B','C','D'];
+  document.getElementById('q-opts').innerHTML = q.opts.map((o,i)=>
+    `<button class="quiz-opt" onclick="pickAnswer(${i})">
+      <span class="quiz-opt-letter">${letters[i]}</span>
+      <span>${o}</span>
+    </button>`
+  ).join('');
+  document.getElementById('q-feedback').className='quiz-feedback';
+  document.getElementById('q-feedback').textContent='';
+}
+
+function pickAnswer(idx) {
+  if(answered) return;
+  answered=true;
+  const q=questions[current];
+  const correct=idx===q.ans;
+  if(correct) { score++; unitScores[q._unit].right++; }
+  unitScores[q._unit].total++;
+
+  const btns=document.querySelectorAll('.quiz-opt');
+  btns.forEach(b=>b.disabled=true);
+  btns[q.ans].classList.add('correct');
+  if(!correct) btns[idx].classList.add('wrong');
+
+  const fb=document.getElementById('q-feedback');
+  fb.className='quiz-feedback '+(correct?'correct':'wrong');
+  fb.textContent=correct?'✓ Benar!':'✗ Salah. Jawaban benar: '+String.fromCharCode(65+q.ans)+'. '+q.opts[q.ans];
+
+  setTimeout(()=>{
+    current++;
+    if(current<questions.length) showQuestion(); else showResults();
+  }, 1300);
+}
+
+function showResults() {
+  const pct=Math.round(score/questions.length*100);
+  const color=pct>=80?'var(--green)':pct>=55?'var(--amber)':'var(--red)';
+  const icon=pct>=80?'🏆':pct>=55?'👍':'📚';
+  const grade=pct>=80?'Hebat!':pct>=55?'Cukup Baik':'Perlu Belajar Lagi';
+  const msg=pct>=80?'Kamu telah menguasai materi ini dengan baik.':pct>=55?'Terus berlatih untuk hasil yang lebih baik.':'Coba pelajari kembali materi dan ulangi kuis ini.';
+
+  // Unit breakdown
+  const breakdownHtml=Object.entries(unitScores).filter(([,v])=>v.total>0).map(([id,v])=>{
+    const p=Math.round(v.right/v.total*100);
+    const c=p>=80?'var(--green)':p>=55?'var(--amber)':'var(--red)';
+    return `<div class="breakdown-row">
+      <div class="breakdown-unit">${unitName(id)}</div>
+      <div class="breakdown-bar"><div class="breakdown-bar-fill" style="width:${p}%;background:${c}"></div></div>
+      <div class="breakdown-score" style="color:${c}">${v.right}/${v.total}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('quiz-card').innerHTML=`
+    <div class="result-wrap">
+      <div class="result-icon">${icon}</div>
+      <div class="result-grade" style="color:${color}">${grade}</div>
+      <div class="result-score" style="color:${color}">${score} / ${questions.length}</div>
+      <div class="result-pct">${pct}%</div>
+      <div class="result-bar-wrap"><div class="result-bar-fill" style="width:${pct}%;background:${color}"></div></div>
+      <div class="result-msg">${msg}</div>
+      <div class="result-btns">
+        <button class="btn-result btn-result-primary" onclick="retryQuiz()">Ulangi Kuis ↺</button>
+        <button class="btn-result btn-result-outline" onclick="backToSetup()">Ubah Pilihan Unit</button>
+      </div>
+      ${Object.keys(unitScores).filter(id=>unitScores[id].total>0).length>1?`<div class="breakdown"><div class="breakdown-title">Skor per Unit</div>${breakdownHtml}</div>`:''}
+    </div>`;
+}
+
+function retryQuiz() {
+  current=0; score=0; answered=false;
+  const ids=Object.keys(unitScores);
+  let pool=[];
+  ids.forEach(id=>{(QUIZ_BANKS[id]||[]).forEach(q=>pool.push({...q,_unit:id}));});
+  pool=shuffle(pool).slice(0,lastN);
+  questions=pool.map(q=>{
+    const opts=q.opts.map((o,i)=>({text:o,orig:i}));
+    const shuffled=shuffle(opts);
+    return{q:q.q,opts:shuffled.map(o=>o.text),ans:shuffled.findIndex(o=>o.orig===q.ans),_unit:q._unit};
+  });
+  ids.forEach(id=>unitScores[id]={right:0,total:0});
+
+  document.getElementById('quiz-card').innerHTML=`
+    <div class="quiz-prog-wrap">
+      <div class="quiz-prog-bar"><div class="quiz-prog-fill" id="prog-fill"></div></div>
+      <div class="quiz-prog-label" id="prog-label"></div>
+    </div>
+    <div class="quiz-unit-tag" id="q-unit-tag"></div>
+    <div class="quiz-question" id="q-text"></div>
+    <div class="quiz-opts" id="q-opts"></div>
+    <div class="quiz-feedback" id="q-feedback"></div>`;
+  showQuestion();
+}
+
+function backToSetup() {
+  document.getElementById('quiz-area').style.display='none';
+  document.getElementById('setup-area').style.display='block';
+  document.getElementById('quiz-card').innerHTML=`
+    <div class="quiz-prog-wrap">
+      <div class="quiz-prog-bar"><div class="quiz-prog-fill" id="prog-fill"></div></div>
+      <div class="quiz-prog-label" id="prog-label"></div>
+    </div>
+    <div class="quiz-unit-tag" id="q-unit-tag"></div>
+    <div class="quiz-question" id="q-text"></div>
+    <div class="quiz-opts" id="q-opts"></div>
+    <div class="quiz-feedback" id="q-feedback"></div>`;
+}
+
+buildGrid();
+</script>
+</body>
+</html>

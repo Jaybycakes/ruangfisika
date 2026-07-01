@@ -80,6 +80,25 @@ function Dashboard() {
         </div>
       </section>
 
+      {/* Custom Quiz Banner */}
+      <section className="border-b border-border bg-card">
+        <div className="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-sm font-semibold text-foreground">🎯 Kuis Kustom</p>
+              <p className="text-xs text-muted-foreground mt-0.5">Pilih unit mana saja dan buat soal latihan gabungan untuk siswa.</p>
+            </div>
+            <a
+              href="/kuis-kustom.html"
+              className="inline-flex shrink-0 items-center gap-2 rounded-md bg-accent px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-accent/90"
+            >
+              Buat Kuis
+              <ArrowRight className="h-4 w-4" />
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* Curriculum */}
       <section id="kurikulum" className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
         <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-4 sm:flex sm:items-end sm:justify-between">
