@@ -377,7 +377,7 @@ function initQuiz(unitId, containerId) {
   const container = document.getElementById(containerId);
   if (!container) return;
 
-  let questions = [], current = 0, score = 0, answered = false;
+  let questions = [], current = 0, score = 0, answered = false, lastN = 10;
 
   function shuffle(arr) {
     const a = [...arr];
@@ -405,7 +405,9 @@ function initQuiz(unitId, containerId) {
   }
 
   window[`_quizStart_${unitId.replace(/-/g,'_')}`] = function() {
-    const n = Math.min(20, Math.max(5, +document.getElementById('quiz-count').value));
+    const el = document.getElementById('quiz-count');
+    const n = el ? Math.min(20, Math.max(5, +el.value)) : lastN;
+    lastN = n;
     questions = shuffle(bank).slice(0, n).map(q => ({
       ...q,
       opts: q.opts.map((o, i) => ({ text: o, orig: i })),
