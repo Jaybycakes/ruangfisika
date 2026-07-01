@@ -450,12 +450,16 @@ function gDraw(){
   const vpts=Array.from({length:N},(_,i)=>{const t=i/N*maxT;return[t,-A*om*Math.sin(om*t+phi)];});
   const apts=Array.from({length:N},(_,i)=>{const t=i/N*maxT;return[t,-A*om**2*Math.cos(om*t+phi)];});
 
-  function drawPanel(id,h,data,color,label){
+  const Amax=+document.getElementById('g-a').max;
+  const maxYx=Amax;
+  const maxYv=Amax*om;
+  const maxYa=Amax*om**2;
+
+  function drawPanel(id,h,data,color,label,maxY){
     const{W,H,ctx}=getCanvas(id,h);
     ctx.clearRect(0,0,W,H);
     ctx.fillStyle=dark()?'#1e2030':'#f0f2f8';ctx.fillRect(0,0,W,H);
     const ml=42,mr=12,mt=14,mb=22;
-    const maxY=Math.max(...data.map(d=>Math.abs(d[1])),0.1)*1.1;
     const{pw,ph,toX,toY}=drawAxes(ctx,ml,mr,mt,mb,W,H,maxT,maxY,label);
     // Zero line
     ctx.strokeStyle=dark()?'rgba(180,185,210,0.3)':'rgba(60,65,100,0.15)';ctx.lineWidth=1;
@@ -463,9 +467,9 @@ function gDraw(){
     wavePlot(ctx,toX,toY,data,color);
   }
 
-  drawPanel('g-x',120,pts,ac(),'x (m)');
-  drawPanel('g-v',120,vpts,oc(),'v (m/s)');
-  drawPanel('g-acc',120,apts,grc(),'a (m/s²)');
+  drawPanel('g-x',120,pts,ac(),'x (m)',maxYx);
+  drawPanel('g-v',120,vpts,oc(),'v (m/s)',maxYv);
+  drawPanel('g-acc',120,apts,grc(),'a (m/s²)',maxYa);
 }
 
 function showSec(id,el){
