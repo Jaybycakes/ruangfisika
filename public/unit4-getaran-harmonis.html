@@ -444,16 +444,18 @@ function gDraw(){
   document.getElementById('g-fv').textContent=f.toFixed(1);
   document.getElementById('g-phiv').textContent=document.getElementById('g-phi').value;
   const om=2*Math.PI*f;
-  const T=1/f,maxT=3*T;
-  const N=300;
+  const maxT=10;
+  const N=600;
   const pts=Array.from({length:N},(_,i)=>{const t=i/N*maxT;return[t,A*Math.cos(om*t+phi)];});
   const vpts=Array.from({length:N},(_,i)=>{const t=i/N*maxT;return[t,-A*om*Math.sin(om*t+phi)];});
   const apts=Array.from({length:N},(_,i)=>{const t=i/N*maxT;return[t,-A*om**2*Math.cos(om*t+phi)];});
 
   const Amax=+document.getElementById('g-a').max;
+  const fmax=+document.getElementById('g-f').max;
+  const omMax=2*Math.PI*fmax;
   const maxYx=Amax;
-  const maxYv=Amax*om;
-  const maxYa=Amax*om**2;
+  const maxYv=Amax*omMax;
+  const maxYa=Amax*omMax**2;
 
   function drawPanel(id,h,data,color,label,maxY){
     const{W,H,ctx}=getCanvas(id,h);
